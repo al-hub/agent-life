@@ -33,6 +33,7 @@ agent-init help      inspect               show command surface
 agent-init status    inspect               report framework/core/state/profiles
 agent-init list      inspect               list discovered profiles
 agent-init auto      recommend             suggest a profile when unambiguous
+agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
 agent-init develop   placeholder           future profile activation/recommendation
 agent-init stock     placeholder           future profile activation/recommendation
@@ -92,6 +93,23 @@ Current behavior:
 
 It does not switch profiles, source environment, restore a session, or write
 state.
+
+### `agent-init doctor`
+
+Semantic: inspect.
+
+Current behavior:
+
+- Reports framework detection.
+- Reports core discovery.
+- Reports profile discovery.
+- Reports `AGENT_CORE_PATH` status.
+- Reports state path accessibility.
+- Reports shell type as informational only.
+
+It does not repair, activate, switch, sync, write runtime state, mutate shell
+state, or start orchestration. Warnings are best-effort diagnostics and do not
+always mean runtime failure. No strict exit-code contract is defined yet.
 
 ### `agent-init version`
 

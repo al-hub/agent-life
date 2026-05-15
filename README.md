@@ -90,6 +90,7 @@ agent-init help
 agent-init status
 agent-init list
 agent-init auto
+agent-init doctor
 agent-init version
 ```
 
@@ -108,6 +109,7 @@ MVP scope:
 - `status` reports framework, core, state, and profile status.
 - `list` discovers profiles from `agent-core/profiles/*`.
 - `auto` selects a profile only when local context is unambiguous.
+- `doctor` reports best-effort diagnostics without changing runtime state.
 - `version` prints the CLI version.
 
 Deferred:
@@ -202,4 +204,5 @@ Run the MVP CLI directly:
 ./bin/agent-init status
 ./bin/agent-init list
 ./bin/agent-init auto
+./bin/agent-init doctor
 ```

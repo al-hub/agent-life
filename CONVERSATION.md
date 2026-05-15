@@ -106,3 +106,12 @@ Runtime lifecycle step completed:
   guarantee.
 - Confirmed lifecycle stages beyond recommendation remain unimplemented and
   intentionally unresolved.
+
+Doctor MVP step completed:
+
+- Implemented `agent-init doctor` as a best-effort diagnostics command.
+- Checks framework detection, git availability, `AGENT_CORE_PATH`, core
+  discovery, profile discovery, state path accessibility, and shell type.
+- Kept doctor as observer/reporting only: no repair, activation, shell mutation,
+  state writes, sync, tmux, daemon, or lifecycle state machine.
+- Warnings are informational and do not define a strict exit-code contract.

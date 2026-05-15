@@ -16,6 +16,7 @@ Current implemented behavior:
 
 - Discover framework, core, state path, and profile directories.
 - Inspect runtime facts.
+- Diagnose runtime readiness without repairing it.
 - Recommend a profile when the choice is unambiguous.
 
 Current unimplemented behavior:

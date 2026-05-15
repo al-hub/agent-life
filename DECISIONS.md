@@ -124,3 +124,12 @@ these stages are placeholders and not execution guarantees.
 Reason: lifecycle language should clarify future runtime behavior without
 committing to activation, orchestration, state transitions, or shell ownership
 too early.
+
+### 2026-05-16: `agent-init doctor` is diagnostics-only
+
+`doctor` is a best-effort observer command. It reports framework, core, profile,
+state, git, shell, and `AGENT_CORE_PATH` status without repairing, activating,
+switching, syncing, or writing runtime state.
+
+Reason: diagnostics are useful now, but runtime ownership and activation
+semantics remain intentionally unresolved.

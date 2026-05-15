@@ -102,6 +102,7 @@ The MVP does not:
 
 - Activate profiles
 - Write `current-profile`
+- Create state files as part of diagnostics
 - Restore sessions
 - Synchronize state
 - Start a runtime daemon

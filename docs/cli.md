@@ -76,6 +76,24 @@ Current MVP behavior:
 This command does not activate environments, source shell files, restore
 sessions, switch profiles, write state, or load private memory yet.
 
+### `agent-init doctor`
+
+Run best-effort runtime diagnostics.
+
+Expected behavior:
+
+- Check framework detection.
+- Check whether `git` is available.
+- Report `AGENT_CORE_PATH` status.
+- Check core discovery.
+- Check profile discovery.
+- Check state path accessibility without creating it.
+- Report shell type as informational only.
+
+`doctor` does not repair, activate, switch, sync, write `current-profile`, mutate
+the shell, or start orchestration. Warnings are informational and do not always
+mean runtime failure. No strict exit-code contract is defined yet.
+
 ### `agent-init version`
 
 Print the CLI version.
@@ -87,7 +105,6 @@ These commands remain planned but are not part of the current MVP:
 - `agent-init develop`
 - `agent-init stock`
 - `agent-init sync`
-- `agent-init doctor`
 
 ## Path Discovery
 
@@ -110,6 +127,7 @@ Allowed future options should be rare and practical, such as:
 agent-init status --verbose
 agent-init list --verbose
 agent-init auto --verbose
+agent-init doctor --verbose
 ```
 
 Do not add option-heavy command variants unless the command model cannot express
