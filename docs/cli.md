@@ -2,9 +2,8 @@
 
 `agent-init` is the command entry point for the personal AI operating system.
 
-The CLI initializes an agent session around a target context: development,
-stock analysis, automatic detection, status checks, synchronization, or
-diagnostics.
+The CLI initializes and inspects an agent runtime around public framework,
+private core, local state, and discovered profiles.
 
 ## Design Rules
 
@@ -17,76 +16,75 @@ diagnostics.
 
 ## Commands
 
-### `agent-init develop`
+### `agent-init help`
 
-Load the development profile.
+Show the command surface and design rules.
 
-Expected behavior:
+Current behavior:
 
-- Discover `agent-core`.
-- Load development-oriented prompts and memory from private context.
-- Print session handoff instructions for coding agents.
-- Avoid exposing private content unless running in a trusted local session.
-
-### `agent-init stock`
-
-Load the stock or market-analysis profile.
-
-Expected behavior:
-
-- Discover `agent-core`.
-- Load finance/stock profile context.
-- Prepare agent instructions for market research workflows.
-- Keep account details and private financial data in `agent-core`.
-
-### `agent-init auto`
-
-Detect the current context and choose a profile.
-
-Expected behavior:
-
-- Inspect current directory.
-- Detect whether the session looks like development, finance, docs, or general
-  work.
-- Select the best available profile.
-- Show the selected profile and reason.
+- Prints available MVP commands.
+- Keeps syntax simple and action-centered.
 
 ### `agent-init status`
 
 Show runtime status.
 
+Expected behavior:
+
+- Show framework path.
+- Discover `agent-core`.
+- Show local state path.
+- List discovered profile names.
+- Support only `--verbose` for extra checks.
+
 Expected output:
 
 ```text
-agent-life: found
-agent-core: found at ../agent-core
-core source: sibling
-profile: not loaded
-shell integration: unknown
+Framework: OK
+Framework Path: /path/to/agent-life
+Core: Found
+Core Path: /path/to/agent-core
+Core Source: sibling
+State: Local
+State Path: /home/user/.local/state/agent-life
+Profiles: develop, stock, faith
 ```
 
-### `agent-init sync`
+### `agent-init list`
 
-Synchronize safe context between public and private layers.
+List profiles from `agent-core/profiles/*`.
 
 Expected behavior:
 
-- Sync only approved public summaries.
-- Never copy private memory into `agent-life`.
-- Surface files that require manual review.
+- Do not hardcode profile names.
+- Treat each non-hidden directory under `profiles/` as a profile.
+- Print `Profiles: none` when no core or profile directory exists.
 
-### `agent-init doctor`
+### `agent-init auto`
 
-Diagnose installation and runtime readiness.
+Select a profile from discovered profiles using local context.
 
-Expected checks:
+Current MVP behavior:
 
-- `agent-life` repo root exists.
-- `agent-core` path can be discovered.
-- Discovered core path is a git repo.
-- `bin/agent-init` is executable.
-- Shell path can reach `agent-init`.
-- No obvious private files are tracked by `agent-life`.
+- If current directory name matches a discovered profile directory, select it.
+- If exactly one profile exists, select it.
+- Otherwise print no selection and explain why.
+
+This command does not activate environments, source shell files, restore
+sessions, or load private memory yet.
+
+### `agent-init version`
+
+Print the CLI version.
+
+## Deferred Commands
+
+These commands remain planned but are not part of the current MVP:
+
+- `agent-init develop`
+- `agent-init stock`
+- `agent-init sync`
+- `agent-init doctor`
 
 ## Path Discovery
 
@@ -97,7 +95,7 @@ Expected checks:
 3. `../agent-core`
 4. `~/.agent-core`
 
-`status` reports the result. `doctor` validates it.
+`status` reports the result. `list` and `auto` use the same discovery behavior.
 
 ## Option Policy
 
@@ -106,9 +104,22 @@ Prefer config over flags.
 Allowed future options should be rare and practical, such as:
 
 ```text
-agent-init doctor --verbose
-agent-init sync --dry-run
+agent-init status --verbose
+agent-init list --verbose
+agent-init auto --verbose
 ```
 
 Do not add option-heavy command variants unless the command model cannot express
 the behavior clearly.
+
+## Non-Goals For MVP
+
+The MVP does not implement:
+
+- tmux orchestration
+- shell export/source
+- RAG engine
+- LLM integration
+- AGENTS.md parsing
+- session restore
+- environment activation

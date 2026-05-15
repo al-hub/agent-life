@@ -54,3 +54,19 @@ Discovery order:
 Reason: sibling repos preserve the public/private boundary, avoid submodule
 friction, and reduce the chance that private memory is treated as public repo
 content.
+
+### 2026-05-16: `agent-init` MVP stays bash-only
+
+The first `agent-init` implementation is a simple bash script. It avoids Python
+orchestration, tmux control, shell activation, RAG, LLM integration, and session
+restore.
+
+Reason: the current goal is to validate the command-centered CLI shape and
+runtime boundaries before adding heavier orchestration.
+
+### 2026-05-16: Profiles are discovered, not hardcoded
+
+Profiles are recognized by scanning `agent-core/profiles/*` directories. Public
+framework code should not hardcode profile names as behavior.
+
+Reason: private core owns profile inventory and personal context.

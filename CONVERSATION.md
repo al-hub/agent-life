@@ -55,3 +55,12 @@ Current implementation step:
 - Create the initial markdown runtime documents.
 - Add an initial safe `install.sh` bootstrap checker.
 - Document architecture and CLI behavior before building the full CLI.
+
+Next implementation step completed:
+
+- Added `bin/agent-init` MVP as a bash script.
+- Implemented `help`, `status`, `list`, `auto`, and `version`.
+- Kept profile discovery dynamic through `agent-core/profiles/*`.
+- Kept `install.sh` as a non-destructive bootstrap checker.
+- Deferred tmux orchestration, shell activation, RAG, LLM integration,
+  AGENTS.md parsing, session restore, and environment activation.

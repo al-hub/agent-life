@@ -44,12 +44,11 @@ structured context for a future agent session to continue work without guessing.
 The main command will be `agent-init`.
 
 ```text
-agent-init develop
-agent-init stock
-agent-init auto
+agent-init help
 agent-init status
-agent-init sync
-agent-init doctor
+agent-init list
+agent-init auto
+agent-init version
 ```
 
 Design rules:
@@ -60,6 +59,23 @@ Design rules:
 - Complex configuration belongs in config files.
 - Public framework stays in `agent-life`.
 - Private memory stays in `agent-core`.
+
+MVP scope:
+
+- `help` prints the command surface.
+- `status` reports framework, core, state, and profile status.
+- `list` discovers profiles from `agent-core/profiles/*`.
+- `auto` selects a profile only when local context is unambiguous.
+- `version` prints the CLI version.
+
+Deferred:
+
+- tmux orchestration
+- shell export/source
+- RAG engine
+- LLM integration
+- session restore
+- environment activation
 
 ## Core Discovery
 
@@ -83,6 +99,8 @@ agent-life/
   DECISIONS.md
   NEXT.md
   install.sh
+  bin/
+    agent-init
   docs/
     architecture.md
     cli.md
@@ -91,8 +109,6 @@ agent-life/
 Planned additions:
 
 ```text
-bin/
-  agent-init
 completions/
   agent-init.bash
   agent-init.zsh
@@ -110,3 +126,11 @@ Run the current bootstrap check:
 
 It verifies the repo root, checks likely `agent-core` paths, and prints next
 steps for installing `agent-init` when the CLI exists.
+
+Run the MVP CLI directly:
+
+```sh
+./bin/agent-init status
+./bin/agent-init list
+./bin/agent-init auto
+```

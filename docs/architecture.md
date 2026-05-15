@@ -4,6 +4,14 @@
 It provides a repo-based runtime that AI agents can inspect, update, and hand
 off through.
 
+The runtime has three layers:
+
+```text
+framework   public bootstrap/runtime in agent-life
+core        private memory/context in agent-core
+state       local runtime/cache outside public git history
+```
+
 ## Two-Repo Model
 
 ```text
@@ -47,6 +55,25 @@ travel
 stock
 ```
 
+### local state
+
+Responsibilities:
+
+- Runtime cache
+- Local-only status files
+- Future session metadata
+- Non-portable machine state
+
+Default path:
+
+```text
+~/.local/state/agent-life
+```
+
+The state layer is not a substitute for durable AI memory. Durable public memory
+belongs in markdown files in `agent-life`; durable private memory belongs in
+`agent-core`.
+
 ## Default Layout
 
 Use sibling repositories:
@@ -79,6 +106,7 @@ shell
   -> agent-init <target>
   -> discover agent-life root
   -> discover agent-core path
+  -> resolve local state path
   -> load public command framework
   -> load private profile context
   -> print or export handoff instructions for the agent session
@@ -108,3 +136,16 @@ The runtime should prefer explicit, inspectable files over hidden state.
 - Public docs must not include personal profile content.
 - Bootstrap commands should be safe to run repeatedly.
 - Private repo access failures should produce clear recovery instructions.
+
+## MVP Boundary
+
+Current `agent-init` MVP implements only:
+
+- `help`
+- `status`
+- `list`
+- `auto`
+- `version`
+
+It does not implement tmux orchestration, shell activation, RAG, LLM
+integration, AGENTS.md parsing, session restore, or environment activation.

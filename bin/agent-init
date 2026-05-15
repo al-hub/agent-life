@@ -1,0 +1,284 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+VERSION="0.1.0"
+
+usage() {
+  cat <<'EOF'
+agent-init - personal AI runtime bootstrap
+
+Usage:
+  agent-init help
+  agent-init status [--verbose]
+  agent-init list [--verbose]
+  agent-init auto [--verbose]
+  agent-init version
+
+Commands:
+  help      Show this help.
+  status    Show framework, core, state, and profile status.
+  list      List discovered profiles from agent-core/profiles.
+  auto      Select a profile from discovered profiles using local context.
+  version   Show agent-init version.
+
+Design:
+  command = action
+  argument = target
+  options stay minimal
+EOF
+}
+
+die() {
+  printf '%s\n' "$*" >&2
+  exit 1
+}
+
+script_dir() {
+  cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd
+}
+
+framework_root() {
+  local dir
+  dir="$(script_dir)"
+
+  if [ "$(basename -- "$dir")" = "bin" ] && [ -f "$dir/../README.md" ]; then
+    cd -- "$dir/.." && pwd
+    return 0
+  fi
+
+  if git -C "$dir" rev-parse --show-toplevel >/dev/null 2>&1; then
+    git -C "$dir" rev-parse --show-toplevel
+    return 0
+  fi
+
+  pwd
+}
+
+state_path() {
+  if [ -n "${AGENT_STATE_PATH:-}" ]; then
+    printf '%s\n' "$AGENT_STATE_PATH"
+  else
+    printf '%s\n' "$HOME/.local/state/agent-life"
+  fi
+}
+
+discover_core() {
+  local root
+  root="$1"
+
+  if [ -n "${AGENT_CORE_PATH:-}" ]; then
+    printf '%s|%s\n' "$AGENT_CORE_PATH" "AGENT_CORE_PATH"
+  elif [ -d "$root/../agent-core" ]; then
+    printf '%s|%s\n' "$(cd -- "$root/../agent-core" && pwd)" "sibling"
+  elif [ -d "$HOME/.agent-core" ]; then
+    printf '%s|%s\n' "$HOME/.agent-core" "home"
+  else
+    printf '%s|%s\n' "" "missing"
+  fi
+}
+
+core_path_from_result() {
+  printf '%s\n' "${1%%|*}"
+}
+
+core_source_from_result() {
+  printf '%s\n' "${1#*|}"
+}
+
+profiles_dir() {
+  printf '%s/profiles\n' "$1"
+}
+
+list_profiles_raw() {
+  local core profiles name found
+  core="$1"
+  profiles="$(profiles_dir "$core")"
+  found=0
+
+  if [ -z "$core" ] || [ ! -d "$profiles" ]; then
+    return 0
+  fi
+
+  for path in "$profiles"/*; do
+    [ -d "$path" ] || continue
+    name="$(basename -- "$path")"
+    case "$name" in
+      .*|'') continue ;;
+    esac
+    printf '%s\n' "$name"
+    found=1
+  done
+
+  return 0
+}
+
+join_profiles() {
+  awk 'BEGIN { first = 1 } { if (!first) printf ", "; printf "%s", $0; first = 0 } END { if (first) printf "none" }'
+}
+
+print_status() {
+  local verbose root state core_result core core_source profiles joined
+  verbose="$1"
+  root="$(framework_root)"
+  state="$(state_path)"
+  core_result="$(discover_core "$root")"
+  core="$(core_path_from_result "$core_result")"
+  core_source="$(core_source_from_result "$core_result")"
+  joined="$(list_profiles_raw "$core" | join_profiles)"
+
+  echo "Framework: OK"
+  echo "Framework Path: $root"
+
+  if [ -n "$core" ]; then
+    echo "Core: Found"
+    echo "Core Path: $core"
+    echo "Core Source: $core_source"
+  else
+    echo "Core: Missing"
+    echo "Core Source: $core_source"
+  fi
+
+  echo "State: Local"
+  echo "State Path: $state"
+  echo "Profiles: $joined"
+
+  if [ "$verbose" = "1" ]; then
+    echo
+    echo "Checks:"
+    if [ -n "$core" ] && git -C "$core" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      echo "- Core Git Repo: OK"
+    elif [ -n "$core" ]; then
+      echo "- Core Git Repo: Not a git repo"
+    else
+      echo "- Core Git Repo: Missing"
+    fi
+
+    if [ -n "$core" ] && [ -d "$(profiles_dir "$core")" ]; then
+      echo "- Profiles Directory: OK"
+    else
+      echo "- Profiles Directory: Missing"
+    fi
+  fi
+}
+
+print_profiles() {
+  local verbose root core_result core profiles
+  verbose="$1"
+  root="$(framework_root)"
+  core_result="$(discover_core "$root")"
+  core="$(core_path_from_result "$core_result")"
+
+  if [ -z "$core" ]; then
+    echo "Core: Missing"
+    echo "Profiles: none"
+    return 1
+  fi
+
+  profiles="$(profiles_dir "$core")"
+  if [ ! -d "$profiles" ]; then
+    echo "Core: Found"
+    echo "Profiles Directory: Missing"
+    echo "Profiles: none"
+    return 1
+  fi
+
+  echo "Profiles:"
+  list_profiles_raw "$core" | awk '{ print "- " $0 }'
+
+  if [ "$verbose" = "1" ]; then
+    echo
+    echo "Profiles Path: $profiles"
+  fi
+}
+
+auto_profile() {
+  local verbose root core_result core cwd_name profile count selected
+  verbose="$1"
+  root="$(framework_root)"
+  core_result="$(discover_core "$root")"
+  core="$(core_path_from_result "$core_result")"
+  cwd_name="$(basename -- "$PWD")"
+  count=0
+  selected=""
+
+  if [ -z "$core" ]; then
+    echo "Core: Missing"
+    echo "Auto Profile: none"
+    echo "Reason: agent-core was not found"
+    return 1
+  fi
+
+  while IFS= read -r profile; do
+    [ -n "$profile" ] || continue
+    count=$((count + 1))
+    if [ "$profile" = "$cwd_name" ]; then
+      selected="$profile"
+    fi
+  done <<EOF
+$(list_profiles_raw "$core")
+EOF
+
+  if [ -n "$selected" ]; then
+    echo "Auto Profile: $selected"
+    echo "Reason: current directory name matches a discovered profile"
+  elif [ "$count" -eq 1 ]; then
+    selected="$(list_profiles_raw "$core")"
+    echo "Auto Profile: $selected"
+    echo "Reason: only one profile is available"
+  else
+    echo "Auto Profile: none"
+    echo "Reason: no unambiguous profile match"
+  fi
+
+  if [ "$verbose" = "1" ]; then
+    echo
+    echo "Current Directory: $PWD"
+    echo "Framework Path: $root"
+    echo "Core Path: $core"
+    echo "Profiles: $(list_profiles_raw "$core" | join_profiles)"
+  fi
+}
+
+parse_verbose() {
+  local verbose arg
+  verbose=0
+  for arg in "$@"; do
+    case "$arg" in
+      --verbose) verbose=1 ;;
+      *) die "unknown option: $arg" ;;
+    esac
+  done
+  printf '%s\n' "$verbose"
+}
+
+main() {
+  local command verbose
+  command="${1:-help}"
+  shift || true
+
+  case "$command" in
+    help|-h|--help)
+      usage
+      ;;
+    status)
+      verbose="$(parse_verbose "$@")"
+      print_status "$verbose"
+      ;;
+    list)
+      verbose="$(parse_verbose "$@")"
+      print_profiles "$verbose"
+      ;;
+    auto)
+      verbose="$(parse_verbose "$@")"
+      auto_profile "$verbose"
+      ;;
+    version)
+      echo "agent-init $VERSION"
+      ;;
+    *)
+      die "unknown command: $command"
+      ;;
+  esac
+}
+
+main "$@"
