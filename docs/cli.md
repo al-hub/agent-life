@@ -121,6 +121,8 @@ These commands remain planned but are not part of the current MVP:
 `status` reports the result. `list` and `auto` use the same discovery behavior.
 
 Local config is optional and read-only from the CLI. See `docs/config.md`.
+The discovery implementation is kept in an internal shell helper so observer
+commands resolve the same core path in the same environment.
 
 ## Option Policy
 

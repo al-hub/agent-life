@@ -271,6 +271,8 @@ agent-life/
   install.sh
   bin/
     agent-init
+  lib/
+    core-discovery.sh
   docs/
     architecture.md
     bootstrap.md

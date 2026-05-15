@@ -31,11 +31,12 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Document minimal remove/uninstall flow.
 - [x] Define optional local config semantics at `~/.agent-life/config`.
 - [x] Add `default-core-path` to core discovery as read-only local preference.
+- [x] Centralize core discovery in internal `lib/core-discovery.sh` helper.
+- [x] Reuse core discovery from `status`, `doctor`, `list`, `auto`, and
+      bootstrap guidance.
 
 ## Next
 
-- [ ] Add reusable core discovery helper using `AGENT_CORE_PATH`, config,
-      `../agent-core`, and `~/.agent-core`.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`

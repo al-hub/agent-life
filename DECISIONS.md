@@ -188,3 +188,19 @@ no JSON/YAML/TOML config system.
 
 Reason: local preferences improve onboarding without introducing runtime
 ownership, activation, session persistence, shell hooks, or hidden mutation.
+
+### 2026-05-16: Core discovery is centralized in an internal helper
+
+`agent-core` discovery semantics live in `lib/core-discovery.sh`, which is
+sourced by `agent-init` and `install.sh`.
+
+The helper preserves the existing order: `AGENT_CORE_PATH`,
+`~/.agent-life/config` key `default-core-path`, `../agent-core`, then
+`~/.agent-core`.
+
+It is a private implementation detail, not a generic framework abstraction,
+dynamic provider system, cache, state layer, activation mechanism, or plugin
+interface.
+
+Reason: `status`, `doctor`, `list`, `auto`, and bootstrap guidance should
+resolve the same core path in the same environment without duplicating logic.

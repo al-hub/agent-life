@@ -84,6 +84,7 @@ Avoid option-heavy commands unless there is a strong reason.
 - `agent-core` is not a submodule by default.
 - Discovery order is `AGENT_CORE_PATH`, `~/.agent-life/config`
   `default-core-path`, `../agent-core`, `~/.agent-core`.
+- Core discovery implementation lives in internal `lib/core-discovery.sh`.
 - `install.sh` should be safe to run repeatedly.
 - Bootstrap code must not print or persist secrets.
 

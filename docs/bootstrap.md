@@ -40,8 +40,9 @@ The bootstrap flow is intentionally small:
 3. Clone the framework when the target path is missing.
 4. Pull best-effort updates when the target path is an existing git checkout.
 5. Run lightweight validation.
-6. Print diagnostics-first manual next-step guidance.
-7. Exit.
+6. Report current core discovery using the same internal helper as `agent-init`.
+7. Print diagnostics-first manual next-step guidance.
+8. Exit.
 
 Existing installs are updated with `git pull --ff-only`. If the pull fails, the
 installer leaves the checkout in place and asks the user to inspect it manually.

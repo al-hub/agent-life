@@ -161,6 +161,9 @@ constraints.
 
 `docs/runtime-lifecycle.md` defines conceptual lifecycle vocabulary.
 
+`lib/core-discovery.sh` is an internal shell helper for consistent
+`agent-core` discovery. It is not a plugin system or public extension layer.
+
 ## Boundary Rules
 
 - Public repo code may know how to find `agent-core`.

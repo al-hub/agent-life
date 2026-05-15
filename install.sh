@@ -32,6 +32,7 @@ Behavior:
   - clones agent-life when the target path is missing
   - pulls best-effort updates when the target path is an existing git checkout
   - validates the lightweight framework files
+  - reports current core discovery
   - prints diagnostics-first manual next steps
 
 It does not edit PATH, shell rc files, aliases, symlinks, runtime state, or
@@ -123,7 +124,39 @@ validate_install() {
     missing=1
   fi
 
+  if [[ -r "$install_dir/lib/core-discovery.sh" ]]; then
+    log "[OK] core discovery helper found"
+  else
+    log "[WARN] core discovery helper missing"
+    missing=1
+  fi
+
   return "$missing"
+}
+
+print_core_discovery_preview() {
+  local install_dir helper core_result core core_source
+  install_dir="$1"
+  helper="$install_dir/lib/core-discovery.sh"
+
+  [[ -r "$helper" ]] || return 0
+
+  # shellcheck source=/dev/null
+  . "$helper"
+
+  core_result="$(agent_life_discover_core "$install_dir")"
+  core="$(agent_life_core_path_from_result "$core_result")"
+  core_source="$(agent_life_core_source_from_result "$core_result")"
+
+  log "Current core discovery:"
+  if [[ -n "$core" ]]; then
+    log "  Source: $core_source"
+    log "  Path: $core"
+  else
+    log "  Source: $core_source"
+    log "  Path: not found"
+  fi
+  log
 }
 
 print_next_steps() {
@@ -135,6 +168,7 @@ print_next_steps() {
   log
   log "Framework path: $install_dir"
   log
+  print_core_discovery_preview "$install_dir"
   log "Manual next steps:"
   log "  1. Run diagnostics first:"
   log "     $install_dir/bin/agent-init doctor"

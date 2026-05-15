@@ -64,6 +64,10 @@ Current runtime behavior does not depend on these keys.
 
 `AGENT_CORE_PATH` remains the most explicit per-command override.
 
+This order is implemented by an internal shell helper shared by `agent-init` and
+the bootstrap script. The helper is a private implementation detail, not a
+dynamic provider or plugin system.
+
 ## Create Manually
 
 The bootstrap script does not create config files.

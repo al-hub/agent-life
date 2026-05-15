@@ -175,3 +175,17 @@ Local config semantics step completed:
   `current-profile` writes, daemon/watcher, runtime activation, shell hooks,
   AGENTS semantic parsing, tmux/session config, or runtime/session persistence
   semantics.
+
+Core discovery helper step completed:
+
+- Added internal `lib/core-discovery.sh`.
+- Moved core discovery, local config lookup, `~` expansion, result parsing, and
+  discovery reasoning rows into the helper.
+- Updated `agent-init status`, `doctor`, `list`, and `auto` to use the helper.
+- Updated `install.sh` to validate the helper and print current core discovery
+  after clone/update using the same implementation.
+- Preserved discovery order exactly: `AGENT_CORE_PATH`, config
+  `default-core-path`, `../agent-core`, then `~/.agent-core`.
+- Kept the helper private and small: no provider/plugin system, generic
+  framework layer, hidden cache/state, activation, shell mutation,
+  `current-profile` writes, daemon/watcher, or AGENTS semantic parsing.
