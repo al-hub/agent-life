@@ -104,3 +104,13 @@ and `stock` remain semantic placeholders until activation behavior is designed.
 
 Reason: command meaning should be stable before adding shell activation, tmux,
 session restore, state persistence, RAG, or LLM integration.
+
+### 2026-05-16: Shell ownership boundary is explicit
+
+`agent-init` is currently a child-process CLI that inspects and recommends. It
+does not mutate the parent shell. Activation, attach, and switch semantics remain
+unimplemented and intentionally unresolved.
+
+Reason: a child process cannot directly change parent shell `cwd`, environment,
+aliases, functions, or prompt. Future source/eval or shell-wrapper behavior must
+be designed explicitly before implementation.

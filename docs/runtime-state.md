@@ -108,6 +108,9 @@ The MVP does not:
 - Source shell files
 - Mutate environment variables
 
+Shell ownership and future activation constraints are documented in
+`docs/shell-boundary.md`.
+
 ## Design Principles
 
 - Repo markdown is persistent memory/context.

@@ -85,3 +85,13 @@ Runtime semantics step completed:
   placeholders only.
 - Confirmed current commands remain inspection/discovery focused; `auto`
   recommends but does not activate, switch, attach, or write state.
+
+Shell boundary step completed:
+
+- Added `docs/shell-boundary.md`.
+- Documented the child process limitation: plain `agent-init` commands cannot
+  mutate parent shell `cwd`, environment, aliases, functions, or prompt.
+- Clarified activate, attach, and switch as future unimplemented semantics.
+- Kept source/eval activation as a future possibility, not a committed API.
+- Confirmed the current CLI is an inspector/recommender, not a runtime
+  controller.

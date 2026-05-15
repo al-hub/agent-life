@@ -114,6 +114,10 @@ shell
 
 The runtime should prefer explicit, inspectable files over hidden state.
 
+The user's shell owns its own `cwd`, environment, aliases, functions, and prompt.
+Plain `agent-init` child processes cannot mutate that parent shell state. Future
+activation must account for this process boundary explicitly.
+
 ## Persistent Context Files
 
 `README.md` describes the public framework.
@@ -133,6 +137,9 @@ The runtime should prefer explicit, inspectable files over hidden state.
 `docs/runtime-state.md` defines the local ephemeral state model.
 
 `docs/command-semantics.md` defines current command behavior.
+
+`docs/shell-boundary.md` defines process boundaries and future activation
+constraints.
 
 ## Boundary Rules
 

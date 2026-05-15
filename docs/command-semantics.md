@@ -19,6 +19,9 @@ It does not implement activation, attach, switch, shell mutation, tmux
 orchestration, session restore, state synchronization, AGENTS.md semantic
 parsing, RAG, or LLM integration.
 
+See `docs/shell-boundary.md` for why plain child-process commands cannot mutate
+the parent shell.
+
 ## Command Table
 
 ```text
@@ -112,6 +115,7 @@ Current stage:
 - Not implemented.
 - Not a shell activation command.
 - Not a session restore command.
+- Does not define `current-profile` write behavior yet.
 
 ### `agent-init stock`
 
@@ -128,6 +132,7 @@ Current stage:
 - Not a trading engine.
 - Not a shell activation command.
 - Not a session restore command.
+- Does not define `current-profile` write behavior yet.
 
 ## State Policy
 

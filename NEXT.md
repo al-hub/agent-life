@@ -17,6 +17,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Add minimal public sample profiles for `develop` and `stock`.
 - [x] Define runtime state model.
 - [x] Define command semantics for MVP and future placeholders.
+- [x] Define shell boundary and future activation constraints.
 
 ## Next
 
@@ -29,6 +30,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Add tests for `agent-init` command output.
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
+- [ ] Decide whether activation should use source/eval, wrapper functions, or a
+      separate controller command.
 
 ## Later
 

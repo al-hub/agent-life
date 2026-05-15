@@ -127,6 +127,8 @@ The MVP does not implement:
 - session restore
 - environment activation
 
+Shell/process ownership details are documented in `docs/shell-boundary.md`.
+
 ## Profile Contract
 
 See `docs/profile-contract.md`.

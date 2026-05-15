@@ -38,6 +38,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.
 - `docs/command-semantics.md` defines current command behavior.
+- `docs/shell-boundary.md` defines the process and shell ownership boundary.
 
 The goal is not to store full transcripts. The goal is to preserve enough
 structured context for a future agent session to continue work without guessing.
@@ -55,6 +56,17 @@ State is ephemeral runtime data. It belongs outside public git history:
 
 Current MVP commands may report the state path, but they do not activate
 profiles, restore sessions, mutate shell environment, or write `current-profile`.
+
+## Shell Boundary
+
+`agent-init` currently inspects and recommends. It is not a runtime controller.
+
+A child process cannot directly mutate the parent shell's `cwd`, environment,
+aliases, functions, or prompt. Future activation may require explicit
+shell-owned `source` or `eval` behavior, but that API is intentionally
+unresolved.
+
+The current CLI performs no hidden shell mutation.
 
 ## CLI Direction
 
@@ -145,6 +157,7 @@ agent-life/
     command-semantics.md
     profile-contract.md
     runtime-state.md
+    shell-boundary.md
   profiles/
     develop/
     stock/
