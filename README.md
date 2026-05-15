@@ -34,6 +34,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `DECISIONS.md` records durable architecture decisions.
 - `NEXT.md` lists the next concrete actions.
 - `docs/architecture.md` explains the runtime model.
+- `docs/bootstrap.md` defines external bootstrap and install semantics.
 - `docs/cli.md` defines the `agent-init` command surface.
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.
@@ -133,8 +134,42 @@ Deferred:
 3. `../agent-core`
 4. `~/.agent-core`
 
-The initial `install.sh` only checks and reports this connection. It does not
-clone private repositories, write secrets, or install private memory.
+`install.sh` installs only the public framework checkout. It does not clone
+private repositories, write secrets, install private memory, or activate
+profiles.
+
+## Bootstrap
+
+`install.sh` is a lightweight bootstrap fetcher for the public framework. It can
+be run from an existing checkout or through a `curl | bash` flow.
+
+Default install location:
+
+```text
+~/.agent-life/framework
+```
+
+Recommended external bootstrap shape:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh | bash
+```
+
+Bootstrap behavior:
+
+- checks that `git` exists
+- prints the target clone/update path
+- clones the framework when the target path is missing
+- runs a best-effort `git pull --ff-only` when the target is an existing
+  checkout
+- performs lightweight validation
+- prints manual next-step guidance
+
+The installer does not edit `PATH`, shell rc files, aliases, symlinks, runtime
+state, `current-profile`, tmux, daemons, watchers, or profile activation. PATH
+or symlink integration is shown only as manual guidance.
+
+See `docs/bootstrap.md` for the full bootstrap contract.
 
 ## Profiles
 
@@ -171,6 +206,7 @@ agent-life/
     agent-init
   docs/
     architecture.md
+    bootstrap.md
     cli.md
     command-semantics.md
     profile-contract.md
@@ -190,16 +226,13 @@ completions/
   agent-init.zsh
 ```
 
-## Bootstrap
+## Local Usage
 
-Run the current bootstrap check:
+Run the bootstrap fetcher:
 
 ```sh
 ./install.sh
 ```
-
-It verifies the repo root, checks likely `agent-core` paths, and prints next
-steps for installing `agent-init` when the CLI exists.
 
 Run the MVP CLI directly:
 

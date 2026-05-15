@@ -124,10 +124,32 @@ Before adding any source or eval workflow, the project should decide:
 - The user's shell owns its `cwd`, environment, aliases, functions, and prompt.
 - `agent-init` must not pretend to mutate parent shell state from a child
   process.
+- `install.sh` must not take shell or runtime ownership during bootstrap.
 - Shell rc files must not be modified automatically.
 - PATH must not be overwritten automatically.
+- Aliases must not be injected automatically.
+- Symlinks must not be created automatically.
 - Shell hooks must require explicit user action.
 - Future activation semantics must be documented before implementation.
+
+## Install Is Not Activation
+
+`install.sh` may clone or update the public framework checkout and print manual
+next steps.
+
+It must not:
+
+- activate a profile
+- write `current-profile`
+- edit shell startup files
+- modify PATH
+- inject aliases
+- start daemons or watchers
+- attach to tmux
+- perform background self-update behavior
+
+Any PATH or symlink integration belongs in explicit user-owned next-step
+guidance, not hidden installer behavior.
 
 ## Design Principles
 

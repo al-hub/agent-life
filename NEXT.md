@@ -21,12 +21,18 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Define conceptual runtime lifecycle vocabulary.
 - [x] Implement `agent-init doctor` as diagnostics-only observer.
 - [x] Normalize lightweight CLI diagnostic output.
+- [x] Support `curl | bash` bootstrap flow for public framework install.
+- [x] Define repo-external bootstrap semantics.
+- [x] Set default install location to `~/.agent-life/framework`.
+- [x] Keep install as fetch/update guidance, not runtime activation.
 
 ## Next
 
 - [ ] Add reusable core discovery helper using `AGENT_CORE_PATH`, config,
       `../agent-core`, and `~/.agent-core`.
 - [ ] Decide config filename and schema for public bootstrap settings.
+- [ ] Decide the canonical public raw `install.sh` URL after repository remote
+      is final.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Add tests for `agent-init` command output.

@@ -141,3 +141,25 @@ Verbose output may add discovery reasoning, but it must not change behavior.
 
 Reason: current commands are observer/recommender tools, not a stable
 machine-readable protocol or runtime control plane.
+
+### 2026-05-16: Bootstrap installs the public framework only
+
+`install.sh` supports external `curl | bash` execution by cloning or updating the
+public `agent-life` framework checkout at `~/.agent-life/framework`.
+
+Install means fetch/update and lightweight validation. It does not mean runtime
+activation, shell ownership, PATH mutation, shell rc modification, alias
+injection, symlink creation, `current-profile` writes, daemon startup, tmux
+integration, AGENTS semantic parsing, or profile activation.
+
+Reason: bootstrap ergonomics should improve without turning install into a
+runtime controller or hidden shell mutation mechanism.
+
+### 2026-05-16: Bootstrap update semantics are best-effort and reversible
+
+Existing installs are handled with a lightweight `git pull --ff-only` when the
+target path is already a git checkout. Failures leave the checkout in place and
+ask the user to inspect manually.
+
+Reason: reinstall/update behavior should remain deterministic, transparent,
+idempotent, and easy to reverse by removing `~/.agent-life/framework`.

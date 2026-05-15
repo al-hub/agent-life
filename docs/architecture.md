@@ -74,9 +74,9 @@ The state layer is not a substitute for durable AI memory. Durable public memory
 belongs in markdown files in `agent-life`; durable private memory belongs in
 `agent-core`.
 
-## Default Layout
+## Repository Layout
 
-Use sibling repositories:
+For active development, sibling repositories are the preferred layout:
 
 ```text
 ~/workspace/
@@ -86,6 +86,17 @@ Use sibling repositories:
 
 `agent-core` is not a submodule by default. Submodule support may exist later as
 an advanced mode, but the default runtime should work through path discovery.
+
+## Bootstrap Install Location
+
+The default bootstrap install location for the public framework is:
+
+```text
+~/.agent-life/framework
+```
+
+This location is user-local and reversible. Removing that directory removes the
+public framework checkout installed by the bootstrap flow.
 
 ## Core Discovery
 
@@ -132,6 +143,8 @@ activation must account for this process boundary explicitly.
 
 `docs/cli.md` defines the CLI contract.
 
+`docs/bootstrap.md` defines external bootstrap and install semantics.
+
 `docs/profile-contract.md` defines the lightweight profile workspace convention.
 
 `docs/runtime-state.md` defines the local ephemeral state model.
@@ -151,7 +164,10 @@ constraints.
 - Public docs must not include personal profile content.
 - Public sample profiles must stay minimal and non-sensitive.
 - Bootstrap commands should be safe to run repeatedly.
+- Bootstrap commands may clone or update only the public framework checkout.
 - Private repo access failures should produce clear recovery instructions.
+- Install must not imply runtime activation, shell ownership, or hidden
+  mutation.
 
 ## Profile Workspaces
 

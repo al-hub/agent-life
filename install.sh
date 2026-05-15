@@ -1,65 +1,185 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-main() {
-  local script_dir repo_root core_path core_source
+DEFAULT_REPO_URL="https://github.com/al-hub/agent-life.git"
+DEFAULT_INSTALL_DIR="$HOME/.agent-life/framework"
 
-  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-  repo_root="$script_dir"
+log() {
+  printf '%s\n' "$*"
+}
 
-  if ! git -C "$repo_root" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "agent-life: not inside a git repository: $repo_root" >&2
-    exit 1
-  fi
+fail() {
+  printf 'agent-life: %s\n' "$*" >&2
+  exit 1
+}
 
-  repo_root="$(git -C "$repo_root" rev-parse --show-toplevel)"
+usage() {
+  cat <<EOF_USAGE
+agent-life bootstrap
 
-  echo "agent-life bootstrap"
-  echo
-  echo "agent-life: $repo_root"
+Usage:
+  ./install.sh
+  curl -fsSL <install.sh-url> | bash
 
-  if [[ -n "${AGENT_CORE_PATH:-}" ]]; then
-    core_path="$AGENT_CORE_PATH"
-    core_source="AGENT_CORE_PATH"
-  elif [[ -d "$repo_root/../agent-core" ]]; then
-    core_path="$(cd "$repo_root/../agent-core" && pwd)"
-    core_source="sibling"
-  elif [[ -d "$HOME/.agent-core" ]]; then
-    core_path="$HOME/.agent-core"
-    core_source="home"
-  else
-    core_path=""
-    core_source="missing"
-  fi
+Environment:
+  AGENT_LIFE_REPO_URL      Repository URL to clone when no install exists.
+                            Default: $DEFAULT_REPO_URL
+  AGENT_LIFE_INSTALL_DIR   Install target path.
+                            Default: $DEFAULT_INSTALL_DIR
 
-  if [[ -n "$core_path" ]]; then
-    echo "agent-core: $core_path"
-    echo "core source: $core_source"
+Behavior:
+  - checks for git
+  - clones agent-life when the target path is missing
+  - pulls best-effort updates when the target path is an existing git checkout
+  - validates the lightweight framework files
+  - prints manual next steps
 
-    if git -C "$core_path" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      echo "core git repo: yes"
+It does not edit PATH, shell rc files, aliases, symlinks, runtime state, or
+profile activation state.
+EOF_USAGE
+}
+
+abs_parent() {
+  local path parent
+  path="$1"
+  parent="$(dirname -- "$path")"
+  mkdir -p -- "$parent"
+  (cd -- "$parent" && pwd)
+}
+
+resolve_install_dir() {
+  local requested parent base
+  requested="${AGENT_LIFE_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+
+  case "$requested" in
+    ~) requested="$HOME" ;;
+    ~/*) requested="$HOME/${requested#~/}" ;;
+  esac
+
+  parent="$(abs_parent "$requested")"
+  base="$(basename -- "$requested")"
+  printf '%s/%s\n' "$parent" "$base"
+}
+
+clone_or_update() {
+  local repo_url install_dir
+  repo_url="$1"
+  install_dir="$2"
+
+  if [[ -d "$install_dir/.git" ]]; then
+    log "[INFO] Existing install found"
+    log "       Path: $install_dir"
+    log "[INFO] Updating existing checkout"
+    if git -C "$install_dir" pull --ff-only; then
+      log "[OK] Update complete"
     else
-      echo "core git repo: no"
+      log "[WARN] Update skipped or failed"
+      log "       Existing checkout was left in place. Inspect manually: $install_dir"
     fi
-  else
-    echo "agent-core: not found"
-    echo "core source: $core_source"
-    echo
-    echo "Create or clone private agent-core as a sibling repo:"
-    echo "  $(dirname "$repo_root")/agent-core"
-    echo
-    echo "Or set AGENT_CORE_PATH to an existing private core path."
+    return 0
   fi
 
-  echo
-
-  if [[ -x "$repo_root/bin/agent-init" ]]; then
-    echo "agent-init: found at $repo_root/bin/agent-init"
-    echo "next: add $repo_root/bin to PATH or symlink agent-init into ~/.local/bin"
-  else
-    echo "agent-init: not installed yet"
-    echo "next: create bin/agent-init, then rerun this bootstrap check"
+  if [[ -e "$install_dir" ]]; then
+    fail "target exists but is not a git checkout: $install_dir"
   fi
+
+  log "[INFO] Cloning framework"
+  log "       Repo: $repo_url"
+  log "       Path: $install_dir"
+  git clone "$repo_url" "$install_dir"
+  log "[OK] Clone complete"
+}
+
+validate_install() {
+  local install_dir missing
+  install_dir="$1"
+  missing=0
+
+  log "[INFO] Validating framework"
+
+  if [[ -f "$install_dir/install.sh" ]]; then
+    log "[OK] install.sh found"
+  else
+    log "[WARN] install.sh missing"
+    missing=1
+  fi
+
+  if [[ -x "$install_dir/bin/agent-init" ]]; then
+    log "[OK] agent-init found"
+    log "     Path: $install_dir/bin/agent-init"
+  elif [[ -f "$install_dir/bin/agent-init" ]]; then
+    log "[WARN] agent-init exists but is not executable"
+    log "       Path: $install_dir/bin/agent-init"
+    missing=1
+  else
+    log "[WARN] agent-init missing"
+    missing=1
+  fi
+
+  if [[ -f "$install_dir/README.md" ]]; then
+    log "[OK] README.md found"
+  else
+    log "[WARN] README.md missing"
+    missing=1
+  fi
+
+  return "$missing"
+}
+
+print_next_steps() {
+  local install_dir
+  install_dir="$1"
+
+  log
+  log "agent-life bootstrap complete"
+  log
+  log "Framework path: $install_dir"
+  log
+  log "Manual next steps:"
+  log "  Run status directly:"
+  log "    $install_dir/bin/agent-init status"
+  log
+  log "  Optional PATH integration, if you choose to own it in your shell config:"
+  log "    export PATH=\"$install_dir/bin:\$PATH\""
+  log
+  log "  Optional symlink, if you choose to manage it yourself:"
+  log "    mkdir -p ~/.local/bin"
+  log "    ln -sfn $install_dir/bin/agent-init ~/.local/bin/agent-init"
+  log
+  log "No PATH, shell rc, alias, symlink, runtime state, or profile activation changes were made."
+}
+
+main() {
+  local repo_url install_dir
+
+  if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+    usage
+    exit 0
+  fi
+
+  repo_url="${AGENT_LIFE_REPO_URL:-$DEFAULT_REPO_URL}"
+  install_dir="$(resolve_install_dir)"
+
+  log "agent-life bootstrap"
+  log
+  log "[INFO] Install target"
+  log "       Path: $install_dir"
+  log "[INFO] Repository"
+  log "       URL: $repo_url"
+
+  if ! command -v git >/dev/null 2>&1; then
+    fail "git is required for clone/update bootstrap"
+  fi
+  log "[OK] git found"
+
+  clone_or_update "$repo_url" "$install_dir"
+
+  if ! validate_install "$install_dir"; then
+    log "[WARN] Lightweight validation reported issues"
+    log "       The checkout remains available for manual inspection."
+  fi
+
+  print_next_steps "$install_dir"
 }
 
 main "$@"

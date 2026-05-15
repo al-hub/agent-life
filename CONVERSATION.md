@@ -124,3 +124,21 @@ CLI output refinement step completed:
   machine-readable protocol.
 - Kept commands mutation-free: no activation, repair, shell mutation, state
   writes, sync, tmux, daemon, or lifecycle state machine.
+
+Bootstrap ergonomics step completed:
+
+- Reworked `install.sh` into a lightweight public framework bootstrap fetcher.
+- Added support for repo-external execution and `curl | bash` style usage.
+- Set default install location to `~/.agent-life/framework`.
+- Installer checks for `git`, prints the clone/update target path, clones when
+  missing, and performs best-effort `git pull --ff-only` for existing git
+  checkouts.
+- Added lightweight validation for `install.sh`, `bin/agent-init`, and
+  `README.md`.
+- Installer prints manual next-step guidance only.
+- Explicitly preserved boundaries: no PATH mutation, shell rc modification,
+  alias injection, automatic symlink creation, `current-profile` writes, daemon
+  or watcher, auto activation, tmux integration, AGENTS semantic parsing, or
+  hidden shell/runtime ownership.
+- Added `docs/bootstrap.md` and updated README/architecture/shell-boundary
+  docs plus durable decision and next-action files.
