@@ -25,6 +25,9 @@ the parent shell.
 See `docs/runtime-lifecycle.md` for lifecycle vocabulary and current/future
 stage boundaries.
 
+CLI output is human-oriented diagnostics. `[OK]`, `[WARN]`, and `[INFO]` are
+plain-text labels, not a stable machine interface.
+
 ## Command Table
 
 ```text
@@ -110,6 +113,7 @@ Current behavior:
 It does not repair, activate, switch, sync, write runtime state, mutate shell
 state, or start orchestration. Warnings are best-effort diagnostics and do not
 always mean runtime failure. No strict exit-code contract is defined yet.
+Verbose output adds reasoning only and does not change behavior.
 
 ### `agent-init version`
 

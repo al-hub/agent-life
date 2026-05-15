@@ -112,6 +112,9 @@ MVP scope:
 - `doctor` reports best-effort diagnostics without changing runtime state.
 - `version` prints the CLI version.
 
+CLI output is plain text for humans. `[OK]`, `[WARN]`, and `[INFO]` prefixes are
+diagnostic labels, not a stable machine-readable protocol.
+
 Deferred:
 
 - tmux orchestration

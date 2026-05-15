@@ -13,6 +13,8 @@ private core, local state, and discovered profiles.
 - Complex behavior belongs in config files.
 - Output should be readable by humans and useful to AI agents.
 - Failures should explain the next concrete fix.
+- `[OK]`, `[WARN]`, and `[INFO]` are human diagnostic labels, not a stable
+  machine-readable protocol.
 
 ## Commands
 
@@ -42,14 +44,14 @@ Expected behavior:
 Expected output:
 
 ```text
-Framework: OK
-Framework Path: /path/to/agent-life
-Core: Found
-Core Path: /path/to/agent-core
-Core Source: sibling
-State: Local
-State Path: /home/user/.local/state/agent-life
-Profiles: develop, stock, faith
+[OK] Framework detected
+     Path: /path/to/agent-life
+[OK] Core path found
+     Path: /path/to/agent-core
+     Source: sibling
+[INFO] State path
+     Path: /home/user/.local/state/agent-life
+[OK] Profiles: develop, stock, faith
 ```
 
 ### `agent-init list`
@@ -89,6 +91,7 @@ Expected behavior:
 - Check profile discovery.
 - Check state path accessibility without creating it.
 - Report shell type as informational only.
+- In verbose mode, print reasoning about discovery paths.
 
 `doctor` does not repair, activate, switch, sync, write `current-profile`, mutate
 the shell, or start orchestration. Warnings are informational and do not always
@@ -165,3 +168,9 @@ See `docs/runtime-state.md`.
 The CLI may report `~/.local/state/agent-life`, but current MVP commands should
 not persist runtime state. `current-profile`, `last-context`, `sessions/`, and
 `cache/` are documented future placeholders, not active runtime requirements.
+
+## Verbose Output
+
+Verbose output adds reasoning and diagnostic details only. It must not change
+runtime behavior, write files, repair state, activate profiles, or mutate the
+shell.

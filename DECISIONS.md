@@ -133,3 +133,11 @@ switching, syncing, or writing runtime state.
 
 Reason: diagnostics are useful now, but runtime ownership and activation
 semantics remain intentionally unresolved.
+
+### 2026-05-16: CLI output is human-oriented diagnostics
+
+`agent-init` uses plain `[OK]`, `[WARN]`, and `[INFO]` labels for readability.
+Verbose output may add discovery reasoning, but it must not change behavior.
+
+Reason: current commands are observer/recommender tools, not a stable
+machine-readable protocol or runtime control plane.

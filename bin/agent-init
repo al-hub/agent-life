@@ -122,6 +122,37 @@ profile_count() {
   awk 'NF { count += 1 } END { printf "%d", count }'
 }
 
+say() {
+  local level message
+  level="$1"
+  message="$2"
+  printf '[%s] %s\n' "$level" "$message"
+}
+
+detail() {
+  printf '     %s\n' "$1"
+}
+
+warn_detail() {
+  printf '       %s\n' "$1"
+}
+
+print_core_discovery_reasoning() {
+  local root
+  root="$1"
+
+  say "INFO" "Checking AGENT_CORE_PATH"
+  if [ -n "${AGENT_CORE_PATH:-}" ]; then
+    detail "Value: $AGENT_CORE_PATH"
+  fi
+
+  say "INFO" "Checking sibling ../agent-core"
+  detail "Path: $root/../agent-core"
+
+  say "INFO" "Checking home ~/.agent-core"
+  detail "Path: $HOME/.agent-core"
+}
+
 print_status() {
   local verbose root state core_result core core_source profiles joined
   verbose="$1"
@@ -132,68 +163,97 @@ print_status() {
   core_source="$(core_source_from_result "$core_result")"
   joined="$(list_profiles_raw "$core" | join_profiles)"
 
-  echo "Framework: OK"
-  echo "Framework Path: $root"
+  say "OK" "Framework detected"
+  detail "Path: $root"
 
   if [ -n "$core" ]; then
-    echo "Core: Found"
-    echo "Core Path: $core"
-    echo "Core Source: $core_source"
+    say "OK" "Core path found"
+    detail "Path: $core"
+    detail "Source: $core_source"
   else
-    echo "Core: Missing"
-    echo "Core Source: $core_source"
+    say "WARN" "Core path not found"
+    warn_detail "Source: $core_source"
   fi
 
-  echo "State: Local"
-  echo "State Path: $state"
-  echo "Profiles: $joined"
+  say "INFO" "State path"
+  detail "Path: $state"
+
+  if [ "$joined" = "none" ]; then
+    say "WARN" "Profiles: none"
+  else
+    say "OK" "Profiles: $joined"
+  fi
 
   if [ "$verbose" = "1" ]; then
     echo
-    echo "Checks:"
+    echo "Reasoning:"
+    print_core_discovery_reasoning "$root"
+
+    echo
+    echo "Diagnostics:"
     if [ -n "$core" ] && git -C "$core" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      echo "- Core Git Repo: OK"
+      say "OK" "Core git repository detected"
     elif [ -n "$core" ]; then
-      echo "- Core Git Repo: Not a git repo"
+      say "WARN" "Core path is not a git repository"
     else
-      echo "- Core Git Repo: Missing"
+      say "WARN" "Core git repository unavailable"
     fi
 
     if [ -n "$core" ] && [ -d "$(profiles_dir "$core")" ]; then
-      echo "- Profiles Directory: OK"
+      say "OK" "Profiles directory found"
+      detail "Path: $(profiles_dir "$core")"
     else
-      echo "- Profiles Directory: Missing"
+      say "WARN" "Profiles directory missing"
+      say "INFO" "Public sample profiles are ignored for runtime discovery"
     fi
   fi
 }
 
 print_profiles() {
-  local verbose root core_result core profiles
+  local verbose root core_result core profiles joined count
   verbose="$1"
   root="$(framework_root)"
   core_result="$(discover_core "$root")"
   core="$(core_path_from_result "$core_result")"
 
   if [ -z "$core" ]; then
-    echo "Core: Missing"
-    echo "Profiles: none"
+    say "WARN" "Core path not found"
+    say "WARN" "Profiles: none"
+    if [ "$verbose" = "1" ]; then
+      echo
+      echo "Reasoning:"
+      print_core_discovery_reasoning "$root"
+      say "INFO" "Public sample profiles are ignored for runtime discovery"
+    fi
     return 1
   fi
 
   profiles="$(profiles_dir "$core")"
   if [ ! -d "$profiles" ]; then
-    echo "Core: Found"
-    echo "Profiles Directory: Missing"
-    echo "Profiles: none"
+    say "OK" "Core path found"
+    detail "Path: $core"
+    say "WARN" "Profiles directory missing"
+    say "WARN" "Profiles: none"
     return 1
   fi
 
-  echo "Profiles:"
-  list_profiles_raw "$core" | awk '{ print "- " $0 }'
+  joined="$(list_profiles_raw "$core" | join_profiles)"
+  count="$(list_profiles_raw "$core" | profile_count)"
+
+  if [ "$count" -gt 0 ]; then
+    say "OK" "Profiles discovered: $joined"
+    list_profiles_raw "$core" | awk '{ print "     - " $0 }'
+  else
+    say "WARN" "No runtime profiles discovered"
+  fi
 
   if [ "$verbose" = "1" ]; then
     echo
-    echo "Profiles Path: $profiles"
+    echo "Reasoning:"
+    print_core_discovery_reasoning "$root"
+    say "INFO" "Runtime profiles directory"
+    detail "Path: $profiles"
+    say "INFO" "Public sample profiles are ignored for runtime discovery"
   fi
 }
 
@@ -208,9 +268,9 @@ auto_profile() {
   selected=""
 
   if [ -z "$core" ]; then
-    echo "Core: Missing"
-    echo "Auto Profile: none"
-    echo "Reason: agent-core was not found"
+    say "WARN" "Core path not found"
+    say "INFO" "Auto Profile: none"
+    say "INFO" "Reason: agent-core was not found"
     return 1
   fi
 
@@ -225,23 +285,28 @@ $(list_profiles_raw "$core")
 EOF
 
   if [ -n "$selected" ]; then
-    echo "Auto Profile: $selected"
-    echo "Reason: current directory name matches a discovered profile"
+    say "OK" "Auto Profile: $selected"
+    say "INFO" "Reason: current directory name matches a discovered profile"
   elif [ "$count" -eq 1 ]; then
     selected="$(list_profiles_raw "$core")"
-    echo "Auto Profile: $selected"
-    echo "Reason: only one profile is available"
+    say "OK" "Auto Profile: $selected"
+    say "INFO" "Reason: only one profile is available"
   else
-    echo "Auto Profile: none"
-    echo "Reason: no unambiguous profile match"
+    say "INFO" "Auto Profile: none"
+    say "INFO" "Reason: no unambiguous profile match"
   fi
 
   if [ "$verbose" = "1" ]; then
     echo
-    echo "Current Directory: $PWD"
-    echo "Framework Path: $root"
-    echo "Core Path: $core"
-    echo "Profiles: $(list_profiles_raw "$core" | join_profiles)"
+    echo "Reasoning:"
+    say "INFO" "Current directory"
+    detail "Path: $PWD"
+    say "INFO" "Framework path"
+    detail "Path: $root"
+    say "INFO" "Core path"
+    detail "Path: $core"
+    say "INFO" "Runtime profiles"
+    detail "Profiles: $(list_profiles_raw "$core" | join_profiles)"
   fi
 }
 
@@ -263,75 +328,86 @@ print_doctor() {
   echo
 
   if [ -d "$root" ] && [ -f "$root/README.md" ]; then
-    echo "[OK] Framework detected"
+    say "OK" "Framework detected"
     if [ "$verbose" = "1" ]; then
-      echo "     Path: $root"
+      detail "Path: $root"
     fi
   else
-    echo "[WARN] Framework root is incomplete"
+    say "WARN" "Framework root is incomplete"
     if [ "$verbose" = "1" ]; then
-      echo "       Path: $root"
+      warn_detail "Path: $root"
     fi
   fi
 
   if command -v git >/dev/null 2>&1; then
-    echo "[OK] git command found"
+    say "OK" "git command found"
   else
-    echo "[WARN] git command not found"
+    say "WARN" "git command not found"
   fi
 
   if [ -n "${AGENT_CORE_PATH:-}" ]; then
-    echo "[INFO] AGENT_CORE_PATH set"
+    say "INFO" "AGENT_CORE_PATH set"
     if [ "$verbose" = "1" ]; then
-      echo "       Value: $AGENT_CORE_PATH"
+      detail "Value: $AGENT_CORE_PATH"
     fi
   else
-    echo "[WARN] AGENT_CORE_PATH not set"
+    say "WARN" "AGENT_CORE_PATH not set"
+  fi
+
+  if [ "$verbose" = "1" ]; then
+    echo
+    echo "Reasoning:"
+    print_core_discovery_reasoning "$root"
+    echo
+    echo "Diagnostics:"
   fi
 
   if [ -n "$core" ]; then
-    echo "[OK] Core path found"
+    say "OK" "Core path found"
     if [ "$verbose" = "1" ]; then
-      echo "     Path: $core"
-      echo "     Source: $core_source"
+      detail "Path: $core"
+      detail "Source: $core_source"
     fi
 
     if git -C "$core" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      echo "[OK] Core repository detected"
+      say "OK" "Core repository detected"
     else
-      echo "[WARN] Core path is not a git repository"
+      say "WARN" "Core path is not a git repository"
     fi
   else
-    echo "[WARN] Core path not found"
+    say "WARN" "Core path not found"
   fi
 
   if [ "$count" -gt 0 ]; then
-    echo "[OK] Profiles discovered: $joined"
+    say "OK" "Profiles discovered: $joined"
   elif [ -n "$core" ]; then
-    echo "[WARN] No profiles discovered"
+    say "WARN" "No runtime profiles discovered"
   else
-    echo "[WARN] Profile discovery unavailable"
+    say "WARN" "Profile discovery unavailable"
+    if [ "$verbose" = "1" ]; then
+      say "INFO" "Public sample profiles are ignored for runtime discovery"
+    fi
   fi
 
   if [ -d "$state" ]; then
     if [ -r "$state" ] && [ -w "$state" ]; then
-      echo "[OK] State directory accessible"
+      say "OK" "State directory accessible"
     else
-      echo "[WARN] State directory exists but may not be readable/writable"
+      say "WARN" "State directory exists but may not be readable/writable"
     fi
   elif [ -d "$state_parent" ] && [ -w "$state_parent" ]; then
-    echo "[OK] State parent directory writable"
+    say "OK" "State parent directory writable"
     if [ "$verbose" = "1" ]; then
-      echo "     State Path: $state"
+      detail "State Path: $state"
     fi
   else
-    echo "[WARN] State directory not present"
+    say "WARN" "State directory not present"
     if [ "$verbose" = "1" ]; then
-      echo "       State Path: $state"
+      warn_detail "State Path: $state"
     fi
   fi
 
-  echo "[INFO] Shell: $shell_name"
+  say "INFO" "Shell: $shell_name"
   echo
   echo "Notes:"
   echo "- doctor is best-effort informational diagnostics."

@@ -115,3 +115,12 @@ Doctor MVP step completed:
 - Kept doctor as observer/reporting only: no repair, activation, shell mutation,
   state writes, sync, tmux, daemon, or lifecycle state machine.
 - Warnings are informational and do not define a strict exit-code contract.
+
+CLI output refinement step completed:
+
+- Normalized observer command output around `[OK]`, `[WARN]`, and `[INFO]`.
+- Added verbose discovery reasoning without changing runtime behavior.
+- Clarified that output remains human-oriented diagnostics, not a stable
+  machine-readable protocol.
+- Kept commands mutation-free: no activation, repair, shell mutation, state
+  writes, sync, tmux, daemon, or lifecycle state machine.
