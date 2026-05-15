@@ -22,6 +22,9 @@ parsing, RAG, or LLM integration.
 See `docs/shell-boundary.md` for why plain child-process commands cannot mutate
 the parent shell.
 
+See `docs/runtime-lifecycle.md` for lifecycle vocabulary and current/future
+stage boundaries.
+
 ## Command Table
 
 ```text

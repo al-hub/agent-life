@@ -114,3 +114,13 @@ unimplemented and intentionally unresolved.
 Reason: a child process cannot directly change parent shell `cwd`, environment,
 aliases, functions, or prompt. Future source/eval or shell-wrapper behavior must
 be designed explicitly before implementation.
+
+### 2026-05-16: Runtime lifecycle is conceptual, not a strict FSM
+
+The current lifecycle is `discover -> inspect -> recommend`. Future vocabulary
+includes `activate`, `attach`, `switch`, `sync`, `restore`, and `shutdown`, but
+these stages are placeholders and not execution guarantees.
+
+Reason: lifecycle language should clarify future runtime behavior without
+committing to activation, orchestration, state transitions, or shell ownership
+too early.

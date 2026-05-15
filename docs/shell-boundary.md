@@ -137,3 +137,6 @@ Before adding any source or eval workflow, the project should decide:
 - Local state remains ephemeral and minimal.
 - Markdown remains persistent memory.
 - Hidden shell mutation is not acceptable.
+
+Lifecycle vocabulary and future state transition boundaries are documented in
+`docs/runtime-lifecycle.md`.

@@ -39,6 +39,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `docs/runtime-state.md` separates persistent memory from local state.
 - `docs/command-semantics.md` defines current command behavior.
 - `docs/shell-boundary.md` defines the process and shell ownership boundary.
+- `docs/runtime-lifecycle.md` defines conceptual lifecycle vocabulary.
 
 The goal is not to store full transcripts. The goal is to preserve enough
 structured context for a future agent session to continue work without guessing.
@@ -67,6 +68,18 @@ shell-owned `source` or `eval` behavior, but that API is intentionally
 unresolved.
 
 The current CLI performs no hidden shell mutation.
+
+## Runtime Lifecycle
+
+Current lifecycle:
+
+```text
+discover -> inspect -> recommend
+```
+
+Future lifecycle vocabulary includes `activate`, `attach`, `switch`, `sync`,
+`restore`, and `shutdown`, but these are conceptual placeholders, not execution
+guarantees. The CLI is not yet a runtime controller or orchestrator.
 
 ## CLI Direction
 
@@ -156,6 +169,7 @@ agent-life/
     cli.md
     command-semantics.md
     profile-contract.md
+    runtime-lifecycle.md
     runtime-state.md
     shell-boundary.md
   profiles/

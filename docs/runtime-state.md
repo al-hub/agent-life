@@ -111,6 +111,9 @@ The MVP does not:
 Shell ownership and future activation constraints are documented in
 `docs/shell-boundary.md`.
 
+Lifecycle state transition boundaries are documented in
+`docs/runtime-lifecycle.md`.
+
 ## Design Principles
 
 - Repo markdown is persistent memory/context.

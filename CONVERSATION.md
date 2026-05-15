@@ -95,3 +95,14 @@ Shell boundary step completed:
 - Kept source/eval activation as a future possibility, not a committed API.
 - Confirmed the current CLI is an inspector/recommender, not a runtime
   controller.
+
+Runtime lifecycle step completed:
+
+- Added `docs/runtime-lifecycle.md`.
+- Defined current lifecycle as `discover -> inspect -> recommend`.
+- Documented future vocabulary: activate, attach, switch, sync, restore, and
+  shutdown.
+- Kept lifecycle as conceptual vocabulary, not a strict FSM or ordered execution
+  guarantee.
+- Confirmed lifecycle stages beyond recommendation remain unimplemented and
+  intentionally unresolved.

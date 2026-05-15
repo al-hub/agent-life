@@ -141,6 +141,8 @@ activation must account for this process boundary explicitly.
 `docs/shell-boundary.md` defines process boundaries and future activation
 constraints.
 
+`docs/runtime-lifecycle.md` defines conceptual lifecycle vocabulary.
+
 ## Boundary Rules
 
 - Public repo code may know how to find `agent-core`.
@@ -188,3 +190,6 @@ integration, AGENTS.md parsing, session restore, or environment activation.
 
 Current command behavior is inspection/discovery first. `auto` may recommend a
 profile, but it does not switch, activate, attach, or write runtime state.
+
+Lifecycle stages beyond recommendation are conceptual. Activation, attach,
+switch, sync, restore, and shutdown do not exist as runtime behavior yet.

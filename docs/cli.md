@@ -129,6 +129,8 @@ The MVP does not implement:
 
 Shell/process ownership details are documented in `docs/shell-boundary.md`.
 
+Lifecycle vocabulary is documented in `docs/runtime-lifecycle.md`.
+
 ## Profile Contract
 
 See `docs/profile-contract.md`.

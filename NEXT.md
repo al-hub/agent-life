@@ -18,6 +18,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Define runtime state model.
 - [x] Define command semantics for MVP and future placeholders.
 - [x] Define shell boundary and future activation constraints.
+- [x] Define conceptual runtime lifecycle vocabulary.
 
 ## Next
 
@@ -32,6 +33,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a
       separate controller command.
+- [ ] Decide whether lifecycle transitions should ever become a strict runtime
+      state machine.
 
 ## Later
 
