@@ -145,6 +145,9 @@ activation must account for this process boundary explicitly.
 
 `docs/bootstrap.md` defines external bootstrap and install semantics.
 
+`docs/quickstart.md` defines first-run onboarding and private core connection
+examples.
+
 `docs/profile-contract.md` defines the lightweight profile workspace convention.
 
 `docs/runtime-state.md` defines the local ephemeral state model.

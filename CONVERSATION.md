@@ -142,3 +142,19 @@ Bootstrap ergonomics step completed:
   hidden shell/runtime ownership.
 - Added `docs/bootstrap.md` and updated README/architecture/shell-boundary
   docs plus durable decision and next-action files.
+
+Quickstart onboarding step completed:
+
+- Added `docs/quickstart.md` for minimal first-run onboarding.
+- Documented the recommended flow: curl bootstrap, confirm framework with
+  `agent-init doctor`, clone private `agent-core`, optionally set
+  `AGENT_CORE_PATH`, then run `agent-init doctor`, `list`, and `auto`.
+- Added copy-paste examples for optional PATH guidance and explicit
+  `AGENT_CORE_PATH` usage.
+- Documented minimal update and remove flows without assuming global or
+  system-wide install.
+- Improved install output to recommend diagnostics first and point at the local
+  quickstart document.
+- Preserved boundaries: no PATH mutation, shell rc modification, auto
+  activation, `current-profile` writes, tmux/session orchestration,
+  daemon/watcher, AGENTS semantic parsing, or runtime mutation.

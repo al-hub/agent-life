@@ -40,7 +40,7 @@ The bootstrap flow is intentionally small:
 3. Clone the framework when the target path is missing.
 4. Pull best-effort updates when the target path is an existing git checkout.
 5. Run lightweight validation.
-6. Print manual next-step guidance.
+6. Print diagnostics-first manual next-step guidance.
 7. Exit.
 
 Existing installs are updated with `git pull --ff-only`. If the pull fails, the
@@ -86,6 +86,40 @@ The installer must not:
 - take ownership of the user's shell or runtime
 
 PATH or symlink integration may be printed as manual guidance only.
+
+## First Run
+
+After bootstrap, start with diagnostics:
+
+```sh
+$HOME/.agent-life/framework/bin/agent-init doctor
+```
+
+Then inspect private profiles:
+
+```sh
+$HOME/.agent-life/framework/bin/agent-init list
+$HOME/.agent-life/framework/bin/agent-init auto
+```
+
+If private core is not in a discoverable path, pass it explicitly:
+
+```sh
+AGENT_CORE_PATH="$HOME/workspace/agent-core" \
+  "$HOME/.agent-life/framework/bin/agent-init" doctor
+```
+
+See `docs/quickstart.md` for first-run onboarding.
+
+## Remove
+
+Remove the public framework checkout:
+
+```sh
+rm -rf "$HOME/.agent-life/framework"
+```
+
+This does not remove private `agent-core` data or manual shell configuration.
 
 ## Semantics
 

@@ -163,3 +163,14 @@ ask the user to inspect manually.
 
 Reason: reinstall/update behavior should remain deterministic, transparent,
 idempotent, and easy to reverse by removing `~/.agent-life/framework`.
+
+### 2026-05-16: First-run onboarding is diagnostics-first
+
+Quickstart guidance starts with bootstrap, then `agent-init doctor`, then
+private `agent-core` connection, `list`, and `auto`.
+
+PATH and `AGENT_CORE_PATH` examples are manual guidance only. The installer does
+not write shell configuration or create runtime state.
+
+Reason: first-run UX should be clear and copy-pasteable without turning install
+into activation, orchestration, or hidden shell ownership.

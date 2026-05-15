@@ -35,6 +35,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `NEXT.md` lists the next concrete actions.
 - `docs/architecture.md` explains the runtime model.
 - `docs/bootstrap.md` defines external bootstrap and install semantics.
+- `docs/quickstart.md` defines first-run onboarding.
 - `docs/cli.md` defines the `agent-init` command surface.
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.
@@ -171,6 +172,43 @@ or symlink integration is shown only as manual guidance.
 
 See `docs/bootstrap.md` for the full bootstrap contract.
 
+## Quickstart
+
+See `docs/quickstart.md` for the minimal first-run flow.
+
+Copy-paste shape:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh | bash
+$HOME/.agent-life/framework/bin/agent-init doctor
+```
+
+Private core example:
+
+```sh
+mkdir -p "$HOME/workspace"
+git clone <private-agent-core-url> "$HOME/workspace/agent-core"
+AGENT_CORE_PATH="$HOME/workspace/agent-core" \
+  "$HOME/.agent-life/framework/bin/agent-init" doctor
+```
+
+Diagnostics-first flow:
+
+```sh
+$HOME/.agent-life/framework/bin/agent-init doctor
+$HOME/.agent-life/framework/bin/agent-init list
+$HOME/.agent-life/framework/bin/agent-init auto
+```
+
+Optional manual PATH guidance:
+
+```sh
+export PATH="$HOME/.agent-life/framework/bin:$PATH"
+```
+
+The project does not assume global or system-wide install. Any PATH or shell
+configuration is user-owned and manual.
+
 ## Profiles
 
 Profiles are context workspaces, not apps. Runtime profiles live in private
@@ -210,6 +248,7 @@ agent-life/
     cli.md
     command-semantics.md
     profile-contract.md
+    quickstart.md
     runtime-lifecycle.md
     runtime-state.md
     shell-boundary.md

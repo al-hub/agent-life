@@ -32,7 +32,7 @@ Behavior:
   - clones agent-life when the target path is missing
   - pulls best-effort updates when the target path is an existing git checkout
   - validates the lightweight framework files
-  - prints manual next steps
+  - prints diagnostics-first manual next steps
 
 It does not edit PATH, shell rc files, aliases, symlinks, runtime state, or
 profile activation state.
@@ -136,8 +136,17 @@ print_next_steps() {
   log "Framework path: $install_dir"
   log
   log "Manual next steps:"
-  log "  Run status directly:"
-  log "    $install_dir/bin/agent-init status"
+  log "  1. Run diagnostics first:"
+  log "     $install_dir/bin/agent-init doctor"
+  log
+  log "  2. Connect private agent-core when needed:"
+  log "     AGENT_CORE_PATH=\"\$HOME/workspace/agent-core\" $install_dir/bin/agent-init doctor"
+  log
+  log "  3. Inspect profiles:"
+  log "     $install_dir/bin/agent-init list"
+  log
+  log "  4. Ask for a recommendation:"
+  log "     $install_dir/bin/agent-init auto"
   log
   log "  Optional PATH integration, if you choose to own it in your shell config:"
   log "    export PATH=\"$install_dir/bin:\$PATH\""
@@ -145,6 +154,8 @@ print_next_steps() {
   log "  Optional symlink, if you choose to manage it yourself:"
   log "    mkdir -p ~/.local/bin"
   log "    ln -sfn $install_dir/bin/agent-init ~/.local/bin/agent-init"
+  log
+  log "Quickstart: $install_dir/docs/quickstart.md"
   log
   log "No PATH, shell rc, alias, symlink, runtime state, or profile activation changes were made."
 }

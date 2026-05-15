@@ -25,6 +25,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Define repo-external bootstrap semantics.
 - [x] Set default install location to `~/.agent-life/framework`.
 - [x] Keep install as fetch/update guidance, not runtime activation.
+- [x] Add lightweight first-run quickstart onboarding.
+- [x] Document private `agent-core` connection examples.
+- [x] Improve install next-step guidance around `doctor`, `list`, and `auto`.
+- [x] Document minimal remove/uninstall flow.
 
 ## Next
 
@@ -33,6 +37,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide config filename and schema for public bootstrap settings.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
+- [ ] Decide whether quickstart should mention a public sample `agent-core`
+      template after private core structure exists.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Add tests for `agent-init` command output.
