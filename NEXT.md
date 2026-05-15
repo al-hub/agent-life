@@ -34,6 +34,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Centralize core discovery in internal `lib/core-discovery.sh` helper.
 - [x] Reuse core discovery from `status`, `doctor`, `list`, `auto`, and
       bootstrap guidance.
+- [x] Add POSIX shell smoke tests for install, doctor, discovery precedence,
+      list, and auto.
 
 ## Next
 
@@ -43,9 +45,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       template after private core structure exists.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
-- [ ] Add tests for `agent-init` command output.
-- [ ] Add tests for `agent-init doctor` diagnostics output.
-- [ ] Add tests for output consistency across `status`, `list`, and `doctor`.
+- [ ] Expand smoke tests only when new observer behavior is added.
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a

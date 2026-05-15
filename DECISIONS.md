@@ -204,3 +204,16 @@ interface.
 
 Reason: `status`, `doctor`, `list`, `auto`, and bootstrap guidance should
 resolve the same core path in the same environment without duplicating logic.
+
+### 2026-05-16: Smoke tests stay POSIX shell and isolated
+
+Regression tests live under `tests/smoke/` and run through
+`tests/smoke/run.sh`.
+
+They use POSIX shell scripts and isolated temporary `HOME` directories. They do
+not use pytest, bats, TAP, a framework dependency, hidden mutation,
+`current-profile` writes, activation, orchestration, daemons, or watchers.
+
+Reason: the current need is lightweight semantic regression coverage for
+bootstrap, discovery, `doctor`, `list`, and `auto`, not a full correctness proof
+or heavy CI framework.

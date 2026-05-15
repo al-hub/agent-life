@@ -178,3 +178,18 @@ not persist runtime state. `current-profile`, `last-context`, `sessions/`, and
 Verbose output adds reasoning and diagnostic details only. It must not change
 runtime behavior, write files, repair state, activate profiles, or mutate the
 shell.
+
+## Smoke Tests
+
+Lightweight command regression checks live under `tests/smoke/`.
+
+Run them with:
+
+```sh
+tests/smoke/run.sh
+```
+
+The smoke tests use isolated temporary `HOME` directories and POSIX shell
+scripts. They cover install/bootstrap behavior, `doctor`, core discovery
+precedence, `list`, and `auto` without adding activation, state writes, shell
+mutation, or a test framework dependency.

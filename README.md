@@ -259,6 +259,19 @@ profiles/<name>/
 Public samples live under `profiles/` in this repo only as minimal templates.
 They are not a substitute for private profile memory.
 
+## Smoke Tests
+
+Run lightweight smoke tests:
+
+```sh
+tests/smoke/run.sh
+```
+
+The tests use POSIX shell scripts with isolated temporary `HOME` directories.
+They cover bootstrap install behavior, `doctor`, core discovery precedence,
+`list`, and `auto`. They are semantic regression checks, not a heavy test
+framework.
+
 ## Initial Structure
 
 ```text
@@ -287,6 +300,8 @@ agent-life/
   profiles/
     develop/
     stock/
+  tests/
+    smoke/
 ```
 
 Planned additions:

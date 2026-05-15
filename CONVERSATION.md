@@ -189,3 +189,15 @@ Core discovery helper step completed:
 - Kept the helper private and small: no provider/plugin system, generic
   framework layer, hidden cache/state, activation, shell mutation,
   `current-profile` writes, daemon/watcher, or AGENTS semantic parsing.
+
+Smoke tests step completed:
+
+- Added `tests/smoke/run.sh` as a lightweight POSIX shell runner.
+- Added smoke tests for install/bootstrap, `agent-init doctor`, discovery
+  precedence, and `list`/`auto`.
+- Tests use isolated temporary `HOME` directories and clean them with traps.
+- Covered current discovery order: `AGENT_CORE_PATH`, config
+  `default-core-path`, `../agent-core`, then `~/.agent-core`.
+- Kept the tests framework-free: no pytest, bats, TAP, hidden mutation,
+  `current-profile` writes, activation, orchestration, daemon, or watcher.
+- Current smoke run result: 4 passed, 0 failed.
