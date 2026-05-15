@@ -64,3 +64,13 @@ Next implementation step completed:
 - Kept `install.sh` as a non-destructive bootstrap checker.
 - Deferred tmux orchestration, shell activation, RAG, LLM integration,
   AGENTS.md parsing, session restore, and environment activation.
+
+Profile contract step completed:
+
+- Defined profiles as context workspaces, not apps.
+- Added `docs/profile-contract.md`.
+- Added minimal public sample profiles: `profiles/develop` and `profiles/stock`.
+- Documented root `AGENTS.md` vs profile `AGENTS.md` roles.
+- Kept current runtime simple: profile discovery is based on directory
+  existence only; no parsing, sourcing, activation, inheritance, merge logic,
+  RAG, or LLM integration.

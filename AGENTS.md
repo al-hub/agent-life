@@ -18,6 +18,7 @@ Allowed in `agent-life`:
 - Documentation
 - Shared command conventions
 - Non-sensitive profile names and interfaces
+- Minimal non-sensitive sample profile templates
 
 Not allowed in `agent-life`:
 
@@ -27,6 +28,21 @@ Not allowed in `agent-life`:
 - Financial account details
 - Faith, travel, development, or personal workflow content
 - Private repo contents copied from `agent-core`
+
+## AGENTS.md Hierarchy
+
+Root `AGENTS.md` defines repository-wide rules for `agent-life`: public/private
+boundaries, CLI principles, and maintenance expectations.
+
+Profile `AGENTS.md` files define local behavior for one profile workspace, such
+as `develop` or `stock`.
+
+Current MVP behavior:
+
+- No inheritance logic is implemented.
+- No merge logic is implemented.
+- No semantic parsing is implemented.
+- Agents should read root and relevant profile guidance directly.
 
 ## Working Rules
 

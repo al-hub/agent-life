@@ -59,6 +59,7 @@ Expected behavior:
 - Do not hardcode profile names.
 - Treat each non-hidden directory under `profiles/` as a profile.
 - Print `Profiles: none` when no core or profile directory exists.
+- Do not parse or activate profile contents.
 
 ### `agent-init auto`
 
@@ -123,3 +124,12 @@ The MVP does not implement:
 - AGENTS.md parsing
 - session restore
 - environment activation
+
+## Profile Contract
+
+See `docs/profile-contract.md`.
+
+The CLI currently treats profiles as directories only. Directory existence is
+the contract used for discovery. `AGENTS.md`, `prompts/`, `memory/`, `context/`,
+and `profile.env` are documented conventions for humans and future agents, not
+runtime inputs for the current MVP.

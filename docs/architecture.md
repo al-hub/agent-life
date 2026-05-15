@@ -128,14 +128,39 @@ The runtime should prefer explicit, inspectable files over hidden state.
 
 `docs/cli.md` defines the CLI contract.
 
+`docs/profile-contract.md` defines the lightweight profile workspace convention.
+
 ## Boundary Rules
 
 - Public repo code may know how to find `agent-core`.
 - Public repo code must not contain private memory.
 - Public docs may name profile categories.
 - Public docs must not include personal profile content.
+- Public sample profiles must stay minimal and non-sensitive.
 - Bootstrap commands should be safe to run repeatedly.
 - Private repo access failures should produce clear recovery instructions.
+
+## Profile Workspaces
+
+Profiles are context workspaces, not apps. They organize AI runtime context for
+an area of life or work.
+
+Runtime profiles live in private `agent-core/profiles/<name>/`. Public
+`agent-life/profiles/` entries are samples only.
+
+Minimal convention:
+
+```text
+profiles/<name>/
+  AGENTS.md
+  prompts/
+  memory/
+  context/
+  profile.env
+```
+
+The current runtime recognizes profile names by directory existence. It does not
+parse, activate, source, inherit, or merge profile files.
 
 ## MVP Boundary
 

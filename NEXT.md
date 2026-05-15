@@ -13,16 +13,19 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Implement `agent-init list`.
 - [x] Implement `agent-init auto`.
 - [x] Implement `agent-init help` and `agent-init version`.
+- [x] Define lightweight profile contract.
+- [x] Add minimal public sample profiles for `develop` and `stock`.
 
 ## Next
 
 - [ ] Implement `agent-init doctor`.
-- [ ] Add core discovery helper using `AGENT_CORE_PATH`, config, `../agent-core`,
-      and `~/.agent-core`.
+- [ ] Add reusable core discovery helper using `AGENT_CORE_PATH`, config,
+      `../agent-core`, and `~/.agent-core`.
 - [ ] Decide config filename and schema for public bootstrap settings.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader contract between `agent-life` and `agent-core`.
 - [ ] Add tests for `agent-init` command output.
+- [ ] Decide whether public sample profiles should become installable templates.
 
 ## Later
 

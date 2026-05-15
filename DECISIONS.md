@@ -70,3 +70,20 @@ Profiles are recognized by scanning `agent-core/profiles/*` directories. Public
 framework code should not hardcode profile names as behavior.
 
 Reason: private core owns profile inventory and personal context.
+
+### 2026-05-16: Profiles are context workspaces, not apps
+
+A profile is a lightweight workspace for an area of life or work. The minimal
+convention is `AGENTS.md`, `prompts/`, `memory/`, `context/`, and `profile.env`.
+
+Reason: the runtime needs shared semantics that humans and AI agents can inspect
+without introducing activation, parsing, or a strict schema too early.
+
+### 2026-05-16: Profile contract is convention-first
+
+The current profile contract is a lightweight convention. The MVP recognizes
+profiles by directory existence only and does not implement inheritance, merge
+logic, shell sourcing, semantic parsing, RAG, or LLM integration.
+
+Reason: current simplicity and human-editable files are more important than
+future abstraction.

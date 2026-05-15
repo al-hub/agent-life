@@ -35,6 +35,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `NEXT.md` lists the next concrete actions.
 - `docs/architecture.md` explains the runtime model.
 - `docs/cli.md` defines the `agent-init` command surface.
+- `docs/profile-contract.md` defines the lightweight profile convention.
 
 The goal is not to store full transcripts. The goal is to preserve enough
 structured context for a future agent session to continue work without guessing.
@@ -89,6 +90,27 @@ Deferred:
 The initial `install.sh` only checks and reports this connection. It does not
 clone private repositories, write secrets, or install private memory.
 
+## Profiles
+
+Profiles are context workspaces, not apps. Runtime profiles live in private
+`agent-core/profiles/<name>/`.
+
+Minimal profile shape:
+
+```text
+profiles/<name>/
+  AGENTS.md
+  prompts/
+  memory/
+  context/
+  profile.env
+```
+
+`agent-init list` discovers profile names from `agent-core/profiles/*`.
+
+Public samples live under `profiles/` in this repo only as minimal templates.
+They are not a substitute for private profile memory.
+
 ## Initial Structure
 
 ```text
@@ -104,6 +126,10 @@ agent-life/
   docs/
     architecture.md
     cli.md
+    profile-contract.md
+  profiles/
+    develop/
+    stock/
 ```
 
 Planned additions:
@@ -112,8 +138,6 @@ Planned additions:
 completions/
   agent-init.bash
   agent-init.zsh
-profiles/
-  README.md
 ```
 
 ## Bootstrap
