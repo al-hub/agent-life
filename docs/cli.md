@@ -114,11 +114,13 @@ These commands remain planned but are not part of the current MVP:
 `agent-init` finds `agent-core` in this order:
 
 1. `AGENT_CORE_PATH`
-2. future `agent-life` config
+2. `~/.agent-life/config` key `default-core-path`
 3. `../agent-core`
 4. `~/.agent-core`
 
 `status` reports the result. `list` and `auto` use the same discovery behavior.
+
+Local config is optional and read-only from the CLI. See `docs/config.md`.
 
 ## Option Policy
 

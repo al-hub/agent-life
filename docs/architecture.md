@@ -103,7 +103,7 @@ public framework checkout installed by the bootstrap flow.
 Discovery order:
 
 1. `AGENT_CORE_PATH`
-2. future `agent-life` config
+2. `~/.agent-life/config` key `default-core-path`
 3. `../agent-core`
 4. `~/.agent-core`
 
@@ -147,6 +147,8 @@ activation must account for this process boundary explicitly.
 
 `docs/quickstart.md` defines first-run onboarding and private core connection
 examples.
+
+`docs/config.md` defines optional local preference semantics.
 
 `docs/profile-contract.md` defines the lightweight profile workspace convention.
 

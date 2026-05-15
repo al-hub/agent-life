@@ -73,6 +73,15 @@ export AGENT_CORE_PATH="$HOME/workspace/agent-core"
 This is optional and user-owned. The installer does not write it to shell rc
 files.
 
+Optional local config example:
+
+```sh
+mkdir -p "$HOME/.agent-life"
+printf 'default-core-path=%s\n' "$HOME/workspace/agent-core" > "$HOME/.agent-life/config"
+```
+
+This is also manual and local. The default flow works without config.
+
 ## 5. List Profiles
 
 ```sh
@@ -143,6 +152,12 @@ If profiles are missing, confirm your private core path:
 ```sh
 AGENT_CORE_PATH="$HOME/workspace/agent-core" \
   "$HOME/.agent-life/framework/bin/agent-init" list
+```
+
+Or inspect local config discovery:
+
+```sh
+$HOME/.agent-life/framework/bin/agent-init doctor --verbose
 ```
 
 If `agent-init` is not found, run it by absolute path or add PATH manually.

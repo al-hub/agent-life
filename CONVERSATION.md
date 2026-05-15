@@ -158,3 +158,20 @@ Quickstart onboarding step completed:
 - Preserved boundaries: no PATH mutation, shell rc modification, auto
   activation, `current-profile` writes, tmux/session orchestration,
   daemon/watcher, AGENTS semantic parsing, or runtime mutation.
+
+Local config semantics step completed:
+
+- Added `docs/config.md`.
+- Chose `~/.agent-life/config` as the only local config location.
+- Defined config as optional local preference, not runtime state or activation.
+- Added read-only `default-core-path` support to `agent-init` core discovery.
+- Updated discovery order to `AGENT_CORE_PATH`, config `default-core-path`,
+  `../agent-core`, then `~/.agent-core`.
+- Kept config format as simple `key=value` text with comments and graceful
+  ignore for malformed or unknown lines.
+- Documented reserved examples `verbose-default` and `install-root` without
+  making current runtime behavior depend on them.
+- Preserved constraints: no config auto-generation, hidden config mutation,
+  `current-profile` writes, daemon/watcher, runtime activation, shell hooks,
+  AGENTS semantic parsing, tmux/session config, or runtime/session persistence
+  semantics.

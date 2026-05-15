@@ -64,12 +64,57 @@ state_path() {
   fi
 }
 
+config_path() {
+  printf '%s\n' "$HOME/.agent-life/config"
+}
+
+expand_user_path() {
+  local value
+  value="$1"
+
+  case "$value" in
+    "~") printf '%s\n' "$HOME" ;;
+    "~/"*) printf '%s/%s\n' "$HOME" "${value#\~/}" ;;
+    *) printf '%s\n' "$value" ;;
+  esac
+}
+
+config_value() {
+  local key file line raw_key raw_value
+  key="$1"
+  file="$(config_path)"
+
+  [ -r "$file" ] || return 0
+
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      ''|\#*) continue ;;
+      *=*) ;;
+      *) continue ;;
+    esac
+
+    raw_key="${line%%=*}"
+    raw_value="${line#*=}"
+    raw_key="$(printf '%s' "$raw_key" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+    raw_value="$(printf '%s' "$raw_value" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+
+    [ "$raw_key" = "$key" ] || continue
+    [ -n "$raw_value" ] || continue
+
+    printf '%s\n' "$raw_value"
+    return 0
+  done < "$file"
+}
+
 discover_core() {
-  local root
+  local root configured_core
   root="$1"
+  configured_core="$(config_value "default-core-path")"
 
   if [ -n "${AGENT_CORE_PATH:-}" ]; then
     printf '%s|%s\n' "$AGENT_CORE_PATH" "AGENT_CORE_PATH"
+  elif [ -n "$configured_core" ]; then
+    printf '%s|%s\n' "$(expand_user_path "$configured_core")" "config"
   elif [ -d "$root/../agent-core" ]; then
     printf '%s|%s\n' "$(cd -- "$root/../agent-core" && pwd)" "sibling"
   elif [ -d "$HOME/.agent-core" ]; then
@@ -138,12 +183,19 @@ warn_detail() {
 }
 
 print_core_discovery_reasoning() {
-  local root
+  local root configured_core
   root="$1"
+  configured_core="$(config_value "default-core-path")"
 
   say "INFO" "Checking AGENT_CORE_PATH"
   if [ -n "${AGENT_CORE_PATH:-}" ]; then
     detail "Value: $AGENT_CORE_PATH"
+  fi
+
+  say "INFO" "Checking local config default-core-path"
+  detail "Path: $(config_path)"
+  if [ -n "$configured_core" ]; then
+    detail "Value: $(expand_user_path "$configured_core")"
   fi
 
   say "INFO" "Checking sibling ../agent-core"
@@ -311,7 +363,7 @@ EOF
 }
 
 print_doctor() {
-  local verbose root state state_parent core_result core core_source profiles joined count shell_name
+  local verbose root state state_parent core_result core core_source profiles joined count shell_name configured_core
   verbose="$1"
   root="$(framework_root)"
   state="$(state_path)"
@@ -323,6 +375,7 @@ print_doctor() {
   joined="$(printf '%s\n' "$profiles" | join_profiles)"
   count="$(printf '%s\n' "$profiles" | profile_count)"
   shell_name="$(basename -- "${SHELL:-unknown}")"
+  configured_core="$(config_value "default-core-path")"
 
   echo "agent-init doctor"
   echo
@@ -352,6 +405,23 @@ print_doctor() {
     fi
   else
     say "WARN" "AGENT_CORE_PATH not set"
+  fi
+
+  if [ -r "$(config_path)" ]; then
+    say "INFO" "Local config found"
+    if [ "$verbose" = "1" ]; then
+      detail "Path: $(config_path)"
+      if [ -n "$configured_core" ]; then
+        detail "default-core-path: $(expand_user_path "$configured_core")"
+      else
+        detail "default-core-path: unset"
+      fi
+    fi
+  else
+    say "INFO" "Local config not found"
+    if [ "$verbose" = "1" ]; then
+      detail "Path: $(config_path)"
+    fi
   fi
 
   if [ "$verbose" = "1" ]; then

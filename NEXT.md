@@ -29,12 +29,13 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Document private `agent-core` connection examples.
 - [x] Improve install next-step guidance around `doctor`, `list`, and `auto`.
 - [x] Document minimal remove/uninstall flow.
+- [x] Define optional local config semantics at `~/.agent-life/config`.
+- [x] Add `default-core-path` to core discovery as read-only local preference.
 
 ## Next
 
 - [ ] Add reusable core discovery helper using `AGENT_CORE_PATH`, config,
       `../agent-core`, and `~/.agent-core`.
-- [ ] Decide config filename and schema for public bootstrap settings.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`

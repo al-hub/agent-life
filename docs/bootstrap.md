@@ -109,6 +109,13 @@ AGENT_CORE_PATH="$HOME/workspace/agent-core" \
   "$HOME/.agent-life/framework/bin/agent-init" doctor
 ```
 
+Or create an optional local preference:
+
+```sh
+mkdir -p "$HOME/.agent-life"
+printf 'default-core-path=%s\n' "$HOME/workspace/agent-core" > "$HOME/.agent-life/config"
+```
+
 See `docs/quickstart.md` for first-run onboarding.
 
 ## Remove

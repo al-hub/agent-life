@@ -42,6 +42,15 @@ State belongs outside public git history:
 ~/.local/state/agent-life/
 ```
 
+Local config is separate from state:
+
+```text
+~/.agent-life/config
+```
+
+Config records optional local preferences. It is not session state, runtime
+ownership, or durable memory.
+
 State may be useful, but it is not durable truth. Anything important enough for
 future agents to rely on should be summarized into markdown memory.
 

@@ -107,6 +107,7 @@ Current behavior:
 - Reports core discovery.
 - Reports profile discovery.
 - Reports `AGENT_CORE_PATH` status.
+- Reports local config presence when relevant.
 - Reports state path accessibility.
 - Reports shell type as informational only.
 

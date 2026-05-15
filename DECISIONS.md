@@ -47,7 +47,7 @@ configuration. It is not vendored or embedded into `agent-life` by default.
 Discovery order:
 
 1. `AGENT_CORE_PATH`
-2. future `agent-life` config
+2. `~/.agent-life/config` key `default-core-path`
 3. `../agent-core`
 4. `~/.agent-core`
 
@@ -174,3 +174,17 @@ not write shell configuration or create runtime state.
 
 Reason: first-run UX should be clear and copy-pasteable without turning install
 into activation, orchestration, or hidden shell ownership.
+
+### 2026-05-16: Local config is optional preference only
+
+The only local config path is `~/.agent-life/config`.
+
+The current supported key is `default-core-path`, used for core discovery after
+`AGENT_CORE_PATH` and before fallback paths. Config is not auto-generated, not
+mutated by bootstrap, and not runtime state.
+
+Malformed or unknown config lines may be ignored. There is no strict schema and
+no JSON/YAML/TOML config system.
+
+Reason: local preferences improve onboarding without introducing runtime
+ownership, activation, session persistence, shell hooks, or hidden mutation.

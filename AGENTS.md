@@ -82,7 +82,8 @@ Avoid option-heavy commands unless there is a strong reason.
 
 - Default `agent-core` layout is a sibling private repo: `../agent-core`.
 - `agent-core` is not a submodule by default.
-- Discovery order is `AGENT_CORE_PATH`, config, `../agent-core`, `~/.agent-core`.
+- Discovery order is `AGENT_CORE_PATH`, `~/.agent-life/config`
+  `default-core-path`, `../agent-core`, `~/.agent-core`.
 - `install.sh` should be safe to run repeatedly.
 - Bootstrap code must not print or persist secrets.
 

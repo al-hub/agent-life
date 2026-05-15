@@ -36,6 +36,7 @@ This repo treats markdown files as AI-readable runtime memory:
 - `docs/architecture.md` explains the runtime model.
 - `docs/bootstrap.md` defines external bootstrap and install semantics.
 - `docs/quickstart.md` defines first-run onboarding.
+- `docs/config.md` defines optional local preferences.
 - `docs/cli.md` defines the `agent-init` command surface.
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.
@@ -131,7 +132,7 @@ Deferred:
 `agent-life` finds `agent-core` in this order:
 
 1. `AGENT_CORE_PATH`
-2. future `agent-life` config
+2. `~/.agent-life/config` key `default-core-path`
 3. `../agent-core`
 4. `~/.agent-core`
 
@@ -209,6 +210,34 @@ export PATH="$HOME/.agent-life/framework/bin:$PATH"
 The project does not assume global or system-wide install. Any PATH or shell
 configuration is user-owned and manual.
 
+## Local Config
+
+Local config is optional. The default flow works without it.
+
+Config path:
+
+```text
+~/.agent-life/config
+```
+
+Minimal example:
+
+```sh
+mkdir -p "$HOME/.agent-life"
+printf 'default-core-path=%s\n' "$HOME/workspace/agent-core" > "$HOME/.agent-life/config"
+```
+
+Supported current behavior:
+
+- `default-core-path` participates in `agent-core` discovery after
+  `AGENT_CORE_PATH`.
+
+The installer does not create or edit config files. Local config does not
+activate profiles, mutate shell state, write `current-profile`, or persist
+sessions.
+
+See `docs/config.md`.
+
 ## Profiles
 
 Profiles are context workspaces, not apps. Runtime profiles live in private
@@ -247,6 +276,7 @@ agent-life/
     bootstrap.md
     cli.md
     command-semantics.md
+    config.md
     profile-contract.md
     quickstart.md
     runtime-lifecycle.md

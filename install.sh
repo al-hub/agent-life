@@ -141,6 +141,7 @@ print_next_steps() {
   log
   log "  2. Connect private agent-core when needed:"
   log "     AGENT_CORE_PATH=\"\$HOME/workspace/agent-core\" $install_dir/bin/agent-init doctor"
+  log "     Optional local config: $HOME/.agent-life/config"
   log
   log "  3. Inspect profiles:"
   log "     $install_dir/bin/agent-init list"
