@@ -87,3 +87,20 @@ logic, shell sourcing, semantic parsing, RAG, or LLM integration.
 
 Reason: current simplicity and human-editable files are more important than
 future abstraction.
+
+### 2026-05-16: Memory and state are separate concepts
+
+Memory is persistent context in markdown and repositories. State is local,
+ephemeral runtime data under `~/.local/state/agent-life`.
+
+Reason: future agents need durable context, while runtime details should remain
+machine-local and disposable.
+
+### 2026-05-16: Current commands are inspection and recommendation only
+
+The MVP command semantics are limited to inspection and recommendation.
+`status`, `list`, `help`, and `version` inspect. `auto` recommends. `develop`
+and `stock` remain semantic placeholders until activation behavior is designed.
+
+Reason: command meaning should be stable before adding shell activation, tmux,
+session restore, state persistence, RAG, or LLM integration.

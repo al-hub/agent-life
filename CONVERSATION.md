@@ -74,3 +74,14 @@ Profile contract step completed:
 - Kept current runtime simple: profile discovery is based on directory
   existence only; no parsing, sourcing, activation, inheritance, merge logic,
   RAG, or LLM integration.
+
+Runtime semantics step completed:
+
+- Added `docs/runtime-state.md` to separate memory from local state.
+- Added `docs/command-semantics.md` to define inspect/recommend/placeholder
+  command behavior.
+- Defined proposed state path as `~/.local/state/agent-life/`.
+- Kept `current-profile`, `last-context`, `sessions/`, and `cache/` as future
+  placeholders only.
+- Confirmed current commands remain inspection/discovery focused; `auto`
+  recommends but does not activate, switch, attach, or write state.

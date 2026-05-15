@@ -16,6 +16,8 @@ private core, local state, and discovered profiles.
 
 ## Commands
 
+See `docs/command-semantics.md` for the semantic meaning of each command.
+
 ### `agent-init help`
 
 Show the command surface and design rules.
@@ -72,7 +74,7 @@ Current MVP behavior:
 - Otherwise print no selection and explain why.
 
 This command does not activate environments, source shell files, restore
-sessions, or load private memory yet.
+sessions, switch profiles, write state, or load private memory yet.
 
 ### `agent-init version`
 
@@ -133,3 +135,11 @@ The CLI currently treats profiles as directories only. Directory existence is
 the contract used for discovery. `AGENTS.md`, `prompts/`, `memory/`, `context/`,
 and `profile.env` are documented conventions for humans and future agents, not
 runtime inputs for the current MVP.
+
+## Runtime State
+
+See `docs/runtime-state.md`.
+
+The CLI may report `~/.local/state/agent-life`, but current MVP commands should
+not persist runtime state. `current-profile`, `last-context`, `sessions/`, and
+`cache/` are documented future placeholders, not active runtime requirements.

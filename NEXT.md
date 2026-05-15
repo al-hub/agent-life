@@ -15,6 +15,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Implement `agent-init help` and `agent-init version`.
 - [x] Define lightweight profile contract.
 - [x] Add minimal public sample profiles for `develop` and `stock`.
+- [x] Define runtime state model.
+- [x] Define command semantics for MVP and future placeholders.
 
 ## Next
 
@@ -23,9 +25,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
       `../agent-core`, and `~/.agent-core`.
 - [ ] Decide config filename and schema for public bootstrap settings.
 - [ ] Add shell completion stubs for bash and zsh.
-- [ ] Define profile loader contract between `agent-life` and `agent-core`.
+- [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Add tests for `agent-init` command output.
 - [ ] Decide whether public sample profiles should become installable templates.
+- [ ] Decide when `current-profile` may be written and by which command.
 
 ## Later
 

@@ -130,6 +130,10 @@ The runtime should prefer explicit, inspectable files over hidden state.
 
 `docs/profile-contract.md` defines the lightweight profile workspace convention.
 
+`docs/runtime-state.md` defines the local ephemeral state model.
+
+`docs/command-semantics.md` defines current command behavior.
+
 ## Boundary Rules
 
 - Public repo code may know how to find `agent-core`.
@@ -174,3 +178,6 @@ Current `agent-init` MVP implements only:
 
 It does not implement tmux orchestration, shell activation, RAG, LLM
 integration, AGENTS.md parsing, session restore, or environment activation.
+
+Current command behavior is inspection/discovery first. `auto` may recommend a
+profile, but it does not switch, activate, attach, or write runtime state.
