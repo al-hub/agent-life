@@ -241,7 +241,7 @@ Deferred:
 - session restore
 - environment activation
 
-## Future preparation shortcut
+## Future convenience
 
 Future user-facing preparation shorthand may look like this:
 
@@ -269,7 +269,14 @@ The shortcut should remain preparation-only.
 [profile] [topic] ≠ activate
 [profile] [topic] ≠ attach
 [profile] [topic] ≠ shell mutation
+[profile] [topic] ≠ write current-profile
 [profile] [topic] ≠ orchestration
+```
+
+Planned shortcut for:
+
+```text
+agent-init ready [profile] [topic]
 ```
 
 Possible future preparation output:

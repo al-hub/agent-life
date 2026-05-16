@@ -5,11 +5,10 @@ VERSION="0.1.0"
 
 usage() {
   cat <<'EOF'
-agent-init - personal AI runtime bootstrap
+agent-init - prepare AI-ready work context
 
 Usage:
   agent-init <command>
-  agent-init [profile] [topic]   future shortcut concept
 
 Current commands:
   help       Show this help
@@ -23,9 +22,10 @@ Current role:
   agent-init is a lightweight observer/recommender.
   It does not activate profiles, mutate shell state, attach sessions, or orchestrate runtime.
 
-Future direction:
+Future convenience:
   agent-init [profile] [topic]
     Prepare an AI-ready work context.
+    Planned shortcut for: agent-init ready [profile] [topic]
     Example: agent-init develop
     Example: agent-init money dividend
 
@@ -34,7 +34,7 @@ Reserved commands:
 
 Important:
   Profile shortcut is preparation-only.
-  It is not activation, attach, shell mutation, or orchestration.
+  It is not activation, attach, shell mutation, write current-profile, or orchestration.
 EOF
 }
 

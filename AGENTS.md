@@ -97,6 +97,11 @@ agent-init [profile] [topic]
 ```
 
 This is preparation-only and not implemented yet.
+Planned shortcut for:
+
+```text
+agent-init ready [profile] [topic]
+```
 
 Current bootstrap target:
 

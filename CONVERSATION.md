@@ -214,3 +214,13 @@ CLI help semantics step completed:
 - Kept current behavior unchanged: no profile shortcut execution, no ready
   command, no activation, no shell mutation, no orchestration, and no
   `current-profile` write.
+
+Help wording refinement step completed:
+
+- Changed the top line to `agent-init - prepare AI-ready work context`.
+- Kept `Usage:` limited to `agent-init <command>`.
+- Moved `agent-init [profile] [topic]` under `Future convenience`.
+- Added `Planned shortcut for: agent-init ready [profile] [topic]`.
+- Added `write current-profile` to the help warning so the shortcut cannot be
+  mistaken for runtime ownership.
+- Kept the change wording-only; no runtime shortcut behavior was added.

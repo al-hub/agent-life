@@ -59,7 +59,7 @@ Current behavior:
 
 - Prints current commands.
 - Explains the current observer/recommender role.
-- Shows the future preparation-only shortcut concept.
+- Shows the future convenience shortcut concept.
 - Does not inspect private memory.
 - Does not write state.
 
@@ -144,6 +144,7 @@ Future direction:
 - May act as a user-friendly shortcut to a future preparation-only `ready` flow.
 - May prepare a work context for a profile and optional topic.
 - May be used without arguments as a future auto-ready concept.
+- Planned shortcut for `agent-init ready [profile] [topic]`.
 
 Current stage:
 
@@ -151,6 +152,7 @@ Current stage:
 - Not a profile activation command.
 - Not a shell activation command.
 - Not a session restore command.
+- Not a `current-profile` write command.
 - Does not define `current-profile` write behavior yet.
 
 Reserved command note:

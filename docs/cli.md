@@ -29,7 +29,7 @@ Show the command surface and design rules.
 
 Current behavior:
 
-- Prints reserved built-in commands and the future profile shortcut concept.
+- Prints reserved built-in commands and the future convenience shortcut concept.
 - Keeps syntax simple and action-centered.
 
 ### `agent-init status`
@@ -110,7 +110,7 @@ These commands remain planned but are not part of the current MVP:
 
 - `agent-init sync`
 
-## Future Profile Shortcut
+## Future Convenience
 
 Future user-facing shortcut shape may be:
 
@@ -134,6 +134,12 @@ agent-init money dividend
 agent-init faith nehemiah
 ```
 
+Planned shortcut for:
+
+```text
+agent-init ready [profile] [topic]
+```
+
 Reserved commands stay reserved:
 
 ```text
@@ -141,6 +147,8 @@ help, doctor, status, list, auto, version
 ```
 
 Profile names must not collide with reserved commands.
+The shortcut must not be described as activation, attach, shell mutation, or
+`current-profile` write behavior.
 
 ## Path Discovery
 
