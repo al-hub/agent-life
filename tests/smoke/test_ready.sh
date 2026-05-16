@@ -43,6 +43,18 @@ assert_contains "$ready_output" "Verification"
 assert_contains "$ready_output" "Next action"
 assert_contains "$ready_output" "Read-first files are recommendations only; no automatic parsing or merging occurs."
 
+requested_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready develop)"
+
+assert_contains "$requested_output" "[OK] Requested profile: develop"
+assert_contains "$requested_output" "requested profile exists in agent-core"
+assert_contains "$requested_output" "agent-core/profiles/develop/AGENTS.md"
+
+missing_profile_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready missing-profile)"
+
+assert_contains "$missing_profile_output" "[WARN] Requested profile: missing-profile"
+assert_contains "$missing_profile_output" "requested profile is missing from agent-core"
+assert_not_contains "$missing_profile_output" "agent-core/profiles/missing-profile/AGENTS.md"
+
 empty_core="$SMOKE_TMP_BASE/empty-core"
 mkdir -p "$empty_core/profiles"
 empty_core_output="$(AGENT_CORE_PATH="$empty_core" "$ROOT/bin/agent-init" ready)"

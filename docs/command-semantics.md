@@ -7,7 +7,8 @@ Built-in commands are reserved words. Profile names must not reuse them.
 
 The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
-`agent-init ready` is the current output-only preparation command.
+`agent-init ready` is the current output-only preparation command, and it may
+accept one explicit profile target.
 
 ## Semantic Types
 
@@ -79,7 +80,8 @@ Current behavior:
 - Shows the framework path.
 - Shows the core discovery result.
 - Shows discovered profiles.
-- Suggests a profile when one can be identified.
+- Suggests a profile, or reports a requested profile.
+- May accept one explicit profile target.
 - Shows read-first files, boundary reminders, verification commands, and a
   short task brief skeleton.
 - Does not parse or merge recommended files.

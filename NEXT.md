@@ -52,6 +52,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Expand smoke tests only when new observer behavior is added.
 - [x] Implement `agent-init ready` as an output-only preparation command.
+- [x] Support `agent-init ready <profile>` as an explicit target form.
 - [ ] Decide whether `agent-init [profile] [topic]` should map to `ready`
       later or remain a documented shortcut concept.
 - [ ] Decide whether public sample profiles should become installable templates.

@@ -258,6 +258,11 @@ Ready profile-discovery refinement step completed:
 - Kept read-first files as recommendations only and avoided any automatic
   parsing or merging.
 
+Ready explicit-profile step completed:
+
+- Added support for `agent-init ready <profile>` as an explicit target form.
+- Kept the command output-only and non-activating.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as

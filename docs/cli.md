@@ -10,7 +10,8 @@ profile shortcut space, not a current activation path.
 
 The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
-`agent-init ready` is the current output-only preparation command.
+`agent-init ready` is the current output-only preparation command, and it may
+accept one explicit profile target.
 
 ## Design Rules
 
@@ -119,7 +120,8 @@ Expected behavior:
 - Show the framework path.
 - Show the core discovery result.
 - Show discovered profiles.
-- Show a suggested profile or a no-profile warning.
+- Show a suggested profile, a requested profile, or a no-profile warning.
+- May accept one explicit profile target.
 - Show read-first files, boundary reminders, verification commands, and a
   short task brief skeleton.
 - Do not parse or merge recommended files.
@@ -138,6 +140,12 @@ agent-init ready
      Source: sibling
 [OK] Suggested profile: develop
 [INFO] Reason: current directory name matches a discovered profile
+
+[INFO] Discovered profiles
+[OK] Discovered profiles: develop, stock, faith
+     - develop
+     - stock
+     - faith
 
 [INFO] Read first
      README.md

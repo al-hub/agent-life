@@ -150,6 +150,24 @@ EOF
   fi
 }
 
+requested_profile_result() {
+  local core requested profile_path
+  core="$1"
+  requested="$2"
+
+  if [ -z "$core" ]; then
+    printf '%s|%s|%s\n' "none" "WARN" "agent-core was not found"
+    return 0
+  fi
+
+  profile_path="$core/profiles/$requested"
+  if [ -d "$profile_path" ]; then
+    printf '%s|%s|%s\n' "$requested" "OK" "requested profile exists in agent-core"
+  else
+    printf '%s|%s|%s\n' "$requested" "WARN" "requested profile is missing from agent-core"
+  fi
+}
+
 print_profile_candidate() {
   local label result profile level reason
   label="$1"
@@ -327,15 +345,22 @@ auto_profile() {
 }
 
 print_ready() {
-  local root core_result core core_source profile_result profile level reason profiles joined count
+  local root core_result core core_source requested profile_result profile level reason profiles joined count profile_result_label
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
+  requested="${1:-}"
   profiles="$(list_profiles_raw "$core")"
   joined="$(list_profiles_raw "$core" | join_profiles)"
   count="$(list_profiles_raw "$core" | profile_count)"
-  profile_result="$(profile_candidate_result "$core")"
+  if [ -n "$requested" ]; then
+    profile_result="$(requested_profile_result "$core" "$requested")"
+    profile_result_label="Requested profile"
+  else
+    profile_result="$(profile_candidate_result "$core")"
+    profile_result_label="Suggested profile"
+  fi
   IFS='|' read -r profile level reason <<EOF
 $profile_result
 EOF
@@ -369,7 +394,7 @@ EOF
   fi
 
   say "INFO" "Profile"
-  say "$level" "Suggested profile: $profile"
+  say "$level" "$profile_result_label: $profile"
   say "INFO" "Reason: $reason"
 
   echo
@@ -568,10 +593,10 @@ main() {
       auto_profile "$verbose"
       ;;
     ready)
-      if [ "$#" -ne 0 ]; then
-        die "ready does not accept arguments"
+      if [ "$#" -gt 1 ]; then
+        die "ready accepts at most one profile argument"
       fi
-      print_ready
+      print_ready "${1:-}"
       ;;
     doctor)
       verbose="$(parse_verbose "$@")"

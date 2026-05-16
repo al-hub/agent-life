@@ -221,7 +221,9 @@ or heavy CI framework.
 ### 2026-05-16: `agent-init ready` is output-only preparation
 
 `agent-init ready` is implemented as a preparation command that prints a
-readiness briefing and does not mutate runtime state.
+readiness briefing and does not mutate runtime state. It may accept one
+explicit profile target, but it does not activate profiles or write
+`current-profile`.
 
 The future user-facing shortcut `agent-init [profile] [topic]` remains
 unimplemented and documented only as a concept.

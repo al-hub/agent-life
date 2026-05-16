@@ -2,7 +2,8 @@
 
 `ready` is a preparation flow for AI work contexts.
 
-The current minimal command is `agent-init ready`.
+The current minimal command is `agent-init ready`, with an optional explicit
+profile target such as `agent-init ready develop`.
 
 It describes what `agent-init` should prepare before work begins:
 
@@ -43,7 +44,7 @@ The first usable `ready` MVP should:
 - show the framework path
 - show the core discovery result
 - show discovered profiles, or a no-profile warning
-- show a selected or suggested profile, or a no-profile warning
+- show a selected, suggested, or requested profile, or a no-profile warning
 - show a short recommended file list to read first
 - show boundary reminders
 - show suggested verification commands
