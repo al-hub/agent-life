@@ -44,14 +44,29 @@ After registering shell integration, source your shell rc file in the current
 terminal to make `agent-init` and completion available immediately:
 
 ```sh
-source ~/.bashrc
+# zsh
 source ~/.zshrc
+
+# bash
+source ~/.bashrc
+
+command -v agent-init
+agent-init help
 ```
+
+Opening a new terminal has the same effect after the marker block is registered.
 
 ## 2. Confirm The Framework
 
 ```sh
 $HOME/.agent-life/framework/bin/agent-init doctor
+```
+
+If shell integration is registered and sourced, you can use the shorter command:
+
+```sh
+agent-init help
+agent-init doctor
 ```
 
 `doctor` is diagnostics-first. It reports what it can see and gives warnings
@@ -185,4 +200,10 @@ Or inspect local config discovery:
 $HOME/.agent-life/framework/bin/agent-init doctor --verbose
 ```
 
-If `agent-init` is not found, run it by absolute path or add PATH manually.
+If `agent-init` is not found after registering shell integration, run
+`source ~/.zshrc` for zsh or `source ~/.bashrc` for bash, or open a new
+terminal. You can always run it by absolute path:
+
+```sh
+$HOME/.agent-life/framework/bin/agent-init help
+```

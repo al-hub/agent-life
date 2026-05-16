@@ -55,6 +55,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Choose `repo-review` as the first public sample context candidate.
 - [x] Add `profiles/repo-review/AGENTS.md` as a public-safe sample briefing.
 - [x] Add lightweight manual baseline-vs-ready evaluation workflow.
+- [x] Fix shell integration prompt and post-install reload guidance.
 - [ ] Decide whether `agent-init <context>` should be implemented as a
       shortcut to `agent-init ready <context>` or remain documentation-only.
 - [ ] Run a manual `repo-review` baseline-vs-ready evaluation and record the

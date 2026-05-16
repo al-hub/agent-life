@@ -381,6 +381,20 @@ curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh |
 $HOME/.agent-life/framework/bin/agent-init doctor
 ```
 
+If you accepted shell integration during install, apply it to the current
+terminal or open a new terminal:
+
+```sh
+# zsh
+source ~/.zshrc
+
+# bash
+source ~/.bashrc
+
+command -v agent-init
+agent-init help
+```
+
 Private core example:
 
 ```sh
@@ -399,7 +413,21 @@ $HOME/.agent-life/framework/bin/agent-init list
 $HOME/.agent-life/framework/bin/agent-init auto
 ```
 
-Optional manual PATH guidance:
+Optional shell integration and manual PATH guidance:
+
+```sh
+AGENT_LIFE_SHELL_INTEGRATION=yes "$HOME/.agent-life/framework/install.sh"
+
+# zsh
+source ~/.zshrc
+
+# bash
+source ~/.bashrc
+
+agent-init help
+```
+
+Manual PATH-only alternative:
 
 ```sh
 export PATH="$HOME/.agent-life/framework/bin:$PATH"
@@ -407,7 +435,9 @@ export PATH="$HOME/.agent-life/framework/bin:$PATH"
 
 The project does not assume global or system-wide install.
 
-Any PATH or shell configuration is user-owned and manual.
+Any PATH or shell configuration is user-owned. Installer-managed shell
+integration is limited to the explicit marker block described in
+`docs/shell-integration.md`.
 
 ## Local Config
 

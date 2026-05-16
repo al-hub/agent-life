@@ -76,7 +76,15 @@ detect_shell_name() {
   case "${SHELL:-}" in
     *bash) printf '%s\n' bash ;;
     *zsh) printf '%s\n' zsh ;;
-    *) return 1 ;;
+    *)
+      if [[ -n "${ZSH_VERSION:-}" ]]; then
+        printf '%s\n' zsh
+      elif [[ -n "${BASH_VERSION:-}" ]]; then
+        printf '%s\n' bash
+      else
+        return 1
+      fi
+      ;;
   esac
 }
 
@@ -306,18 +314,43 @@ print_next_steps() {
   log
   print_core_discovery_preview "$install_dir"
   log "Manual next steps:"
-  log "  1. Run diagnostics first:"
-  log "     $install_dir/bin/agent-init doctor"
+  if [[ "$shell_state" == registered ]]; then
+    log "  1. Apply shell integration to this terminal:"
+    log "     source \"$shell_rc_file\""
+    log "     Or open a new terminal."
+    log
+    log "  2. Confirm agent-init is available:"
+    log "     command -v agent-init"
+    log "     agent-init help"
+    log
+    log "  3. Run diagnostics:"
+    log "     agent-init doctor"
+  else
+    log "  1. Run diagnostics first:"
+    log "     $install_dir/bin/agent-init doctor"
+  fi
   log
-  log "  2. Connect private agent-core when needed:"
-  log "     AGENT_CORE_PATH=\"\$HOME/workspace/agent-core\" $install_dir/bin/agent-init doctor"
+  log "  Connect private agent-core when needed:"
+  if [[ "$shell_state" == registered ]]; then
+    log "     AGENT_CORE_PATH=\"\$HOME/workspace/agent-core\" agent-init doctor"
+  else
+    log "     AGENT_CORE_PATH=\"\$HOME/workspace/agent-core\" $install_dir/bin/agent-init doctor"
+  fi
   log "     Optional local config: $HOME/.agent-life/config"
   log
-  log "  3. Inspect profiles:"
-  log "     $install_dir/bin/agent-init list"
+  log "  Inspect profiles:"
+  if [[ "$shell_state" == registered ]]; then
+    log "     agent-init list"
+  else
+    log "     $install_dir/bin/agent-init list"
+  fi
   log
-  log "  4. Ask for a recommendation:"
-  log "     $install_dir/bin/agent-init auto"
+  log "  Ask for a recommendation:"
+  if [[ "$shell_state" == registered ]]; then
+    log "     agent-init auto"
+  else
+    log "     $install_dir/bin/agent-init auto"
+  fi
   log
   log "  Optional shell integration:"
   log "    ./install.sh --shell-integration"
@@ -328,9 +361,12 @@ print_next_steps() {
   log
   if [[ "$shell_state" == registered ]]; then
     log "  Shell integration: registered in $shell_rc_file"
-    log "  Reload your shell or run:"
+    log "  It will apply in new terminals automatically."
+    log "  To apply it immediately in this terminal, run:"
     log "    source \"$shell_rc_file\""
-    log "  That makes agent-init and completion available in the current shell."
+    log "  Then confirm:"
+    log "    command -v agent-init"
+    log "    agent-init help"
     log "  The marker block above is the only shell rc change."
     log "  No aliases, symlinks, runtime state, or profile activation changes were made."
   else
@@ -374,12 +410,22 @@ prompt_for_shell_integration() {
 
   show_shell_integration_preview "$rc_file" "$block"
 
-  if [[ ! -t 0 && ! -t 1 ]]; then
-    return 1
-  fi
-
-  printf '%s' "Register shell integration? [Y/n] "
-  if ! IFS= read -r answer; then
+  if { exec 3<>/dev/tty; } 2>/dev/null; then
+    printf '%s' "Register shell integration? [Y/n] " >&3
+    if ! IFS= read -r answer <&3; then
+      exec 3>&-
+      return 1
+    fi
+    exec 3>&-
+  elif [[ -t 0 ]]; then
+    printf '%s' "Register shell integration? [Y/n] "
+    if ! IFS= read -r answer; then
+      return 1
+    fi
+  else
+    log "[INFO] Shell integration prompt unavailable"
+    log "       Reason: no interactive terminal input was available"
+    log "       Use AGENT_LIFE_SHELL_INTEGRATION=yes or --shell-integration to register non-interactively."
     return 1
   fi
 
@@ -445,6 +491,9 @@ handle_shell_integration() {
           log "[OK] Shell integration marker block refreshed"
           ;;
       esac
+      log "[INFO] Shell integration registered"
+      log "       To use agent-init now, run: source \"$rc_file\""
+      log "       Or open a new terminal."
       shell_integration_result="registered"
       return 0
       ;;
@@ -466,6 +515,9 @@ handle_shell_integration() {
             log "[OK] Shell integration marker block refreshed"
             ;;
         esac
+        log "[INFO] Shell integration registered"
+        log "       To use agent-init now, run: source \"$rc_file\""
+        log "       Or open a new terminal."
         shell_integration_result="registered"
       else
         log "[INFO] Shell integration skipped"

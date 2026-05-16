@@ -23,12 +23,42 @@ source "$HOME/.agent-life/framework/completions/agent-init.bash"
 The actual source line uses the detected shell and the installed framework path.
 The block is owned by `agent-life` only.
 
-After the block is registered, source the rc file in your current shell to make
-`agent-init` and completion available immediately:
+## Register
+
+Interactive installs prompt before editing shell rc files:
 
 ```sh
-source ~/.bashrc
+curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh | bash
+```
+
+Pressing Enter accepts the default `[Y/n]` prompt when an interactive terminal is
+available. In non-interactive environments, use an explicit flag or environment
+variable:
+
+```sh
+AGENT_LIFE_SHELL_INTEGRATION=yes ./install.sh
+./install.sh --shell-integration
+```
+
+## Apply To The Current Shell
+
+After the block is registered, new terminals pick it up automatically. To make
+`agent-init` and completion available immediately in the current terminal,
+source the rc file for your shell:
+
+```sh
+# zsh
 source ~/.zshrc
+
+# bash
+source ~/.bashrc
+```
+
+Then confirm:
+
+```sh
+command -v agent-init
+agent-init help
 ```
 
 Non-interactive control:
@@ -51,3 +81,6 @@ Rules:
 
 If shell detection fails, the installer prints manual guidance instead of
 editing rc files.
+
+If `agent-init` still reports `command not found` after install, either open a
+new terminal or run `source ~/.zshrc` for zsh and `source ~/.bashrc` for bash.

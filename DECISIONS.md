@@ -291,6 +291,15 @@ managed by `agent-life`, and it is limited to PATH and completion source lines.
 The default bootstrap remains safe: if the shell cannot be detected or the user
 declines, the installer prints guidance and leaves shell rc files untouched.
 
+For `curl | bash`, the interactive consent prompt reads from `/dev/tty` when
+available because stdin is occupied by the script stream. If no interactive
+terminal input is available, shell integration must be requested explicitly with
+`AGENT_LIFE_SHELL_INTEGRATION=yes` or `--shell-integration`.
+
+After registration, users must source the target rc file, such as
+`source ~/.zshrc` or `source ~/.bashrc`, or open a new terminal before the bare
+`agent-init` command is available in the current shell.
+
 Reason: pathless `agent-init` access and completion support are useful, but the
 project still must avoid hidden shell ownership and keep rc edits reversible.
 

@@ -370,3 +370,25 @@ Manual evaluation workflow documented:
   automation, LLM/RAG integration, runtime behavior change, ready behavior
   change, shell integration, shortcut implementation, or automatic use of
   public samples as runtime context.
+
+Shell integration install issue diagnosed and fixed:
+
+- Diagnosed that `curl | bash` can leave installer stdin connected to the
+  script stream, so an interactive shell integration prompt may not read user
+  input from stdin.
+- Updated `install.sh` so the shell integration prompt reads from `/dev/tty`
+  when available, preserving Enter as the default yes response.
+- Kept non-interactive registration explicit through
+  `AGENT_LIFE_SHELL_INTEGRATION=yes` or `--shell-integration`.
+- Improved zsh/bash shell detection fallback and retained rc targets as
+  `~/.zshrc` for zsh and `~/.bashrc` for bash.
+- Improved next-step output to explicitly tell users to run `source ~/.zshrc`
+  or `source ~/.bashrc`, or open a new terminal, then verify with
+  `command -v agent-init` and `agent-init help`.
+- Strengthened smoke tests for marker block content, completion source lines,
+  duplicate prevention, and marker-only removal while preserving user rc lines.
+- Updated README, quickstart, and shell integration docs with immediate apply
+  steps.
+- Preserved constraints: no shell rc edits without consent, no edits outside
+  the marker block, no aliases, no symlinks, no activation, no `current-profile`
+  writes, no orchestration, and no shortcut/runtime behavior changes.
