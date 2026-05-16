@@ -50,8 +50,20 @@ This file tracks the next concrete actions. Keep it actionable and current.
 
 - [x] Implement `agent-init ready` as an output-only preparation command.
 - [x] Support `agent-init ready <profile>` as an explicit target form.
-- [ ] Decide whether `agent-init [profile] [topic]` should map to `ready`
-      later or remain a documented shortcut concept.
+- [x] Document the single context naming model as a candidate simplification.
+- [x] Define the context naming convention for future shortcut planning.
+- [x] Choose `repo-review` as the first public sample context candidate.
+- [x] Add `profiles/repo-review/AGENTS.md` as a public-safe sample briefing.
+- [x] Add lightweight manual baseline-vs-ready evaluation workflow.
+- [ ] Decide whether `agent-init <context>` should be implemented as a
+      shortcut to `agent-init ready <context>` or remain documentation-only.
+- [ ] Run a manual `repo-review` baseline-vs-ready evaluation and record the
+      result using `docs/evaluation.md`.
+- [ ] Decide whether `repo-review` needs wording changes after the first manual
+      evaluation.
+- [ ] Decide whether existing `profiles/<name>` remains the long-term private
+      container or whether a future `contexts/<name>` structure is worth a
+      separate migration.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`
@@ -64,6 +76,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
+- [ ] Decide whether any future command should support explicit multi-context
+      composition; current candidate direction is no.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a
       separate controller command.
 - [ ] Decide whether lifecycle transitions should ever become a strict runtime

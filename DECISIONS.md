@@ -225,8 +225,9 @@ readiness briefing and does not mutate runtime state. It may accept one
 explicit profile target, but it does not activate profiles or write
 `current-profile`.
 
-The future user-facing shortcut `agent-init [profile] [topic]` remains
-unimplemented and documented only as a concept.
+The future user-facing shortcut remains unimplemented and documented only as a
+concept. The earlier `agent-init [profile] [topic]` shape is now being
+reconsidered in favor of a single context name.
 
 Reason: the command can be useful without becoming activation, orchestration,
 shell ownership, or state persistence.
@@ -245,9 +246,10 @@ behavior expansion.
 `help`, `doctor`, `status`, `list`, `auto`, and `version` are reserved built-in
 commands. Profile names must not reuse them.
 
-Future user-facing shorthand may be `agent-init [profile] [topic]`, which is a
-preparation-only concept for a future `ready` flow. `ready` itself is not
-implemented, and profile shortcut semantics are documented only.
+Future user-facing shorthand was initially documented as `agent-init [profile]
+[topic]`, a preparation-only concept for a future `ready` flow. That shortcut
+shape is now under review and may become the simpler single-context form
+documented later in this file.
 
 Reason: users should not have to memorize a hidden `ready` keyword to understand
 the future preparation direction, but current behavior must stay explicit and
@@ -291,3 +293,92 @@ declines, the installer prints guidance and leaves shell rc files untouched.
 
 Reason: pathless `agent-init` access and completion support are useful, but the
 project still must avoid hidden shell ownership and keep rc edits reversible.
+
+### 2026-05-16: Single context naming model under consideration
+
+The previous future shortcut shape `agent-init [profile] [topic]` is being
+reconsidered in favor of a simpler single-context model:
+
+```text
+agent-init [context]
+agent-init ready [context]
+```
+
+In this candidate model, combinations are named by humans as one kebab-case
+context, such as `python-arch`, `money-dividend`, or `faith-nehemiah`. The CLI
+does not interpret multiple free arguments like `agent-init python arch` as
+context composition.
+
+Current runtime behavior is unchanged. `profiles/<name>` remains the discovered
+private directory structure and can be understood as the current container for a
+named briefing context. No `contexts/` rename, shortcut implementation,
+activation, shell/env mutation, `current-profile` write, orchestration, or
+automatic parsing/merging is decided or implemented.
+
+Reason: a single context name keeps the user-facing preparation model simpler
+than a profile/topic grammar while preserving the existing private profile
+container until a storage decision is made.
+
+### 2026-05-16: Context names use readable kebab-case
+
+Future context shortcut planning should use readable kebab-case names. One
+context name should express one briefing intent. Combined meanings should be
+named as one context, such as `python-arch`, `money-dividend`, or
+`travel-yeosu`, rather than passed as multiple CLI arguments.
+
+Reserved built-in commands must not be used as context names: `help`, `doctor`,
+`status`, `list`, `auto`, `version`, and `ready`.
+
+Overly broad names such as `all`, `misc`, or `general`, temporary names such as
+`temp` or `test-only`, and names that are too abbreviated to read should be
+avoided.
+
+This is a naming convention only. It does not implement `agent-init <context>`,
+multi-context parsing, `contexts/` directories, runtime behavior changes,
+activation, shell/env mutation, `current-profile` writes, orchestration, or
+automatic parsing/merging.
+
+Reason: context names need to be easy for humans and agents to infer without
+turning the CLI into a composition language.
+
+### 2026-05-16: `repo-review` is the first public sample context
+
+The first practical public sample context is `repo-review`.
+
+Candidates considered:
+
+```text
+repo-review
+python-arch
+work
+cli-review
+```
+
+Reason: it is specific enough to follow the context naming convention, useful
+for evaluating `agent-life` itself, and better suited than broad names like
+`work` or development-only names like `develop` for baseline-vs-ready review
+experiments.
+
+The sample lives under `profiles/repo-review/` to preserve the existing profile
+directory structure. It is a public-safe briefing context only. It does not
+implement `agent-init <context>`, change `ready`, activate profiles, write
+`current-profile`, mutate shell/env state, start orchestration, or parse/merge
+context automatically.
+
+### 2026-05-16: Evaluation stays lightweight and manual
+
+Baseline-vs-ready evaluation is documented as a manual workflow in
+`docs/evaluation.md`.
+
+The first scenario compares ordinary AI CLI use against AI CLI use after
+providing `agent-init ready repo-review` output for `agent-life` self-review.
+The final task prompt must remain exactly the same in both flows; the intended
+difference is only the presence or absence of ready context.
+
+This is not an automatic benchmark. It does not run AI CLIs, automate scoring,
+add a benchmark framework, integrate LLM/RAG behavior, change runtime behavior,
+change `ready`, implement `agent-init <context>`, or treat public sample
+profiles as automatic runtime contexts.
+
+Reason: the project needs a practical way to inspect whether ready context
+improves answers before adding automation or shortcut behavior.

@@ -3,12 +3,24 @@
 `agent-init` commands are intentionally simple. The current MVP is centered on
 inspection and discovery, not activation.
 
-Built-in commands are reserved words. Profile names must not reuse them.
+Built-in commands are reserved words. Profile or context names must not reuse
+them.
 
 The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
 `agent-init ready` is the current output-only preparation command, and it may
 accept one explicit profile target.
+
+The previous `profile` plus optional `topic` shortcut idea is under review. The
+simpler candidate model is a single context name:
+
+```text
+agent-init [context]
+agent-init ready [context]
+```
+
+In this model, `context` means an AI-ready briefing context, not an executable
+app, shell activation target, or runtime state transition.
 
 ## Semantic Types
 
@@ -47,13 +59,13 @@ agent-init auto      recommend             suggest a profile when unambiguous
 agent-init ready     prepare               show readiness briefing
 agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
-agent-init [profile] [topic] placeholder    future preparation shortcut concept
+agent-init [context]  placeholder           future preparation shortcut concept
 ```
 
 Reserved built-ins:
 
 ```text
-help, doctor, status, list, auto, version
+help, doctor, status, list, auto, ready, version
 ```
 
 ## Command Details
@@ -160,16 +172,17 @@ Current behavior:
 - Does not inspect profiles.
 - Does not write state.
 
-### `agent-init [profile] [topic]`
+### `agent-init [context]`
 
 Semantic: placeholder.
 
 Future direction:
 
-- May act as a user-friendly shortcut to a future preparation-only `ready` flow.
-- May prepare a work context for a profile and optional topic.
-- May be used without arguments as a future auto-ready concept.
-- Planned shortcut for `agent-init ready [profile] [topic]`.
+- May act as a user-friendly shortcut to a preparation-only `ready` flow.
+- May prepare a work context for one named briefing context.
+- May be used without arguments as a future default-ready concept.
+- Planned shortcut candidate for `agent-init ready [context]`.
+- Does not accept multiple context arguments in the current candidate model.
 
 Current stage:
 
@@ -183,11 +196,61 @@ Current stage:
 The shortcut remains documentation-only until a future implementation decision
 is made.
 
+## Context Naming Model Candidate
+
+The single context naming model is under consideration to avoid growing a CLI
+grammar around profile/topic combinations.
+
+Preferred shape:
+
+```text
+agent-init
+agent-init python
+agent-init python-arch
+agent-init infographic
+agent-init money-dividend
+agent-init faith-nehemiah
+agent-init ready python-arch
+```
+
+Discouraged shape:
+
+```text
+agent-init python arch
+agent-init work arch python
+agent-init money dividend report
+```
+
+Candidate rules:
+
+- A context is one kebab-case name chosen by a human.
+- One context name should express one briefing intent.
+- A combined context is still one name, such as `python-arch` or
+  `money-dividend`.
+- Context names should be readable enough that a human can infer the intended
+  briefing.
+- Overly broad names such as `all`, `misc`, or `general` are discouraged.
+- Temporary names such as `temp` or `test-only` are discouraged.
+- Over-abbreviated names are discouraged.
+- The CLI should not interpret multiple free arguments as context composition.
+- The CLI should not automatically parse, merge, or layer context pieces.
+- Context names are preparation targets only.
+- Context names do not activate profiles, source environment, mutate shell
+  state, write `current-profile`, attach sessions, or start orchestration.
+
+Relationship to current profile discovery:
+
+- Current runtime discovery still reads `agent-core/profiles/*`.
+- Existing profile directories may continue to be the storage containers for
+  named briefing contexts.
+- A future rename from `profiles/<name>` to `contexts/<name>` is unresolved and
+  should not be implemented until separately decided.
+
 Reserved command note:
 
 - Built-in commands remain reserved.
-- Profile names must not be `help`, `doctor`, `status`, `list`, `auto`, or
-  `version`.
+- Context or profile names must not be `help`, `doctor`, `status`, `list`,
+  `auto`, `ready`, or `version`.
 
 ## State Policy
 

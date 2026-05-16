@@ -297,3 +297,76 @@ Explicit shell integration step completed:
 - Kept rc edits consent-based, reversible, and limited to PATH plus completion
   source lines.
 - Added completion stubs for the built-in `agent-init` command surface.
+
+Single context naming model review documented:
+
+- Documented a candidate simplification from `agent-init [profile] [topic]` to
+  `agent-init [context]` and `agent-init ready [context]`.
+- Defined `agent-init` as the default ready briefing concept, with
+  `agent-init <context>` as a future context-specific shortcut concept and
+  `agent-init ready <context>` as the explicit form.
+- Clarified that context is an AI-ready briefing context, not an app,
+  activation target, shell/env mutation, runtime state transition, session
+  attach, orchestration trigger, or `current-profile` write.
+- Documented the preferred composition style as one human-named kebab-case
+  context such as `python-arch`, `money-dividend`, or `faith-nehemiah`, instead
+  of multiple CLI arguments like `agent-init python arch`.
+- Preserved the existing `profiles/<name>` structure as the current private
+  container for named briefing context, without adding `contexts/` or changing
+  runtime behavior.
+
+Context naming convention documented:
+
+- Defined context names as readable kebab-case names with one briefing intent.
+- Documented good examples: `work`, `repo-review`, `python`, `python-arch`,
+  `cli`, `shell-cli`, `infographic`, `money-dividend`, `faith-nehemiah`, and
+  `travel-yeosu`.
+- Documented discouraged names and shapes: multiple CLI arguments like
+  `python arch` or `work arch python`, overly broad names like `all`, `misc`,
+  and `general`, temporary names like `temp` and `test-only`, and vague names
+  like `dev-stuff`.
+- Reserved `help`, `doctor`, `status`, `list`, `auto`, `version`, and `ready`
+  so they must not be used as context names.
+- Kept the change documentation-only: no `agent-init <context>` implementation,
+  no multi-context parsing, no `contexts/` directory creation, no profile
+  structure change, no ready behavior change, no shell mutation, no
+  `current-profile` write, no activation/orchestration, and no automatic
+  parsing or merging.
+
+Public sample context step completed:
+
+- Selected `repo-review` as the first practical public sample context
+  candidate.
+- Reason: it is useful for evaluating `agent-life` itself, supports
+  baseline-vs-ready comparison, and focuses on repo state analysis,
+  improvement candidates, risks, and verification instead of broad development
+  work.
+- Added `profiles/repo-review/AGENTS.md` as a public-safe sample briefing with
+  minimal role, review focus, non-goals, verification habit, and MVP boundary.
+- Documented `repo-review` in the profile contract and ready concept docs as a
+  briefing context, not automatic analysis.
+- Preserved runtime boundaries: no `agent-init <context>` shortcut, no ready
+  behavior change, no profile activation, no `current-profile` write, no shell
+  mutation, no orchestration, and no automatic parsing or merging.
+
+Manual evaluation workflow documented:
+
+- Added `docs/evaluation.md` for lightweight manual comparison between normal
+  AI CLI use and AI CLI use after `agent-init ready`.
+- Chose the first scenario as `agent-life` repo self-evaluation using the
+  `repo-review` briefing context.
+- Preserved fairness by requiring the final task prompt to be exactly the same
+  in baseline and ready flows: `현재 agent-life repo 상태를 분석하고, 다음 개선 후보와 리스크를 제안해줘.`
+- Documented that `profiles/repo-review` is public-safe sample/template only;
+  actual ready evaluation needs a test or private `agent-core` with
+  `profiles/repo-review` and `AGENT_CORE_PATH` set.
+- Added an evaluation table with score and evidence columns for goal alignment,
+  boundary adherence, overengineering risk, actionability, verification
+  quality, context awareness, and handoff quality.
+- Added result-record and feedback templates so baseline and ready answers can
+  be pasted into one comparable note.
+- Linked `docs/evaluation.md` from the README.
+- Kept the workflow manual: no AI CLI automation, benchmark framework, scoring
+  automation, LLM/RAG integration, runtime behavior change, ready behavior
+  change, shell integration, shortcut implementation, or automatic use of
+  public samples as runtime context.

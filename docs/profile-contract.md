@@ -8,6 +8,82 @@ context in files that both humans and agents can read.
 
 This contract is a lightweight convention, not a strict schema.
 
+## Relationship To Context Names
+
+The current runtime still uses `profiles/<name>` as the discovered directory
+structure. In the emerging command-language model, that directory can be
+understood as the container for a named AI-ready briefing context.
+
+That means `profile` is the current storage and discovery term, while `context`
+is the user-facing preparation meaning being considered for commands such as
+`agent-init <context>` and `agent-init ready <context>`.
+
+This does not rename directories or change runtime behavior. A future move from
+`profiles/<name>` to `contexts/<name>` is unresolved.
+
+Examples of possible context names:
+
+```text
+repo-review
+python
+python-arch
+infographic
+money-dividend
+faith-nehemiah
+```
+
+Combined meanings should be represented as one context name, not as multiple
+CLI arguments. The profile contract does not define automatic parsing, merging,
+activation, shell mutation, or `current-profile` writes.
+
+## Context Naming Convention
+
+Context names should be stable, readable, and specific enough to imply one
+briefing intent.
+
+Rules:
+
+- Use kebab-case.
+- Use one context name for one briefing intent.
+- Combine related meanings into one name when the combination is meaningful,
+  such as `python-arch` or `money-dividend`.
+- Prefer names a human can read and roughly understand without opening the
+  profile directory.
+- Avoid names that are too abbreviated to guess.
+- Avoid overly broad names such as `all`, `misc`, or `general`.
+- Avoid temporary names such as `temp` or `test-only`.
+- Do not use reserved command names: `help`, `doctor`, `status`, `list`,
+  `auto`, `version`, or `ready`.
+
+Good examples:
+
+```text
+work
+repo-review
+python
+python-arch
+cli
+shell-cli
+infographic
+money-dividend
+faith-nehemiah
+travel-yeosu
+```
+
+Discouraged examples:
+
+```text
+python arch
+work arch python
+all
+misc
+temp
+dev-stuff
+```
+
+The discouraged multi-word examples are separate CLI arguments, not one context
+name. If that meaning is useful, give it one explicit context name.
+
 ## Location
 
 Runtime profiles live in private `agent-core`:
@@ -20,6 +96,19 @@ agent-core/
 
 Public sample profiles may exist in `agent-life/profiles/` as templates, but
 `agent-init` runtime discovery reads `agent-core/profiles/*`.
+
+Current public sample contexts include:
+
+```text
+develop       software development context
+stock         market-analysis context
+repo-review   repository review briefing context
+```
+
+`repo-review` is the first sample context chosen for evaluating `agent-life`
+itself. It is a public-safe briefing context for repo state analysis,
+improvement candidates, risks, and verification habits. It is not an automatic
+analysis feature and does not change runtime behavior.
 
 ## Minimal Structure
 
