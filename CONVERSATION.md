@@ -432,3 +432,29 @@ First baseline-vs-ready result recorded:
   next time.
 - Made no code, runtime behavior, `ready`, shell integration, or
   `agent-init <context>` shortcut changes.
+
+Project-local context switcher semantics documented:
+
+- Reframed `agent-life` in README and `docs/what-is-agent-life.md` as a
+  lightweight public bootstrap framework and future project-local AI context
+  switcher.
+- Defined the emerging model: `agent-life` connects a selected `agent-core`
+  context to the current project's AI instruction surface.
+- For the Codex MVP target, documented the proposed surface as the current
+  project's `AGENTS.md` file with an explicit `agent-life` marker block.
+- Documented that future `select` means linking read-first references to a
+  selected context, not activating a profile.
+- Documented that future `remove` removes only the `agent-life` marker block,
+  and future `status` reports the current project's selected context state.
+- Added placeholder semantics for `select`, `remove`, and `update` in
+  `docs/command-semantics.md`; no commands were implemented.
+- Added `ready` versus `select` distinction in `docs/ready-concept.md`.
+- Added the project-local AGENTS marker block connection model to
+  `docs/profile-contract.md`.
+- Recorded the direction as a decision candidate in `DECISIONS.md`.
+- Added NEXT candidates for marker format, `select`, `remove`, `status`, and
+  optional `update` behavior.
+- Preserved constraints: no implementation, no AGENTS.md mutation logic, no
+  runtime behavior change, no `current-profile` write, no profile activation,
+  no shell/env mutation, no tmux/session orchestration, no daemon/watcher, no
+  `agent-core` file copy/merge, and no marker-outside edits.

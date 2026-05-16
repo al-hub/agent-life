@@ -36,6 +36,41 @@ Combined meanings should be represented as one context name, not as multiple
 CLI arguments. The profile contract does not define automatic parsing, merging,
 activation, shell mutation, or `current-profile` writes.
 
+## Project-Local Connection Model
+
+Future context selection may connect a profile/context from `agent-core` to the
+current project by writing an explicit marker block in the project's AI
+instruction surface.
+
+For the Codex MVP target, that surface is:
+
+```text
+<current-project>/AGENTS.md
+```
+
+The marker block should contain read-first references to the selected
+`agent-core/profiles/<name>` files, especially the profile-local `AGENTS.md`.
+It should not copy or merge private memory into the project.
+
+Selection means:
+
+- Link the current project to one named context by reference.
+- Replace only the existing `agent-life` marker block when changing context.
+- Keep user-authored `AGENTS.md` content outside the marker block untouched.
+
+Selection does not mean:
+
+- Activating a profile.
+- Writing `current-profile`.
+- Sourcing `profile.env`.
+- Mutating shell or environment state.
+- Starting tmux, sessions, daemons, or watchers.
+- Copying, merging, or vendoring `agent-core` content.
+- Editing anything outside the marker block.
+
+Removal means deleting only the `agent-life` marker block from the current
+project's `AGENTS.md`.
+
 ## Context Naming Convention
 
 Context names should be stable, readable, and specific enough to imply one

@@ -5,6 +5,9 @@
 The current minimal command is `agent-init ready`, with an optional explicit
 profile target such as `agent-init ready develop`.
 
+`ready` prints a briefing for the current session. It does not connect that
+briefing to a project file.
+
 The simpler shortcut concept now under review is:
 
 ```text
@@ -84,6 +87,30 @@ It describes what `agent-init` should prepare before work begins:
 It does not activate a profile.
 It does not mutate shell state, environment variables, or runtime state.
 It does not manage tmux sessions, daemons, or orchestration.
+
+## Ready Versus Select
+
+`ready` and the future `select` flow solve different problems.
+
+```text
+ready   print a one-time briefing for the current AI session
+select  connect a context reference to the current project's AI instruction file
+remove  remove only that project-local context reference
+status  report whether a project-local context reference is selected
+```
+
+For the Codex MVP target, `select` would use the current project's `AGENTS.md`
+as the AI instruction surface. It would write only an explicit `agent-life`
+marker block with read-first references to the selected `agent-core` context.
+
+`select` is not activation. It must not source environment, write
+`current-profile`, mutate shell state, start orchestration, copy `agent-core`
+files, merge private memory, or edit content outside the `agent-life` marker
+block.
+
+`ready` remains useful when the user wants a transient briefing without
+project-local mutation. `select` is useful when the user wants the current
+project to carry a durable, reversible reference to the selected AI context.
 
 ## Relationship To The CLI Shortcut
 

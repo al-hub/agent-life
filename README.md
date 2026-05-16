@@ -1,6 +1,9 @@
 # agent-life
 
-`agent-life` is a lightweight public bootstrap framework for preparing AI-ready work contexts across personal workflows such as development, investing, faith study, writing, travel, and family knowledge.
+`agent-life` is a lightweight public bootstrap framework and project-local AI
+context switcher for preparing AI-ready work contexts across personal workflows
+such as development, investing, faith study, writing, travel, and family
+knowledge.
 
 It gives ChatGPT, Codex, Claude, and local LLM sessions a stable repository-based runtime they can inspect, update, and hand off through.
 
@@ -12,12 +15,15 @@ For manual baseline-vs-ready evaluation, see [`docs/evaluation.md`](docs/evaluat
 
 ## One-sentence definition
 
-`agent-life` prepares the working context before AI starts working.
+`agent-life` prepares the working context before AI starts working and, in a
+future explicit flow, can connect a selected private context to the current
+project's AI instruction surface.
 
 It is a public framework for:
 
 - discovering private context
 - reporting current readiness
+- selecting project-local AI context through explicit marker blocks
 - preserving lightweight runtime semantics
 - preventing hidden mutation
 - guiding the next safe step
@@ -47,6 +53,11 @@ It is not a git submodule by default.
 It does not own `agent-core`.
 
 It does not clone private repositories, write secrets, install private memory, or activate profiles.
+
+Future project-local selection means linking a context reference into the
+current project's AI instruction surface. For Codex, the proposed MVP surface is
+the current project's `AGENTS.md` marker block. This is not profile activation
+and does not copy or merge `agent-core` files.
 
 ## Why agent-life exists
 
@@ -84,6 +95,7 @@ The point is to help AI start with fewer wrong assumptions.
 - a place for shared runtime semantics
 - a CLI surface for readiness inspection
 - a bridge between public framework and private context
+- a future project-local context switcher for AI instruction files
 - a way to make future AI sessions continue work without guessing
 
 ## What agent-life is not
@@ -100,6 +112,9 @@ The point is to help AI start with fewer wrong assumptions.
 
 It does not silently mutate your shell, PATH, aliases, runtime state, or profile activation.
 Explicit shell integration is optional, consent-based, and marker-block reversible.
+Future project-local context selection must follow the same rule: only explicit,
+reversible marker-block edits in the current project are allowed, and only
+inside the `agent-life` marker block.
 
 ## Core philosophy
 

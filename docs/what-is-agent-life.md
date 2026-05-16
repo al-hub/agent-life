@@ -2,7 +2,8 @@
 
 This is the official concept and identity document for `agent-life`.
 
-`agent-life` is a lightweight public bootstrap framework for preparing AI-ready work contexts.
+`agent-life` is a lightweight public bootstrap framework and project-local AI
+context switcher for preparing AI-ready work contexts.
 
 It helps a human and AI start work with clearer context, boundaries, diagnostics, and verification.
 
@@ -14,12 +15,14 @@ The same structure can support other personal workflows such as investing, faith
 
 ## One-sentence definition
 
-`agent-life` prepares the working context before AI starts working.
+`agent-life` prepares the working context before AI starts working and can, in a
+future explicit flow, connect a selected private context to the current
+project's AI instruction surface.
 
 ## Shorter definition
 
 ```text
-agent-life = public bootstrap + runtime semantics + readiness inspection
+agent-life = public bootstrap + runtime semantics + project-local context selection
 agent-core = private memory + prompts + workflows + profiles
 agent-init = observer/recommender CLI
 ```
@@ -133,6 +136,20 @@ agent-init list
 agent-init auto
 ```
 
+### Project-local context selection
+
+Future `select` and `remove` commands may connect or disconnect a selected
+`agent-core` context from the current project.
+
+For the Codex MVP target, the proposed instruction surface is the current
+project's `AGENTS.md` file. Selection would write only an explicit
+`agent-life` marker block containing read-first references to the selected
+context.
+
+This is not profile activation. It does not source environment, write
+`current-profile`, copy `agent-core` files, merge private memory, or start any
+session/orchestration behavior.
+
 ### Runtime semantics
 
 It defines current behavior and boundaries.
@@ -182,6 +199,7 @@ sh tests/smoke/run.sh
 - store private memory in the public repo
 - replace human judgment
 - perform hidden automation
+- mutate project files outside an explicit `agent-life` marker block
 
 This is intentional.
 

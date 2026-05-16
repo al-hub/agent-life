@@ -1,7 +1,11 @@
 # Command Semantics
 
 `agent-init` commands are intentionally simple. The current MVP is centered on
-inspection and discovery, not activation.
+inspection, discovery, and output-only preparation, not activation.
+
+The emerging direction extends `agent-life` toward project-local AI context
+switching: connecting a selected `agent-core` context to the current project's
+AI instruction surface through explicit, reversible marker-block edits.
 
 Built-in commands are reserved words. Profile or context names must not reuse
 them.
@@ -28,6 +32,9 @@ app, shell activation target, or runtime state transition.
 inspect     read and report runtime facts
 recommend   suggest a profile without switching or activating it
 prepare     show a readiness briefing without mutating runtime state
+select      connect a context reference to the current project's AI instructions
+remove      remove only the agent-life project-local marker block
+update      refresh an existing project-local context marker block
 activate    prepare shell/runtime environment
 attach      connect to an existing session
 switch      change current runtime profile
@@ -35,9 +42,9 @@ switch      change current runtime profile
 
 Current MVP implements `inspect`, `recommend`, and `prepare` behavior.
 
-It does not implement activation, attach, switch, shell mutation, tmux
-orchestration, session restore, state synchronization, AGENTS.md semantic
-parsing, RAG, or LLM integration.
+It does not implement project-local selection, removal, update, activation,
+attach, switch, shell mutation, tmux orchestration, session restore, state
+synchronization, AGENTS.md semantic parsing, RAG, or LLM integration.
 
 See `docs/shell-boundary.md` for why plain child-process commands cannot mutate
 the parent shell.
@@ -53,13 +60,16 @@ plain-text labels, not a stable machine interface.
 ```text
 command              current semantic      current behavior
 agent-init help      inspect               show command surface
-agent-init status    inspect               report framework/core/state/profiles
+agent-init status    inspect               report framework/core/state/profiles; future selected context status
 agent-init list      inspect               list discovered profiles
 agent-init auto      recommend             suggest a profile when unambiguous
 agent-init ready     prepare               show readiness briefing
 agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
 agent-init [context]  placeholder           future preparation shortcut concept
+agent-init select    placeholder           future project-local context selection
+agent-init remove    placeholder           future project-local marker removal
+agent-init update    placeholder           future project-local marker refresh
 ```
 
 Reserved built-ins:
@@ -113,6 +123,15 @@ Current behavior:
 - Supports `--verbose` for additional checks.
 
 It does not activate a profile or write `current-profile`.
+
+Future project-local behavior:
+
+- May show whether the current project has an `agent-life` marker block in
+  `AGENTS.md`.
+- May show the selected context name and referenced files from that marker
+  block.
+- Must not repair, select, remove, refresh, or rewrite the marker block.
+- Must not inspect or modify content outside the marker block.
 
 ### `agent-init list`
 
@@ -196,6 +215,62 @@ Current stage:
 The shortcut remains documentation-only until a future implementation decision
 is made.
 
+### `agent-init select <context>`
+
+Semantic: placeholder for project-local selection.
+
+Future direction:
+
+- Connects one selected `agent-core` context to the current project.
+- For the Codex MVP target, writes or refreshes only an `agent-life` marker
+  block in the current project's `AGENTS.md`.
+- The marker block should contain read-first references to the selected context,
+  not copied or merged private content.
+- Replaces only the previous `agent-life` marker block when changing selected
+  context.
+- Creates a project-local selection reference, not a runtime activation.
+
+Current stage:
+
+- Not implemented.
+- Does not activate a profile.
+- Does not write `current-profile`.
+- Does not source environment or mutate shell state.
+- Does not copy, merge, or persist `agent-core` files into the project.
+- Does not modify content outside the `agent-life` marker block.
+
+### `agent-init remove`
+
+Semantic: placeholder for project-local marker removal.
+
+Future direction:
+
+- Removes only the `agent-life` marker block from the current project's
+  `AGENTS.md`.
+- Leaves all user-authored AGENTS content untouched.
+- Does not delete or modify `agent-core`.
+- Does not change shell, runtime state, sessions, or profile activation.
+
+Current stage:
+
+- Not implemented.
+
+### `agent-init update`
+
+Semantic: placeholder for project-local marker refresh.
+
+Future direction:
+
+- Refreshes an existing project-local `agent-life` marker block from the
+  currently selected context reference.
+- Must fail or report guidance when no marker block exists instead of guessing a
+  context.
+- Must not parse, merge, or rewrite content outside the marker block.
+
+Current stage:
+
+- Not implemented.
+
 ## Context Naming Model Candidate
 
 The single context naming model is under consideration to avoid growing a CLI
@@ -268,5 +343,28 @@ Not allowed at this stage:
 - Starting a daemon
 - Synchronizing state
 - Mutating shell environment
+
+## Project-Local Marker Policy
+
+Future project-local context selection may mutate the current project's
+`AGENTS.md`, but only under these constraints:
+
+- The command must be explicit, such as a future `agent-init select <context>`.
+- The mutation must be reversible through a future `agent-init remove`.
+- The mutation must be project-local, not global.
+- The command may edit only the `agent-life` marker block.
+- The marker block may contain references to read first, not copied private
+  content.
+- The command must not modify user-authored content outside the marker block.
+- The command must not write `current-profile`, activate profiles, source
+  environment, mutate shell state, start sessions, or run daemons.
+
+Proposed Codex MVP marker target:
+
+```text
+<current-project>/AGENTS.md
+```
+
+This policy is documentation-only until implementation is separately decided.
 
 State file formats are intentionally not strict yet.

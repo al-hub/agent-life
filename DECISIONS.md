@@ -391,3 +391,26 @@ profiles as automatic runtime contexts.
 
 Reason: the project needs a practical way to inspect whether ready context
 improves answers before adding automation or shortcut behavior.
+
+### 2026-05-16: Candidate project-local marker block selection
+
+Candidate direction: extend `agent-life` from ready-only briefing toward an
+explicit project-local AI context switcher.
+
+In this model, `agent-life` connects a selected `agent-core` context to the
+current project's AI instruction surface. For the Codex MVP target, the proposed
+surface is the current project's `AGENTS.md` file.
+
+The future `select` command would write or refresh only an `agent-life` marker
+block with read-first references to the selected context. The future `remove`
+command would remove only that marker block. The future `status` command would
+report the current project's selected context state.
+
+This is not implemented yet. It is not profile activation, not a
+`current-profile` write, not shell/env mutation, not tmux/session
+orchestration, not daemon/watch behavior, and not `agent-core` file copying or
+merging.
+
+Reason: project-local marker block selection may make AI tools pick up the
+right context repeatedly while preserving the existing principles:
+`explicit > magic`, `observer > controller`, and `reversible > ownership`.
