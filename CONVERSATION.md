@@ -201,3 +201,16 @@ Smoke tests step completed:
 - Kept the tests framework-free: no pytest, bats, TAP, hidden mutation,
   `current-profile` writes, activation, orchestration, daemon, or watcher.
 - Current smoke run result: 4 passed, 0 failed.
+
+CLI help semantics step completed:
+
+- Reworked `agent-init help` output around reserved built-ins and a future
+  profile/topic shortcut concept.
+- Clarified that `help`, `doctor`, `status`, `list`, `auto`, and `version` are
+  reserved words, not profile names.
+- Documented `agent-init [profile] [topic]` as a preparation-only future
+  shortcut concept without implementing it.
+- Added a smoke test for help output to keep the wording stable.
+- Kept current behavior unchanged: no profile shortcut execution, no ready
+  command, no activation, no shell mutation, no orchestration, and no
+  `current-profile` write.

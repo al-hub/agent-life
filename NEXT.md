@@ -36,6 +36,9 @@ This file tracks the next concrete actions. Keep it actionable and current.
       bootstrap guidance.
 - [x] Add POSIX shell smoke tests for install, doctor, discovery precedence,
       list, and auto.
+- [x] Clarify built-in command reservation and future profile shortcut
+      semantics.
+- [x] Refine `agent-init help` output for current vs future behavior.
 
 ## Next
 
@@ -46,6 +49,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Expand smoke tests only when new observer behavior is added.
+- [ ] Decide whether `agent-init [profile] [topic]` should ever become a real
+      `ready` command or remain a documented shortcut concept.
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a

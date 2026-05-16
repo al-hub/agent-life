@@ -5,6 +5,9 @@
 The CLI initializes and inspects an agent runtime around public framework,
 private core, local state, and discovered profiles.
 
+Built-in commands are reserved words. Everything else is treated as future
+profile shortcut space, not a current activation path.
+
 ## Design Rules
 
 - Command is action.
@@ -26,7 +29,7 @@ Show the command surface and design rules.
 
 Current behavior:
 
-- Prints available MVP commands.
+- Prints reserved built-in commands and the future profile shortcut concept.
 - Keeps syntax simple and action-centered.
 
 ### `agent-init status`
@@ -105,9 +108,39 @@ Print the CLI version.
 
 These commands remain planned but are not part of the current MVP:
 
-- `agent-init develop`
-- `agent-init stock`
 - `agent-init sync`
+
+## Future Profile Shortcut
+
+Future user-facing shortcut shape may be:
+
+```text
+agent-init [profile] [topic]
+```
+
+Meaning:
+
+```text
+Prepare an AI-ready work context.
+```
+
+This is preparation-only and remains unimplemented today.
+
+Examples:
+
+```text
+agent-init develop
+agent-init money dividend
+agent-init faith nehemiah
+```
+
+Reserved commands stay reserved:
+
+```text
+help, doctor, status, list, auto, version
+```
+
+Profile names must not collide with reserved commands.
 
 ## Path Discovery
 
@@ -123,6 +156,9 @@ These commands remain planned but are not part of the current MVP:
 Local config is optional and read-only from the CLI. See `docs/config.md`.
 The discovery implementation is kept in an internal shell helper so observer
 commands resolve the same core path in the same environment.
+
+Current no-argument invocation still shows help. A future no-argument
+preparation concept is documented only and not implemented.
 
 ## Option Policy
 

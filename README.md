@@ -206,6 +206,10 @@ agent-init doctor
 agent-init version
 ```
 
+Built-in commands are reserved words. They are not profile names.
+
+Built-in commands are reserved words. They are not profile names.
+
 Design rules:
 
 - A command is an action.
@@ -237,15 +241,12 @@ Deferred:
 - session restore
 - environment activation
 
-## Future central concept: ready
+## Future preparation shortcut
 
-A future command may look like this:
+Future user-facing preparation shorthand may look like this:
 
 ```text
-agent-init ready
-agent-init ready develop
-agent-init ready stock
-agent-init ready faith
+agent-init [profile] [topic]
 ```
 
 Meaning:
@@ -254,16 +255,24 @@ Meaning:
 Prepare the current work context before an AI CLI or coding agent starts working.
 ```
 
-`ready` should remain preparation-only.
+Examples:
 
 ```text
-ready ≠ activate
-ready ≠ attach
-ready ≠ shell mutation
-ready ≠ orchestration
+agent-init develop
+agent-init money dividend
+agent-init faith nehemiah
 ```
 
-Possible `ready` output:
+The shortcut should remain preparation-only.
+
+```text
+[profile] [topic] ≠ activate
+[profile] [topic] ≠ attach
+[profile] [topic] ≠ shell mutation
+[profile] [topic] ≠ orchestration
+```
+
+Possible future preparation output:
 
 ```text
 [OK] Framework detected

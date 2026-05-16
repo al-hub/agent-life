@@ -217,3 +217,16 @@ not use pytest, bats, TAP, a framework dependency, hidden mutation,
 Reason: the current need is lightweight semantic regression coverage for
 bootstrap, discovery, `doctor`, `list`, and `auto`, not a full correctness proof
 or heavy CI framework.
+
+### 2026-05-16: Built-in commands are reserved and profile shortcuts stay conceptual
+
+`help`, `doctor`, `status`, `list`, `auto`, and `version` are reserved built-in
+commands. Profile names must not reuse them.
+
+Future user-facing shorthand may be `agent-init [profile] [topic]`, which is a
+preparation-only concept for a future `ready` flow. `ready` itself is not
+implemented, and profile shortcut semantics are documented only.
+
+Reason: users should not have to memorize a hidden `ready` keyword to understand
+the future preparation direction, but current behavior must stay explicit and
+free of hidden activation or mutation.

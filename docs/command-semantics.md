@@ -3,6 +3,8 @@
 `agent-init` commands are intentionally simple. The current MVP is centered on
 inspection and discovery, not activation.
 
+Built-in commands are reserved words. Profile names must not reuse them.
+
 ## Semantic Types
 
 ```text
@@ -38,8 +40,13 @@ agent-init list      inspect               list discovered profiles
 agent-init auto      recommend             suggest a profile when unambiguous
 agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
-agent-init develop   placeholder           future profile activation/recommendation
-agent-init stock     placeholder           future profile activation/recommendation
+agent-init [profile] [topic] placeholder    future preparation shortcut concept
+```
+
+Reserved built-ins:
+
+```text
+help, doctor, status, list, auto, version
 ```
 
 ## Command Details
@@ -50,8 +57,9 @@ Semantic: inspect.
 
 Current behavior:
 
-- Prints available commands.
-- Explains command-centered usage.
+- Prints current commands.
+- Explains the current observer/recommender role.
+- Shows the future preparation-only shortcut concept.
 - Does not inspect private memory.
 - Does not write state.
 
@@ -127,38 +135,29 @@ Current behavior:
 - Does not inspect profiles.
 - Does not write state.
 
-### `agent-init develop`
+### `agent-init [profile] [topic]`
 
 Semantic: placeholder.
 
 Future direction:
 
-- May target the `develop` profile.
-- May recommend or activate development context later.
+- May act as a user-friendly shortcut to a future preparation-only `ready` flow.
+- May prepare a work context for a profile and optional topic.
+- May be used without arguments as a future auto-ready concept.
 
 Current stage:
 
 - Not implemented.
+- Not a profile activation command.
 - Not a shell activation command.
 - Not a session restore command.
 - Does not define `current-profile` write behavior yet.
 
-### `agent-init stock`
+Reserved command note:
 
-Semantic: placeholder.
-
-Future direction:
-
-- May target the `stock` profile.
-- May recommend or activate stock context later.
-
-Current stage:
-
-- Not implemented.
-- Not a trading engine.
-- Not a shell activation command.
-- Not a session restore command.
-- Does not define `current-profile` write behavior yet.
+- Built-in commands remain reserved.
+- Profile names must not be `help`, `doctor`, `status`, `list`, `auto`, or
+  `version`.
 
 ## State Policy
 

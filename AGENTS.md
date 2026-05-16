@@ -88,6 +88,16 @@ agent-init doctor
 agent-init version
 ```
 
+Built-in commands are reserved words. They are not profile names.
+
+Future profile shortcut concept:
+
+```text
+agent-init [profile] [topic]
+```
+
+This is preparation-only and not implemented yet.
+
 Current bootstrap target:
 
 ```text
@@ -188,13 +198,18 @@ agent-init version
 Future possible shape:
 
 ```text
-agent-init ready
-agent-init ready <profile>
+agent-init [profile] [topic]
 ```
 
 Avoid option-heavy commands unless there is a strong reason.
 
 Keep `agent-init` as an observer/recommender unless an explicit decision changes that.
+
+Profile names must not collide with reserved built-in commands:
+
+```text
+help, doctor, status, list, auto, version
+```
 
 ## Profile rule
 

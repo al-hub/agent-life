@@ -8,25 +8,33 @@ usage() {
 agent-init - personal AI runtime bootstrap
 
 Usage:
-  agent-init help
-  agent-init status [--verbose]
-  agent-init list [--verbose]
-  agent-init auto [--verbose]
-  agent-init doctor [--verbose]
-  agent-init version
+  agent-init <command>
+  agent-init [profile] [topic]   future shortcut concept
 
-Commands:
-  help      Show this help.
-  status    Show framework, core, state, and profile status.
-  list      List discovered profiles from agent-core/profiles.
-  auto      Select a profile from discovered profiles using local context.
-  doctor    Run best-effort runtime diagnostics without changing state.
-  version   Show agent-init version.
+Current commands:
+  help       Show this help
+  doctor     Run environment diagnostics
+  status     Show framework/core/state summary
+  list       List discovered profiles
+  auto       Recommend a profile only
+  version    Show installed version
 
-Design:
-  command = action
-  argument = target
-  options stay minimal
+Current role:
+  agent-init is a lightweight observer/recommender.
+  It does not activate profiles, mutate shell state, attach sessions, or orchestrate runtime.
+
+Future direction:
+  agent-init [profile] [topic]
+    Prepare an AI-ready work context.
+    Example: agent-init develop
+    Example: agent-init money dividend
+
+Reserved commands:
+  help, doctor, status, list, auto, version
+
+Important:
+  Profile shortcut is preparation-only.
+  It is not activation, attach, shell mutation, or orchestration.
 EOF
 }
 
