@@ -282,3 +282,11 @@ Documentation consistency step completed:
   wording there with runtime-semantics language.
 - Kept the existing README/AGENTS/DECISIONS/what-is-agent-life structure intact
   while aligning the scope wording across the public docs.
+
+MVP stabilization checkpoint noted:
+
+- Documented the current usable public surface as stable: bootstrap install,
+  discovery, built-in observer commands, `ready`, `ready <profile>`, smoke
+  tests, and the public/private boundary.
+- Kept the deferred areas explicit so future decisions stay separate from the
+  current MVP.

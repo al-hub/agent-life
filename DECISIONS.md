@@ -263,3 +263,19 @@ The official concept and identity document is `docs/what-is-agent-life.md`.
 
 Reason: the name can stay stable while the scope is explained more precisely for
 new readers and future agents.
+
+### 2026-05-16: MVP stabilization checkpoint reached
+
+The current MVP is stable enough to document as a usable public bootstrap
+surface: curl/bootstrap install, core discovery, built-in observer commands,
+output-only `ready`, profile-aware `ready <profile>`, and lightweight smoke
+tests are all in place.
+
+The intentionally deferred areas remain deferred: `agent-init [profile]
+[topic]`, `ready <profile> <topic>`, `current-profile` writes, activation,
+shell/env mutation, source/eval wrappers, tmux/session orchestration,
+daemons/watchers, AGENTS/NEXT/DECISIONS parsing or merging, and RAG/LLM
+integration.
+
+Reason: the checkpoint clarifies what is safe to use now versus what must stay
+as a later decision boundary.

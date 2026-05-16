@@ -44,6 +44,12 @@ This file tracks the next concrete actions. Keep it actionable and current.
 
 ## Next
 
+### Right now
+
+- [x] Implement `agent-init ready` as an output-only preparation command.
+- [x] Support `agent-init ready <profile>` as an explicit target form.
+- [ ] Decide whether `agent-init [profile] [topic]` should map to `ready`
+      later or remain a documented shortcut concept.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`
@@ -51,19 +57,15 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Expand smoke tests only when new observer behavior is added.
-- [x] Implement `agent-init ready` as an output-only preparation command.
-- [x] Support `agent-init ready <profile>` as an explicit target form.
-- [ ] Decide whether `agent-init [profile] [topic]` should map to `ready`
-      later or remain a documented shortcut concept.
+
+### Later
+
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a
       separate controller command.
 - [ ] Decide whether lifecycle transitions should ever become a strict runtime
       state machine.
-
-## Later
-
 - [ ] Add `agent-init develop` profile loading.
 - [ ] Add `agent-init stock` profile loading.
 - [ ] Add `agent-init auto` context detection.
