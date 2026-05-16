@@ -288,61 +288,11 @@ It does not currently activate, attach, switch, sync, restore, or orchestrate.
 
 ## Future ready concept
 
-A future central command may be:
+The boundary and meaning of `ready` are documented in
+[`docs/ready-concept.md`](docs/ready-concept.md).
 
-```text
-agent-init ready
-agent-init ready develop
-agent-init ready stock
-agent-init ready faith
-```
-
-Meaning:
-
-```text
-Prepare the current work context before AI starts working.
-```
-
-`ready` should provide:
-
-- relevant profile information
-- files to read first
-- diagnostics summary
-- boundary reminders
-- verification commands
-- a task brief skeleton
-
-But `ready` should not activate the environment.
-
-```text
-ready ≠ activate
-ready ≠ attach
-ready ≠ shell mutation
-ready ≠ orchestration
-```
-
-## Example ready output
-
-```text
-Agent-Life Ready
-
-[OK] Framework detected
-[OK] Core found
-[OK] Profile candidate: develop
-
-Read first:
-  AGENTS.md
-  NEXT.md
-  DECISIONS.md
-
-Suggested verification:
-  sh tests/smoke/run.sh
-
-Task brief skeleton:
-  Goal:
-  Boundary:
-  Verification:
-```
+At a high level, `ready` is a preparation flow for AI work contexts.
+It is not implemented in the current MVP.
 
 ## Why non-goals matter
 

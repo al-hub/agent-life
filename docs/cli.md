@@ -8,6 +8,9 @@ private core, local state, and discovered profiles.
 Built-in commands are reserved words. Everything else is treated as future
 profile shortcut space, not a current activation path.
 
+The future `ready` preparation boundary is documented in
+[`docs/ready-concept.md`](docs/ready-concept.md).
+
 ## Design Rules
 
 - Command is action.
@@ -31,6 +34,7 @@ Current behavior:
 
 - Prints reserved built-in commands and the future convenience shortcut concept.
 - Keeps syntax simple and action-centered.
+- Points to the future `ready` concept as documentation only.
 
 ### `agent-init status`
 
@@ -139,6 +143,8 @@ Planned shortcut for:
 ```text
 agent-init ready [profile] [topic]
 ```
+
+See `docs/ready-concept.md` for the intended preparation boundary.
 
 Reserved commands stay reserved:
 

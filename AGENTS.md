@@ -105,6 +105,9 @@ Planned shortcut for:
 agent-init ready [profile] [topic]
 ```
 
+The future `ready` preparation boundary is documented in
+`docs/ready-concept.md`.
+
 Current bootstrap target:
 
 ```text

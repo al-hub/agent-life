@@ -7,6 +7,7 @@ It gives ChatGPT, Codex, Claude, and local LLM sessions a stable repository-base
 Private memory, prompts, RAG material, personal workflows, and profile-specific context live outside this public repository in `agent-core`.
 
 For the concept and identity of this project, see [`docs/what-is-agent-life.md`](docs/what-is-agent-life.md).
+For the future `ready` preparation concept, see [`docs/ready-concept.md`](docs/ready-concept.md).
 
 ## One-sentence definition
 
@@ -130,6 +131,7 @@ Important files:
 - `docs/quickstart.md` defines first-run onboarding.
 - `docs/config.md` defines optional local preferences.
 - `docs/cli.md` defines the `agent-init` command surface.
+- `docs/ready-concept.md` defines the future `ready` preparation boundary.
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.
 - `docs/command-semantics.md` defines current command behavior.

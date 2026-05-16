@@ -218,6 +218,16 @@ Reason: the current need is lightweight semantic regression coverage for
 bootstrap, discovery, `doctor`, `list`, and `auto`, not a full correctness proof
 or heavy CI framework.
 
+### 2026-05-16: `ready` remains documentation-only for now
+
+The `ready` flow is defined as a future preparation boundary in
+`docs/ready-concept.md`, and `agent-init [profile] [topic]` remains a documented
+shortcut concept only. No runtime implementation exists yet.
+
+Reason: the boundary and meaning should be clear before any execution behavior
+is designed, so `ready` is not mistaken for activation, orchestration, or shell
+ownership.
+
 ### 2026-05-16: Built-in commands are reserved and profile shortcuts stay conceptual
 
 `help`, `doctor`, `status`, `list`, `auto`, and `version` are reserved built-in

@@ -5,6 +5,9 @@ inspection and discovery, not activation.
 
 Built-in commands are reserved words. Profile names must not reuse them.
 
+The future `ready` preparation boundary is documented in
+[`docs/ready-concept.md`](docs/ready-concept.md).
+
 ## Semantic Types
 
 ```text
@@ -60,6 +63,7 @@ Current behavior:
 - Prints current commands.
 - Explains the current observer/recommender role.
 - Shows the future convenience shortcut concept.
+- Does not implement `ready`.
 - Does not inspect private memory.
 - Does not write state.
 
@@ -154,6 +158,9 @@ Current stage:
 - Not a session restore command.
 - Not a `current-profile` write command.
 - Does not define `current-profile` write behavior yet.
+
+The shortcut remains documentation-only until a future implementation decision
+is made.
 
 Reserved command note:
 

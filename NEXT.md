@@ -53,6 +53,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Expand smoke tests only when new observer behavior is added.
 - [ ] Decide whether `agent-init [profile] [topic]` should ever become a real
       `ready` command or remain a documented shortcut concept.
+- [ ] Decide whether the documentation-only `ready` concept should become an
+      executable preparation flow, and if so, what command owns it.
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a

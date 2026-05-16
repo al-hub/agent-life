@@ -232,6 +232,13 @@ Smoke test regression step completed:
 - Kept the checks focused on core wording and role semantics instead of full
   output snapshots.
 
+Ready concept documentation step completed:
+
+- Added `docs/ready-concept.md` as the boundary document for the future
+  preparation flow.
+- Linked the concept from CLI and command-semantics docs so the shortcut stays
+  documentation-only for now.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as
