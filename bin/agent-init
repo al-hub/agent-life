@@ -245,7 +245,7 @@ print_profiles() {
     echo
     echo "Reasoning:"
     print_core_discovery_reasoning "$root"
-    say "INFO" "Runtime profiles directory"
+    say "INFO" "Discovered profiles directory"
     detail "Path: $profiles"
     say "INFO" "Public sample profiles are ignored for runtime discovery"
   fi
@@ -299,7 +299,7 @@ EOF
     detail "Path: $root"
     print_core_discovery_reasoning "$root"
     say "INFO" "Discovered profiles"
-    detail "Profiles: $(list_profiles_raw "$core" | join_profiles)"
+    detail "Discovered profiles: $(list_profiles_raw "$core" | join_profiles)"
   fi
 }
 
@@ -390,9 +390,9 @@ print_doctor() {
   fi
 
   if [ "$count" -gt 0 ]; then
-    say "OK" "Profiles discovered: $joined"
+    say "OK" "Discovered profiles: $joined"
   elif [ -n "$core" ]; then
-    say "WARN" "No runtime profiles discovered"
+    say "WARN" "Discovered profiles: none"
   else
     say "WARN" "Profile discovery unavailable"
     if [ "$verbose" = "1" ]; then
