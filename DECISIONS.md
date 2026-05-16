@@ -218,15 +218,16 @@ Reason: the current need is lightweight semantic regression coverage for
 bootstrap, discovery, `doctor`, `list`, and `auto`, not a full correctness proof
 or heavy CI framework.
 
-### 2026-05-16: `ready` remains documentation-only for now
+### 2026-05-16: `agent-init ready` is output-only preparation
 
-The `ready` flow is defined as a future preparation boundary in
-`docs/ready-concept.md`, and `agent-init [profile] [topic]` remains a documented
-shortcut concept only. No runtime implementation exists yet.
+`agent-init ready` is implemented as a preparation command that prints a
+readiness briefing and does not mutate runtime state.
 
-Reason: the boundary and meaning should be clear before any execution behavior
-is designed, so `ready` is not mistaken for activation, orchestration, or shell
-ownership.
+The future user-facing shortcut `agent-init [profile] [topic]` remains
+unimplemented and documented only as a concept.
+
+Reason: the command can be useful without becoming activation, orchestration,
+shell ownership, or state persistence.
 
 ### 2026-05-16: `ready` MVP acceptance criteria are defined
 

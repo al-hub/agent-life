@@ -1,6 +1,8 @@
 # Ready Concept
 
-`ready` is a future preparation flow for AI work contexts.
+`ready` is a preparation flow for AI work contexts.
+
+The current minimal command is `agent-init ready`.
 
 It describes what `agent-init` should prepare before work begins:
 
@@ -32,7 +34,7 @@ agent-init ready [profile] [topic]
 ```
 
 That relationship is documented here only.
-It is not implemented in the current MVP.
+The shortcut is not implemented in the current MVP.
 
 ## MVP Acceptance Criteria
 

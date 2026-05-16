@@ -5,20 +5,22 @@ inspection and discovery, not activation.
 
 Built-in commands are reserved words. Profile names must not reuse them.
 
-The future `ready` preparation boundary is documented in
+The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
+`agent-init ready` is the current output-only preparation command.
 
 ## Semantic Types
 
 ```text
 inspect     read and report runtime facts
 recommend   suggest a profile without switching or activating it
+prepare     show a readiness briefing without mutating runtime state
 activate    prepare shell/runtime environment
 attach      connect to an existing session
 switch      change current runtime profile
 ```
 
-Current MVP implements only `inspect` and `recommend` behavior.
+Current MVP implements `inspect`, `recommend`, and `prepare` behavior.
 
 It does not implement activation, attach, switch, shell mutation, tmux
 orchestration, session restore, state synchronization, AGENTS.md semantic
@@ -41,6 +43,7 @@ agent-init help      inspect               show command surface
 agent-init status    inspect               report framework/core/state/profiles
 agent-init list      inspect               list discovered profiles
 agent-init auto      recommend             suggest a profile when unambiguous
+agent-init ready     prepare               show readiness briefing
 agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
 agent-init [profile] [topic] placeholder    future preparation shortcut concept
@@ -62,10 +65,25 @@ Current behavior:
 
 - Prints current commands.
 - Explains the current observer/recommender role.
-- Shows the future convenience shortcut concept.
-- Does not implement `ready`.
+- Shows the current `ready` briefing command and the future convenience
+  shortcut concept.
 - Does not inspect private memory.
 - Does not write state.
+
+### `agent-init ready`
+
+Semantic: prepare.
+
+Current behavior:
+
+- Shows the framework path.
+- Shows the core discovery result.
+- Suggests a profile when one can be identified.
+- Shows read-first files, boundary reminders, verification commands, and a
+  short task brief skeleton.
+- Does not parse or merge recommended files.
+- Does not activate a profile.
+- Does not write `current-profile`.
 
 ### `agent-init status`
 

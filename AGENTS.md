@@ -15,6 +15,7 @@ It is not a runtime controller.
 It is not an orchestrator.
 
 Its current purpose is to help humans and AI start work with clearer context, boundaries, diagnostics, and verification.
+It includes the output-only `agent-init ready` briefing command.
 
 For the official concept and identity summary, see `docs/what-is-agent-life.md`.
 
@@ -86,6 +87,7 @@ agent-init help
 agent-init status
 agent-init list
 agent-init auto
+agent-init ready
 agent-init doctor
 agent-init version
 ```
@@ -105,7 +107,7 @@ Planned shortcut for:
 agent-init ready [profile] [topic]
 ```
 
-The future `ready` preparation boundary is documented in
+The `ready` preparation boundary is documented in
 `docs/ready-concept.md`.
 
 Current bootstrap target:

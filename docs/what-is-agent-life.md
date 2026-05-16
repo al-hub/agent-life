@@ -285,6 +285,7 @@ agent-init = lightweight observer/recommender
 ```
 
 It does not currently activate, attach, switch, sync, restore, or orchestrate.
+It also includes the output-only `agent-init ready` preparation briefing.
 
 ## Future ready concept
 

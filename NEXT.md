@@ -51,12 +51,9 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
 - [ ] Expand smoke tests only when new observer behavior is added.
-- [ ] Decide whether `agent-init [profile] [topic]` should ever become a real
-      `ready` command or remain a documented shortcut concept.
-- [ ] Decide whether the documentation-only `ready` concept should become an
-      executable preparation flow, and if so, what command owns it.
-- [ ] Implement `ready` only if the documented MVP acceptance criteria remain
-      narrow and boundary-preserving.
+- [x] Implement `agent-init ready` as an output-only preparation command.
+- [ ] Decide whether `agent-init [profile] [topic]` should map to `ready`
+      later or remain a documented shortcut concept.
 - [ ] Decide whether public sample profiles should become installable templates.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a

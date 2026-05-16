@@ -245,6 +245,12 @@ Ready MVP acceptance step completed:
 - Kept the criteria focused on boundary, diagnostics, verification, and a task
   brief skeleton rather than execution or orchestration.
 
+Ready implementation step completed:
+
+- Implemented `agent-init ready` as an output-only preparation command.
+- Kept the shortcut `agent-init [profile] [topic]` unresolved for a later
+  decision.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as

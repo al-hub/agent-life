@@ -8,8 +8,9 @@ private core, local state, and discovered profiles.
 Built-in commands are reserved words. Everything else is treated as future
 profile shortcut space, not a current activation path.
 
-The future `ready` preparation boundary is documented in
+The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
+`agent-init ready` is the current output-only preparation command.
 
 ## Design Rules
 
@@ -34,7 +35,8 @@ Current behavior:
 
 - Prints reserved built-in commands and the future convenience shortcut concept.
 - Keeps syntax simple and action-centered.
-- Points to the future `ready` concept as documentation only.
+- Describes the current `ready` briefing command and the future convenience
+  shortcut concept.
 
 ### `agent-init status`
 
@@ -107,6 +109,43 @@ mean runtime failure. No strict exit-code contract is defined yet.
 ### `agent-init version`
 
 Print the CLI version.
+
+### `agent-init ready`
+
+Prepare an AI-ready work briefing.
+
+Expected behavior:
+
+- Show the framework path.
+- Show the core discovery result.
+- Show a suggested profile or a no-profile warning.
+- Show read-first files, boundary reminders, verification commands, and a
+  short task brief skeleton.
+- Do not parse or merge recommended files.
+- Do not activate profiles, mutate shell or runtime state, or perform
+  orchestration.
+
+Expected output:
+
+```text
+agent-init ready
+
+[OK] Framework detected
+     Path: /path/to/agent-life
+[OK] Core path found
+     Path: /path/to/agent-core
+     Source: sibling
+[OK] Suggested profile: develop
+[INFO] Reason: current directory name matches a discovered profile
+
+[INFO] Read first
+     README.md
+     docs/what-is-agent-life.md
+     docs/cli.md
+     docs/command-semantics.md
+     docs/ready-concept.md
+     agent-core/profiles/develop/AGENTS.md
+```
 
 ## Deferred Commands
 

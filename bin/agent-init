@@ -16,6 +16,7 @@ Current commands:
   status     Show framework/core/state summary
   list       List discovered profiles
   auto       Recommend a profile only
+  ready      Prepare an AI work briefing
   version    Show installed version
 
 Current role:
@@ -115,6 +116,50 @@ join_profiles() {
 
 profile_count() {
   awk 'NF { count += 1 } END { printf "%d", count }'
+}
+
+profile_candidate_result() {
+  local core cwd_name count selected profile
+  core="$1"
+  cwd_name="$(basename -- "$PWD")"
+  count=0
+  selected=""
+
+  if [ -z "$core" ]; then
+    printf '%s|%s|%s\n' "none" "WARN" "agent-core was not found"
+    return 0
+  fi
+
+  while IFS= read -r profile; do
+    [ -n "$profile" ] || continue
+    count=$((count + 1))
+    if [ "$profile" = "$cwd_name" ]; then
+      selected="$profile"
+    fi
+  done <<EOF
+$(list_profiles_raw "$core")
+EOF
+
+  if [ -n "$selected" ]; then
+    printf '%s|%s|%s\n' "$selected" "OK" "current directory name matches a discovered profile"
+  elif [ "$count" -eq 1 ]; then
+    selected="$(list_profiles_raw "$core")"
+    printf '%s|%s|%s\n' "$selected" "OK" "only one profile is available"
+  else
+    printf '%s|%s|%s\n' "none" "WARN" "no unambiguous profile match"
+  fi
+}
+
+print_profile_candidate() {
+  local label result profile level reason
+  label="$1"
+  result="$2"
+  IFS='|' read -r profile level reason <<EOF
+$result
+EOF
+
+  say "$level" "$label: $profile"
+  say "INFO" "Reason: $reason"
 }
 
 say() {
@@ -252,14 +297,11 @@ print_profiles() {
 }
 
 auto_profile() {
-  local verbose root core_result core cwd_name profile count selected
+  local verbose root core_result core profile_result
   verbose="$1"
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
-  cwd_name="$(basename -- "$PWD")"
-  count=0
-  selected=""
 
   if [ -z "$core" ]; then
     say "WARN" "Core path not found"
@@ -268,27 +310,8 @@ auto_profile() {
     return 1
   fi
 
-  while IFS= read -r profile; do
-    [ -n "$profile" ] || continue
-    count=$((count + 1))
-    if [ "$profile" = "$cwd_name" ]; then
-      selected="$profile"
-    fi
-  done <<EOF
-$(list_profiles_raw "$core")
-EOF
-
-  if [ -n "$selected" ]; then
-    say "OK" "Recommended profile: $selected"
-    say "INFO" "Reason: current directory name matches a discovered profile"
-  elif [ "$count" -eq 1 ]; then
-    selected="$(list_profiles_raw "$core")"
-    say "OK" "Recommended profile: $selected"
-    say "INFO" "Reason: only one profile is available"
-  else
-    say "INFO" "Recommended profile: none"
-    say "INFO" "Reason: no unambiguous profile match"
-  fi
+  profile_result="$(profile_candidate_result "$core")"
+  print_profile_candidate "Recommended profile" "$profile_result"
 
   if [ "$verbose" = "1" ]; then
     echo
@@ -301,6 +324,72 @@ EOF
     say "INFO" "Discovered profiles"
     detail "Discovered profiles: $(list_profiles_raw "$core" | join_profiles)"
   fi
+}
+
+print_ready() {
+  local root core_result core core_source profile_result profile level reason
+  root="$(framework_root)"
+  core_result="$(agent_life_discover_core "$root")"
+  core="$(agent_life_core_path_from_result "$core_result")"
+  core_source="$(agent_life_core_source_from_result "$core_result")"
+  profile_result="$(profile_candidate_result "$core")"
+  IFS='|' read -r profile level reason <<EOF
+$profile_result
+EOF
+
+  echo "agent-init ready"
+  echo
+
+  say "OK" "Framework detected"
+  detail "Path: $root"
+
+  if [ -n "$core" ]; then
+    say "OK" "Core path found"
+    detail "Path: $core"
+    detail "Source: $core_source"
+  else
+    say "WARN" "Core path not found"
+    warn_detail "Source: $core_source"
+  fi
+
+  say "$level" "Suggested profile: $profile"
+  say "INFO" "Reason: $reason"
+
+  echo
+  say "INFO" "Read first"
+  detail "README.md"
+  detail "docs/what-is-agent-life.md"
+  detail "docs/cli.md"
+  detail "docs/command-semantics.md"
+  detail "docs/ready-concept.md"
+  if [ "$profile" != "none" ] && [ -n "$core" ] && [ -d "$core/profiles/$profile" ]; then
+    detail "agent-core/profiles/$profile/AGENTS.md"
+  fi
+
+  echo
+  say "INFO" "Boundary reminders"
+  detail "ready does not run the task"
+  detail "ready does not activate profiles"
+  detail "ready does not mutate shell state"
+  detail "ready does not write current-profile"
+  detail "ready does not start tmux, sessions, or orchestration"
+  detail "ready does not parse AGENTS.md semantically"
+
+  echo
+  say "INFO" "Suggested verification"
+  detail "./bin/agent-init doctor"
+  detail "./bin/agent-init status"
+  detail "sh tests/smoke/run.sh"
+
+  echo
+  say "INFO" "Task brief"
+  detail "Goal:"
+  detail "Boundary:"
+  detail "Verification:"
+  detail "Next action:"
+
+  echo
+  say "INFO" "Read-first files are recommendations only; no automatic parsing or merging occurs."
 }
 
 print_doctor() {
@@ -458,6 +547,12 @@ main() {
     auto)
       verbose="$(parse_verbose "$@")"
       auto_profile "$verbose"
+      ;;
+    ready)
+      if [ "$#" -ne 0 ]; then
+        die "ready does not accept arguments"
+      fi
+      print_ready
       ;;
     doctor)
       verbose="$(parse_verbose "$@")"
