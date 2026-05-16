@@ -1,6 +1,6 @@
 # agent-life
 
-`agent-life` is the public bootstrap layer for a personal AI operating system.
+`agent-life` is a lightweight public bootstrap framework for preparing AI-ready work contexts across personal workflows such as development, investing, faith study, writing, travel, and family knowledge.
 
 It gives ChatGPT, Codex, Claude, and local LLM sessions a stable repository-based
 runtime they can inspect, update, and hand off through. Private memory and
