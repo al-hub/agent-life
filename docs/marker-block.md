@@ -137,5 +137,30 @@ Future `agent-init status` may report:
 - project `AGENTS.md` exists with no selected context
 - selected context found in the `agent-life` marker block
 - malformed marker block requiring manual repair
+- selected context source path
+- warning when the selected context source path is missing
 
 Status must be read-only.
+
+Status may read only:
+
+- the current project path
+- whether `<current-project>/AGENTS.md` exists
+- whether the start and end marker tokens exist
+- the inclusive marker block content between the tokens
+- the first `Selected context:` list item inside the marker block
+- the first `Read first:` path inside the marker block
+- whether the referenced context source path exists
+
+Status must not:
+
+- rewrite `AGENTS.md`
+- repair malformed marker blocks
+- add missing fields
+- expand the marker block
+- parse or merge referenced `agent-core` content
+- infer context from text outside the marker block
+- modify runtime state
+
+If no complete marker block exists, status should report selected context as
+`none`.

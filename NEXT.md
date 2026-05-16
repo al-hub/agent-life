@@ -53,6 +53,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Fix shell integration prompt and post-install reload guidance.
 - [x] Record the first `repo-review` baseline-vs-ready evaluation result.
 - [x] Define project-local `AGENTS.md` marker block specification.
+- [x] Design project-local marker block status reporting.
 
 ## Next
 
@@ -70,7 +71,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       separate migration.
 - [ ] Decide `agent-init select <context>` behavior and failure modes.
 - [ ] Decide `agent-init remove` command UX and malformed-marker failure modes.
-- [ ] Decide how `agent-init status` should report selected project context.
+- [ ] Implement `agent-init status` project-local marker block reporting.
 - [ ] Decide whether `agent-init update` is needed for marker refresh.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.

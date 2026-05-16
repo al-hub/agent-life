@@ -482,3 +482,22 @@ AGENTS marker block specification documented:
 - Made no implementation, runtime behavior, AGENTS mutation logic,
   `current-profile` write, profile activation, shell/env mutation, automatic
   parsing/merging, or `agent-core` copy/merge changes.
+
+Project-local status reporting designed:
+
+- Updated `docs/command-semantics.md` with future `agent-init status`
+  project-local output candidates.
+- Candidate status output includes framework path, core path, project path,
+  project `AGENTS.md` existence, marker block state, selected context, context
+  source path, and a warning when the selected context source is missing.
+- Updated `docs/marker-block.md` to define the read-only status scope:
+  current project path, `AGENTS.md` existence, marker tokens, inclusive marker
+  block content, first `Selected context:` item, first `Read first:` path, and
+  source path existence.
+- Defined that missing complete marker block should report selected context as
+  `none`.
+- Marked the status reporting design complete in `NEXT.md` and left
+  `agent-init status` project-local marker reporting as an implementation
+  candidate.
+- Made no implementation, AGENTS.md modification, marker block expansion,
+  runtime behavior, or parsing/merging changes.

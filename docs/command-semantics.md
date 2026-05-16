@@ -133,8 +133,29 @@ Future project-local behavior:
   `AGENTS.md`.
 - May show the selected context name and referenced files from that marker
   block.
+- May show the current project path.
+- May show whether project `AGENTS.md` exists.
+- May show `selected context: none` when no complete marker block exists.
+- May show a context source path when a selected context is present.
+- May warn when the selected context source path is missing.
 - Must not repair, select, remove, refresh, or rewrite the marker block.
 - Must not inspect or modify content outside the marker block.
+
+Future project-local status output candidate:
+
+```text
+Framework: <framework-path>
+Core: <core-path or not found>
+Project: <current-project-path>
+Project AGENTS.md: found | missing
+Agent-life marker block: found | missing | malformed
+Selected context: <context> | none
+Context source: <agent-core>/profiles/<context>/AGENTS.md | none
+Warnings:
+- selected context source missing: <path>
+```
+
+This is a human-readable candidate shape, not a stable output protocol.
 
 ### `agent-init list`
 
