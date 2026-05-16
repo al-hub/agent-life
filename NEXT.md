@@ -39,6 +39,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Clarify built-in command reservation and future profile shortcut
       semantics.
 - [x] Refine `agent-init help` output for current vs future behavior.
+- [x] Add official concept document for agent-life identity.
 
 ## Next
 

@@ -1,6 +1,6 @@
 # Architecture
 
-`agent-life` is the public bootstrap layer for a personal AI operating system.
+`agent-life` is the public bootstrap layer for AI-ready work contexts.
 It provides a repo-based runtime that AI agents can inspect, update, and hand
 off through.
 
@@ -26,7 +26,7 @@ Responsibilities:
 - Install and bootstrap runtime tools
 - Provide the `agent-init` CLI
 - Define shared commands
-- Load shell integrations
+- Define runtime semantics
 - Discover `agent-core`
 - Document public architecture and handoff state
 

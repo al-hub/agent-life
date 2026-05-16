@@ -224,3 +224,23 @@ Help wording refinement step completed:
 - Added `write current-profile` to the help warning so the shortcut cannot be
   mistaken for runtime ownership.
 - Kept the change wording-only; no runtime shortcut behavior was added.
+
+Concept document step completed:
+
+- Added a short identity line to `docs/what-is-agent-life.md` so it reads as
+  the official concept document.
+- Kept the README link in place and preserved the current public framing of
+  `agent-life` as a lightweight bootstrap framework for AI-ready work
+  contexts.
+- Replaced the stale `shell integration` wording in durable decisions with
+  `runtime semantics`.
+- Added a durable decision noting that the `agent-life` name is retained while
+  the scope is reframed more precisely for new readers.
+
+Documentation consistency step completed:
+
+- Reduced `docs/architecture.md` to the current AI-ready work-context framing.
+- Replaced the stale `personal AI operating system` / `shell integration`
+  wording there with runtime-semantics language.
+- Kept the existing README/AGENTS/DECISIONS/what-is-agent-life structure intact
+  while aligning the scope wording across the public docs.

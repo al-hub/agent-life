@@ -1,5 +1,7 @@
 # What is agent-life?
 
+This is the official concept and identity document for `agent-life`.
+
 `agent-life` is a lightweight public bootstrap framework for preparing AI-ready work contexts.
 
 It helps a human and AI start work with clearer context, boundaries, diagnostics, and verification.

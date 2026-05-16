@@ -8,7 +8,7 @@ changes.
 ### 2026-05-16: Split public bootstrap and private brain
 
 `agent-life` is the public repo. It contains bootstrap scripts, CLI framework,
-shell integration, public docs, and shared command conventions.
+runtime semantics, public docs, and shared command conventions.
 
 `agent-core` is the private repo. It contains prompts, memory, RAG, personal
 workflows, and domain profiles.
@@ -230,3 +230,14 @@ implemented, and profile shortcut semantics are documented only.
 Reason: users should not have to memorize a hidden `ready` keyword to understand
 the future preparation direction, but current behavior must stay explicit and
 free of hidden activation or mutation.
+
+### 2026-05-16: `agent-life` name retained, scope reframed
+
+The project keeps the `agent-life` name, but its public framing is a lightweight
+bootstrap framework for preparing AI-ready work contexts, not a development-only
+tool and not a full agent controller.
+
+The official concept and identity document is `docs/what-is-agent-life.md`.
+
+Reason: the name can stay stable while the scope is explained more precisely for
+new readers and future agents.

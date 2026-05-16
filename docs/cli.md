@@ -1,8 +1,8 @@
 # CLI
 
-`agent-init` is the command entry point for the personal AI operating system.
+`agent-init` is the command entry point for `agent-life`.
 
-The CLI initializes and inspects an agent runtime around public framework,
+The CLI prepares and inspects an AI-ready work context around public framework,
 private core, local state, and discovered profiles.
 
 Built-in commands are reserved words. Everything else is treated as future

@@ -16,6 +16,8 @@ It is not an orchestrator.
 
 Its current purpose is to help humans and AI start work with clearer context, boundaries, diagnostics, and verification.
 
+For the official concept and identity summary, see `docs/what-is-agent-life.md`.
+
 ## Mission
 
 Maintain `agent-life` as the public bootstrap/runtime semantics repository for personal AI workflows.
