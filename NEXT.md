@@ -58,6 +58,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Implement `agent-init remove all` marker-only rollback.
 - [x] Implement `agent-init status` project-local marker block reporting.
 - [x] Add smoke coverage for marker block add, update, status, and removal.
+- [x] Strengthen select/remove/status smoke coverage for project-local
+      `AGENTS.md` marker block safety.
 
 ## Next
 

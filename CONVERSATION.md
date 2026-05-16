@@ -527,3 +527,19 @@ Project-local select/remove MVP implemented:
   `current-profile`, Claude/Copilot targets, non-AGENTS targets, AI CLI
   handoff, RAG/LLM integration, profile activation, shell/env mutation,
   tmux/session orchestration, daemon, or watcher behavior.
+
+## 2026-05-17
+
+Select/remove/status smoke coverage strengthened:
+
+- Added a dedicated `tests/smoke/test_select_remove.sh` smoke test.
+- The test uses isolated temporary `HOME`, project directories, and
+  `agent-core` profiles only.
+- Covered select creating `AGENTS.md`, select preserving existing project
+  guidance, repeat select avoiding duplicate marker blocks, switching from
+  context A to context B, `remove all` preserving marker-outside content, and
+  status reporting selected versus none.
+- Kept checks grep/assert based instead of full output snapshots.
+- Made no implementation or marker semantics changes because
+  `docs/marker-block.md` and `docs/command-semantics.md` already matched the
+  current behavior.
