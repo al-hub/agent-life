@@ -40,6 +40,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       semantics.
 - [x] Refine `agent-init help` output for current vs future behavior.
 - [x] Add official concept document for agent-life identity.
+- [x] Add lightweight smoke checks for help/status/version wording consistency.
 
 ## Next
 

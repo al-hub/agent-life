@@ -225,6 +225,13 @@ Help wording refinement step completed:
   mistaken for runtime ownership.
 - Kept the change wording-only; no runtime shortcut behavior was added.
 
+Smoke test regression step completed:
+
+- Added minimal POSIX smoke checks for `status` and `version` alongside the
+  existing help/doctor/list/auto coverage.
+- Kept the checks focused on core wording and role semantics instead of full
+  output snapshots.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as
