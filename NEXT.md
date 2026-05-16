@@ -60,6 +60,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Add smoke coverage for marker block add, update, status, and removal.
 - [x] Strengthen select/remove/status smoke coverage for project-local
       `AGENTS.md` marker block safety.
+- [x] Add a project-local context switching demo document for
+      `select`/`status`/`remove all`.
 
 ## Next
 

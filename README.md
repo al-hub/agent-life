@@ -11,6 +11,7 @@ Private memory, prompts, RAG material, personal workflows, and profile-specific 
 
 For the concept and identity of this project, see [`docs/what-is-agent-life.md`](docs/what-is-agent-life.md).
 For the `ready` preparation command, see [`docs/ready-concept.md`](docs/ready-concept.md).
+For a project-local context switching demo, see [`docs/demo-context-switching.md`](docs/demo-context-switching.md).
 For manual baseline-vs-ready evaluation, see [`docs/evaluation.md`](docs/evaluation.md).
 
 ## One-sentence definition
@@ -150,6 +151,7 @@ Important files:
 - `docs/config.md` defines optional local preferences.
 - `docs/cli.md` defines the `agent-init` command surface.
 - `docs/ready-concept.md` defines the `ready` preparation boundary.
+- `docs/demo-context-switching.md` demonstrates project-local context switching.
 - `docs/evaluation.md` defines lightweight manual baseline-vs-ready evaluation.
 - `docs/profile-contract.md` defines the lightweight profile convention.
 - `docs/runtime-state.md` separates persistent memory from local state.

@@ -543,3 +543,16 @@ Select/remove/status smoke coverage strengthened:
 - Made no implementation or marker semantics changes because
   `docs/marker-block.md` and `docs/command-semantics.md` already matched the
   current behavior.
+
+Context switching demo documented:
+
+- Added `docs/demo-context-switching.md` to show the practical
+  `cd target-project`, `agent-init status`, `agent-init list`,
+  `agent-init select <context>`, `codex`, and `agent-init remove all` flow.
+- Included examples for `repo-review`, infographic format switching, and
+  C++/Java review context switching.
+- Emphasized that `select` writes only a project-local `AGENTS.md` marker block,
+  is not activation, preserves marker-outside content, and links
+  `agent-core` by reference rather than copying or merging private files.
+- Linked the demo from `README.md`.
+- Made documentation-only changes; no implementation files changed.
