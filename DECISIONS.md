@@ -279,3 +279,15 @@ integration.
 
 Reason: the checkpoint clarifies what is safe to use now versus what must stay
 as a later decision boundary.
+
+### 2026-05-16: Explicit shell integration is consent-based and reversible
+
+`install.sh` may register or remove a marker block in bash or zsh rc files when
+the user explicitly consents. The marker block is the only shell rc content
+managed by `agent-life`, and it is limited to PATH and completion source lines.
+
+The default bootstrap remains safe: if the shell cannot be detected or the user
+declines, the installer prints guidance and leaves shell rc files untouched.
+
+Reason: pathless `agent-init` access and completion support are useful, but the
+project still must avoid hidden shell ownership and keep rc edits reversible.

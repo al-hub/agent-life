@@ -36,6 +36,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       bootstrap guidance.
 - [x] Add POSIX shell smoke tests for install, doctor, discovery precedence,
       list, and auto.
+- [x] Add shell completion stubs for bash and zsh.
+- [x] Implement explicit shell integration install/uninstall flow.
 - [x] Clarify built-in command reservation and future profile shortcut
       semantics.
 - [x] Refine `agent-init help` output for current vs future behavior.

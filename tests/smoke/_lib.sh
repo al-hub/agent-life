@@ -54,3 +54,15 @@ make_core() {
   mkdir -p "$core/profiles/$profile"
   printf '# %s\n' "$profile" > "$core/profiles/$profile/AGENTS.md"
 }
+
+snapshot_repo() {
+  src="$1"
+  dest="$2"
+
+  rm -rf "$dest"
+  mkdir -p "$dest"
+  (cd "$src" && tar --exclude=.git -cf - .) | (cd "$dest" && tar -xf -)
+  git -C "$dest" init -q
+  git -C "$dest" add -A
+  git -C "$dest" -c user.name='Smoke Test' -c user.email='smoke@example.com' commit -q -m 'snapshot'
+}

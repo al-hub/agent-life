@@ -7,6 +7,8 @@ is to make the public framework checkout available at a predictable path, then
 print manual next steps.
 
 It is not runtime activation.
+It may optionally register explicit shell integration through a reversible
+marker block when the user consents.
 
 ## Default Install Location
 
@@ -74,8 +76,7 @@ repo checkout does not turn the script into an activation command.
 
 The installer must not:
 
-- edit `PATH`
-- edit shell rc files
+- edit `PATH` or shell rc files without explicit consent
 - inject aliases
 - create symlinks automatically
 - write `current-profile`
@@ -86,7 +87,11 @@ The installer must not:
 - perform background or self-update behavior
 - take ownership of the user's shell or runtime
 
-PATH or symlink integration may be printed as manual guidance only.
+The explicit shell integration flow is marker-block based and reversible. See
+`docs/shell-integration.md`.
+
+Manual PATH fallback may still be printed for users who do not want shell rc
+integration.
 
 ## First Run
 

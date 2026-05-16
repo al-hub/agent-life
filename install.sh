@@ -3,6 +3,8 @@ set -euo pipefail
 
 DEFAULT_REPO_URL="https://github.com/al-hub/agent-life.git"
 DEFAULT_INSTALL_DIR="$HOME/.agent-life/framework"
+MARKER_START="# agent-life shell integration start"
+MARKER_END="# agent-life shell integration end"
 
 log() {
   printf '%s\n' "$*"
@@ -19,6 +21,9 @@ agent-life bootstrap
 
 Usage:
   ./install.sh
+  ./install.sh --shell-integration
+  ./install.sh --no-shell-integration
+  ./install.sh --remove-shell-integration
   curl -fsSL <install.sh-url> | bash
 
 Environment:
@@ -26,6 +31,10 @@ Environment:
                             Default: $DEFAULT_REPO_URL
   AGENT_LIFE_INSTALL_DIR   Install target path.
                             Default: $DEFAULT_INSTALL_DIR
+  AGENT_LIFE_SHELL_INTEGRATION
+                            yes, no, or unset to control shell rc registration
+                            when bash or zsh can be detected.
+                            Default: prompt with [Y/n] in interactive shells
 
 Behavior:
   - checks for git
@@ -33,10 +42,11 @@ Behavior:
   - pulls best-effort updates when the target path is an existing git checkout
   - validates the lightweight framework files
   - reports current core discovery
+  - can register or remove a reversible marker block in bash or zsh rc files
   - prints diagnostics-first manual next steps
 
-It does not edit PATH, shell rc files, aliases, symlinks, runtime state, or
-profile activation state.
+It does not silently edit PATH, shell rc files, aliases, symlinks, runtime
+state, or profile activation state.
 EOF_USAGE
 }
 
@@ -60,6 +70,107 @@ resolve_install_dir() {
   parent="$(abs_parent "$requested")"
   base="$(basename -- "$requested")"
   printf '%s/%s\n' "$parent" "$base"
+}
+
+detect_shell_name() {
+  case "${SHELL:-}" in
+    *bash) printf '%s\n' bash ;;
+    *zsh) printf '%s\n' zsh ;;
+    *) return 1 ;;
+  esac
+}
+
+shell_rc_path() {
+  case "$1" in
+    bash) printf '%s/.bashrc\n' "$HOME" ;;
+    zsh) printf '%s/.zshrc\n' "$HOME" ;;
+    *) return 1 ;;
+  esac
+}
+
+shell_completion_path() {
+  local install_dir shell_name
+  install_dir="$1"
+  shell_name="$2"
+  printf '%s/completions/agent-init.%s\n' "$install_dir" "$shell_name"
+}
+
+shell_integration_block() {
+  local install_dir shell_name completion_path
+  install_dir="$1"
+  shell_name="$2"
+  completion_path="$(shell_completion_path "$install_dir" "$shell_name")"
+  cat <<EOF_BLOCK
+$MARKER_START
+export PATH="$install_dir/bin:\$PATH"
+source "$completion_path"
+$MARKER_END
+EOF_BLOCK
+}
+
+remove_shell_integration_block() {
+  local file tmp had_block
+  file="$1"
+
+  if [[ ! -f "$file" ]]; then
+    printf '%s\n' missing
+    return 0
+  fi
+
+  had_block=0
+  if grep -Fq "$MARKER_START" "$file"; then
+    had_block=1
+  fi
+
+  tmp="$(mktemp)"
+  awk -v start="$MARKER_START" -v end="$MARKER_END" '
+    $0 == start { in_block = 1; next }
+    in_block && $0 == end { in_block = 0; next }
+    in_block { next }
+    { print }
+  ' "$file" > "$tmp"
+  mv "$tmp" "$file"
+
+  if [[ "$had_block" -eq 1 ]]; then
+    printf '%s\n' removed
+  else
+    printf '%s\n' absent
+  fi
+}
+
+apply_shell_integration_block() {
+  local file block tmp had_block
+  file="$1"
+  block="$2"
+
+  had_block=0
+  if [[ -f "$file" ]] && grep -Fq "$MARKER_START" "$file"; then
+    had_block=1
+  fi
+
+  if [[ -f "$file" ]]; then
+    tmp="$(mktemp)"
+    awk -v start="$MARKER_START" -v end="$MARKER_END" '
+      $0 == start { in_block = 1; next }
+      in_block && $0 == end { in_block = 0; next }
+      in_block { next }
+      { print }
+    ' "$file" > "$tmp"
+    mv "$tmp" "$file"
+  else
+    : > "$file"
+  fi
+
+  if [[ -s "$file" ]]; then
+    printf '\n' >> "$file"
+  fi
+  printf '%s\n' "$block" >> "$file"
+
+  if [[ "$had_block" -eq 1 ]]; then
+    printf '%s\n' refreshed
+  else
+    printf '%s\n' added
+  fi
 }
 
 clone_or_update() {
@@ -131,6 +242,29 @@ validate_install() {
     missing=1
   fi
 
+  if [[ -d "$install_dir/completions" ]]; then
+    log "[OK] completions directory found"
+  else
+    log "[WARN] completions directory missing"
+    missing=1
+  fi
+
+  if [[ -r "$install_dir/completions/agent-init.bash" ]]; then
+    log "[OK] bash completion found"
+    log "     Path: $install_dir/completions/agent-init.bash"
+  else
+    log "[WARN] bash completion missing"
+    missing=1
+  fi
+
+  if [[ -r "$install_dir/completions/agent-init.zsh" ]]; then
+    log "[OK] zsh completion found"
+    log "     Path: $install_dir/completions/agent-init.zsh"
+  else
+    log "[WARN] zsh completion missing"
+    missing=1
+  fi
+
   return "$missing"
 }
 
@@ -160,8 +294,10 @@ print_core_discovery_preview() {
 }
 
 print_next_steps() {
-  local install_dir
+  local install_dir shell_state shell_rc_file
   install_dir="$1"
+  shell_state="${2:-skipped}"
+  shell_rc_file="${3:-}"
 
   log
   log "agent-life bootstrap complete"
@@ -183,23 +319,211 @@ print_next_steps() {
   log "  4. Ask for a recommendation:"
   log "     $install_dir/bin/agent-init auto"
   log
-  log "  Optional PATH integration, if you choose to own it in your shell config:"
-  log "    export PATH=\"$install_dir/bin:\$PATH\""
+  log "  Optional shell integration:"
+  log "    ./install.sh --shell-integration"
+  log "    AGENT_LIFE_SHELL_INTEGRATION=yes ./install.sh"
+  log "    AGENT_LIFE_SHELL_INTEGRATION=no ./install.sh"
+  log "    ./install.sh --remove-shell-integration"
+  log "    See: $install_dir/docs/shell-integration.md"
   log
-  log "  Optional symlink, if you choose to manage it yourself:"
-  log "    mkdir -p ~/.local/bin"
-  log "    ln -sfn $install_dir/bin/agent-init ~/.local/bin/agent-init"
+  if [[ "$shell_state" == registered ]]; then
+    log "  Shell integration: registered in $shell_rc_file"
+    log "  Reload your shell or source that file to use agent-init without a path."
+    log "  The marker block above is the only shell rc change."
+    log "  No aliases, symlinks, runtime state, or profile activation changes were made."
+  else
+    log "  Fallback manual PATH guidance:"
+    log "    export PATH=\"$install_dir/bin:\$PATH\""
+    log "  No aliases, symlinks, shell rc files, runtime state, or profile activation changes were made."
+  fi
   log
   log "Quickstart: $install_dir/docs/quickstart.md"
   log
-  log "No PATH, shell rc, alias, symlink, runtime state, or profile activation changes were made."
+}
+
+detect_shell_integration_request() {
+  case "${AGENT_LIFE_SHELL_INTEGRATION:-}" in
+    yes|YES|Yes) printf '%s\n' yes ;;
+    no|NO|No) printf '%s\n' no ;;
+    "") printf '%s\n' prompt ;;
+    *) printf '%s\n' prompt ;;
+  esac
+}
+
+show_shell_integration_preview() {
+  local rc_file block
+  rc_file="$1"
+  block="$2"
+
+  log "[INFO] Shell integration"
+  log "       Target file: $rc_file"
+  log "       Block:"
+  while IFS= read -r line; do
+    log "         $line"
+  done <<EOF_BLOCK
+$block
+EOF_BLOCK
+}
+
+prompt_for_shell_integration() {
+  local rc_file block answer input_fd output_fd
+  rc_file="$1"
+  block="$2"
+
+  show_shell_integration_preview "$rc_file" "$block"
+
+  if [[ ! -t 0 && ! -t 1 ]]; then
+    return 1
+  fi
+
+  if exec 3</dev/tty 4>/dev/tty 2>/dev/null; then
+    input_fd=3
+    output_fd=4
+  else
+    input_fd=0
+    output_fd=1
+  fi
+
+  printf '%s' "Register shell integration? [Y/n] " >&"$output_fd"
+  if ! IFS= read -r answer <&"$input_fd"; then
+    return 1
+  fi
+
+  case "$answer" in
+    ""|y|Y|yes|YES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+handle_shell_integration() {
+  local mode install_dir shell_name rc_file block action
+  mode="$1"
+  install_dir="$2"
+  shell_name="$(detect_shell_name || true)"
+  shell_integration_result="skipped"
+
+  if [[ -z "$shell_name" ]]; then
+    log "[WARN] Shell integration unavailable"
+    log "       Reason: unable to detect bash or zsh from SHELL"
+    log "       Manual guidance only:"
+    log "         Add the PATH and completion source block from docs/shell-integration.md"
+    shell_integration_result="unavailable"
+    return 0
+  fi
+
+  rc_file="$(shell_rc_path "$shell_name")"
+  block="$(shell_integration_block "$install_dir" "$shell_name")"
+
+  case "$mode" in
+    remove)
+      log "[INFO] Shell integration removal"
+      log "       Target file: $rc_file"
+      action="$(remove_shell_integration_block "$rc_file")"
+      case "$action" in
+        removed)
+          log "[OK] Shell integration marker block removed"
+          shell_integration_result="removed"
+          ;;
+        absent)
+          log "[WARN] Shell integration marker block not found"
+          shell_integration_result="absent"
+          ;;
+        missing)
+          log "[WARN] Shell integration target file missing"
+          shell_integration_result="absent"
+          ;;
+      esac
+      if [[ "$shell_integration_result" == removed ]]; then
+        log "Only the agent-life marker block was removed."
+      else
+        log "No agent-life marker block was present, so no rc changes were made."
+      fi
+      return 0
+      ;;
+    yes)
+      show_shell_integration_preview "$rc_file" "$block"
+      action="$(apply_shell_integration_block "$rc_file" "$block")"
+      case "$action" in
+        added)
+          log "[OK] Shell integration marker block added"
+          ;;
+        refreshed)
+          log "[OK] Shell integration marker block refreshed"
+          ;;
+      esac
+      shell_integration_result="registered"
+      return 0
+      ;;
+    no)
+      log "[INFO] Shell integration"
+      log "       Target file: $rc_file"
+      log "[INFO] Shell integration skipped by request"
+      shell_integration_result="skipped"
+      return 0
+      ;;
+    prompt)
+      if prompt_for_shell_integration "$rc_file" "$block"; then
+        action="$(apply_shell_integration_block "$rc_file" "$block")"
+        case "$action" in
+          added)
+            log "[OK] Shell integration marker block added"
+            ;;
+          refreshed)
+            log "[OK] Shell integration marker block refreshed"
+            ;;
+        esac
+        shell_integration_result="registered"
+      else
+        log "[INFO] Shell integration skipped"
+        shell_integration_result="skipped"
+      fi
+      return 0
+      ;;
+  esac
 }
 
 main() {
-  local repo_url install_dir
+  local repo_url install_dir shell_integration_option shell_integration_state shell_integration_target shell_name
+
+  shell_integration_option="prompt"
+  shell_integration_state="skipped"
+  shell_integration_target=""
+  shell_name=""
 
   if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     usage
+    exit 0
+  fi
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --shell-integration)
+        if [[ "$shell_integration_option" != prompt ]]; then
+          fail "shell integration options are mutually exclusive"
+        fi
+        shell_integration_option="yes"
+        ;;
+      --no-shell-integration)
+        if [[ "$shell_integration_option" != prompt ]]; then
+          fail "shell integration options are mutually exclusive"
+        fi
+        shell_integration_option="no"
+        ;;
+      --remove-shell-integration)
+        if [[ "$shell_integration_option" != prompt ]]; then
+          fail "shell integration options are mutually exclusive"
+        fi
+        shell_integration_option="remove"
+        ;;
+      *)
+        fail "unknown option: $1"
+        ;;
+    esac
+    shift
+  done
+
+  if [[ "$shell_integration_option" == remove ]]; then
+    handle_shell_integration remove ""
     exit 0
   fi
 
@@ -225,7 +549,35 @@ main() {
     log "       The checkout remains available for manual inspection."
   fi
 
-  print_next_steps "$install_dir"
+  case "$shell_integration_option" in
+    yes)
+      handle_shell_integration yes "$install_dir"
+      ;;
+    no)
+      handle_shell_integration no "$install_dir"
+      ;;
+    prompt)
+      case "$(detect_shell_integration_request)" in
+        yes)
+          handle_shell_integration yes "$install_dir"
+          ;;
+        no)
+          handle_shell_integration no "$install_dir"
+          ;;
+        prompt)
+          handle_shell_integration prompt "$install_dir"
+          ;;
+      esac
+      ;;
+  esac
+
+  shell_name="$(detect_shell_name || true)"
+  if [[ "${shell_integration_result:-skipped}" == registered ]]; then
+    shell_integration_state="registered"
+    shell_integration_target="$(shell_rc_path "$shell_name")"
+  fi
+
+  print_next_steps "$install_dir" "$shell_integration_state" "$shell_integration_target"
 }
 
 main "$@"

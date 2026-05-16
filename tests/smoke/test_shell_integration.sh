@@ -1,0 +1,87 @@
+#!/bin/sh
+set -eu
+
+. "$(dirname -- "$0")/_lib.sh"
+
+ROOT="$(smoke_root)"
+setup_temp_home
+trap 'rm -rf "$SMOKE_TMP_BASE"' EXIT HUP INT TERM
+
+repo_fixture="$SMOKE_TMP_BASE/repo"
+snapshot_repo "$ROOT" "$repo_fixture"
+install_dir="$SMOKE_TMP_BASE/install/framework"
+
+printf '%s\n' '# user bashrc' > "$HOME/.bashrc"
+
+bash_install_output="$(
+  SHELL=/bin/bash \
+  AGENT_LIFE_REPO_URL="$repo_fixture" \
+  AGENT_LIFE_INSTALL_DIR="$install_dir" \
+  AGENT_LIFE_SHELL_INTEGRATION=yes \
+  "$ROOT/install.sh"
+)"
+
+assert_contains "$bash_install_output" "[INFO] Shell integration"
+assert_contains "$bash_install_output" "[OK] Shell integration marker block added"
+assert_contains "$bash_install_output" "Target file: $HOME/.bashrc"
+
+bashrc_contents="$(cat "$HOME/.bashrc")"
+assert_contains "$bashrc_contents" '# user bashrc'
+assert_contains "$bashrc_contents" '# agent-life shell integration start'
+assert_contains "$bashrc_contents" '# agent-life shell integration end'
+count="$(grep -c '^# agent-life shell integration start$' "$HOME/.bashrc")"
+[ "$count" -eq 1 ] || fail "expected one bash marker block, found $count"
+
+bash_refresh_output="$(
+  SHELL=/bin/bash \
+  AGENT_LIFE_REPO_URL="$repo_fixture" \
+  AGENT_LIFE_INSTALL_DIR="$install_dir" \
+  AGENT_LIFE_SHELL_INTEGRATION=yes \
+  "$ROOT/install.sh"
+)"
+
+assert_contains "$bash_refresh_output" "[OK] Shell integration marker block refreshed"
+count="$(grep -c '^# agent-life shell integration start$' "$HOME/.bashrc")"
+[ "$count" -eq 1 ] || fail "expected one refreshed bash marker block, found $count"
+
+bash_remove_output="$(
+  SHELL=/bin/bash \
+  AGENT_LIFE_INSTALL_DIR="$install_dir" \
+  "$ROOT/install.sh" --remove-shell-integration
+)"
+
+assert_contains "$bash_remove_output" "[OK] Shell integration marker block removed"
+bashrc_contents="$(cat "$HOME/.bashrc")"
+assert_contains "$bashrc_contents" '# user bashrc'
+assert_not_contains "$bashrc_contents" '# agent-life shell integration start'
+
+printf '%s\n' '# user zshrc' > "$HOME/.zshrc"
+
+zsh_install_output="$(
+  SHELL=/bin/zsh \
+  AGENT_LIFE_REPO_URL="$repo_fixture" \
+  AGENT_LIFE_INSTALL_DIR="$install_dir" \
+  AGENT_LIFE_SHELL_INTEGRATION=yes \
+  "$ROOT/install.sh"
+)"
+
+assert_contains "$zsh_install_output" "[OK] Shell integration marker block added"
+assert_contains "$zsh_install_output" "Target file: $HOME/.zshrc"
+
+zshrc_contents="$(cat "$HOME/.zshrc")"
+assert_contains "$zshrc_contents" '# user zshrc'
+assert_contains "$zshrc_contents" '# agent-life shell integration start'
+assert_contains "$zshrc_contents" '# agent-life shell integration end'
+count="$(grep -c '^# agent-life shell integration start$' "$HOME/.zshrc")"
+[ "$count" -eq 1 ] || fail "expected one zsh marker block, found $count"
+
+zsh_remove_output="$(
+  SHELL=/bin/zsh \
+  AGENT_LIFE_INSTALL_DIR="$install_dir" \
+  "$ROOT/install.sh" --remove-shell-integration
+)"
+
+assert_contains "$zsh_remove_output" "[OK] Shell integration marker block removed"
+zshrc_contents="$(cat "$HOME/.zshrc")"
+assert_contains "$zshrc_contents" '# user zshrc'
+assert_not_contains "$zshrc_contents" '# agent-life shell integration start'

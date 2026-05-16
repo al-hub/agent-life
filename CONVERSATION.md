@@ -290,3 +290,10 @@ MVP stabilization checkpoint noted:
   tests, and the public/private boundary.
 - Kept the deferred areas explicit so future decisions stay separate from the
   current MVP.
+
+Explicit shell integration step completed:
+
+- Added marker-block-based shell integration for bash and zsh rc files.
+- Kept rc edits consent-based, reversible, and limited to PATH plus completion
+  source lines.
+- Added completion stubs for the built-in `agent-init` command surface.

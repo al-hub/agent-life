@@ -98,6 +98,7 @@ The point is to help AI start with fewer wrong assumptions.
 - a replacement for human judgment
 
 It does not silently mutate your shell, PATH, aliases, runtime state, or profile activation.
+Explicit shell integration is optional, consent-based, and marker-block reversible.
 
 ## Core philosophy
 
@@ -129,6 +130,7 @@ Important files:
 - `docs/architecture.md` explains the runtime model.
 - `docs/bootstrap.md` defines external bootstrap and install semantics.
 - `docs/quickstart.md` defines first-run onboarding.
+- `docs/shell-integration.md` defines explicit marker-block shell integration.
 - `docs/config.md` defines optional local preferences.
 - `docs/cli.md` defines the `agent-init` command surface.
 - `docs/ready-concept.md` defines the `ready` preparation boundary.
@@ -317,12 +319,16 @@ Task brief skeleton:
 `install.sh` installs only the public framework checkout.
 
 It does not clone private repositories, write secrets, install private memory, or activate profiles.
+It can optionally register PATH and completion source lines in a marker block
+with explicit consent.
 
 ## Bootstrap
 
 `install.sh` is a lightweight bootstrap fetcher for the public framework.
 
 It can be run from an existing checkout or through a `curl | bash` flow.
+It can also register explicit shell integration for PATH and completion source
+lines if you consent.
 
 Default install location:
 
@@ -344,13 +350,13 @@ Bootstrap behavior:
 - runs a best-effort `git pull --ff-only` when the target is an existing checkout
 - performs lightweight validation
 - prints manual next-step guidance
+- may register or remove a reversible marker block in bash or zsh rc files
 
 The installer does not edit:
 
-- `PATH`
-- shell rc files
+- `PATH` without explicit consent
+- shell rc files without explicit consent
 - aliases
-- symlinks
 - runtime state
 - `current-profile`
 - tmux
@@ -358,7 +364,7 @@ The installer does not edit:
 - watchers
 - profile activation
 
-PATH or symlink integration is shown only as manual guidance.
+See `docs/shell-integration.md` for the explicit marker-block flow.
 
 See `docs/bootstrap.md` for the full bootstrap contract.
 
@@ -508,23 +514,19 @@ agent-life/
     config.md
     profile-contract.md
     quickstart.md
+    shell-integration.md
     runtime-lifecycle.md
     runtime-state.md
     shell-boundary.md
     what-is-agent-life.md
+  completions/
+    agent-init.bash
+    agent-init.zsh
   profiles/
     develop/
     stock/
   tests/
     smoke/
-```
-
-Planned additions:
-
-```text
-completions/
-  agent-init.bash
-  agent-init.zsh
 ```
 
 ## Local Usage

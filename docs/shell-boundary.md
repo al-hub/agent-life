@@ -126,6 +126,8 @@ Before adding any source or eval workflow, the project should decide:
   process.
 - `install.sh` must not take shell or runtime ownership during bootstrap.
 - Shell rc files must not be modified automatically.
+- Explicit shell integration may add or remove only the `agent-life` marker
+  block with user consent.
 - PATH must not be overwritten automatically.
 - Aliases must not be injected automatically.
 - Symlinks must not be created automatically.
@@ -134,14 +136,14 @@ Before adding any source or eval workflow, the project should decide:
 
 ## Install Is Not Activation
 
-`install.sh` may clone or update the public framework checkout and print manual
-next steps.
+`install.sh` may clone or update the public framework checkout, optionally
+register explicit shell integration, and print manual next steps.
 
 It must not:
 
 - activate a profile
 - write `current-profile`
-- edit shell startup files
+- edit shell startup files without explicit consent
 - modify PATH
 - inject aliases
 - start daemons or watchers

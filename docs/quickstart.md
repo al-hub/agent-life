@@ -21,7 +21,24 @@ The installer prints the clone/update target path, performs lightweight
 validation, and exits.
 
 It does not edit `PATH`, shell rc files, aliases, symlinks, runtime state, or
-profile activation state.
+profile activation state unless you explicitly consent to the shell
+integration marker block.
+
+Optional shell integration:
+
+```sh
+# interactive installs prompt with [Y/n]
+curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh | bash
+
+# non-interactive control
+"$HOME/.agent-life/framework/install.sh" --shell-integration
+AGENT_LIFE_SHELL_INTEGRATION=yes "$HOME/.agent-life/framework/install.sh"
+AGENT_LIFE_SHELL_INTEGRATION=no "$HOME/.agent-life/framework/install.sh"
+"$HOME/.agent-life/framework/install.sh" --remove-shell-integration
+```
+
+See [`shell-integration.md`](shell-integration.md) for the explicit
+marker-block flow.
 
 ## 2. Confirm The Framework
 
