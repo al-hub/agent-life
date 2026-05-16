@@ -458,3 +458,27 @@ Project-local context switcher semantics documented:
   runtime behavior change, no `current-profile` write, no profile activation,
   no shell/env mutation, no tmux/session orchestration, no daemon/watcher, no
   `agent-core` file copy/merge, and no marker-outside edits.
+
+AGENTS marker block specification documented:
+
+- Added `docs/marker-block.md` as the specification for future project-local
+  `AGENTS.md` marker block selection.
+- Defined marker tokens as `<!-- agent-life:start -->` and
+  `<!-- agent-life:end -->`.
+- Defined the selected-context block shape with selected context, read-first
+  profile `AGENTS.md`, and session rules.
+- Defined insert behavior: append to existing `AGENTS.md` while preserving all
+  existing content.
+- Defined create behavior: future `select` may create `AGENTS.md` containing
+  only the marker block when the project has no `AGENTS.md`.
+- Defined update behavior: replace only the inclusive marker block range.
+- Defined remove behavior: remove only the marker block.
+- Defined remove-all rollback: delete `AGENTS.md` only if it contains only the
+  marker block plus whitespace; otherwise keep the file.
+- Linked the marker spec from `docs/command-semantics.md` and
+  `docs/profile-contract.md`.
+- Recorded the marker format decision in `DECISIONS.md` and marked the marker
+  specification complete in `NEXT.md`.
+- Made no implementation, runtime behavior, AGENTS mutation logic,
+  `current-profile` write, profile activation, shell/env mutation, automatic
+  parsing/merging, or `agent-core` copy/merge changes.

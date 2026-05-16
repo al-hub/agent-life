@@ -52,6 +52,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Add lightweight manual baseline-vs-ready evaluation workflow.
 - [x] Fix shell integration prompt and post-install reload guidance.
 - [x] Record the first `repo-review` baseline-vs-ready evaluation result.
+- [x] Define project-local `AGENTS.md` marker block specification.
 
 ## Next
 
@@ -67,10 +68,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
-- [ ] Decide exact `AGENTS.md` marker block format for project-local context
-      selection.
 - [ ] Decide `agent-init select <context>` behavior and failure modes.
-- [ ] Decide `agent-init remove` rollback behavior for marker-only removal.
+- [ ] Decide `agent-init remove` command UX and malformed-marker failure modes.
 - [ ] Decide how `agent-init status` should report selected project context.
 - [ ] Decide whether `agent-init update` is needed for marker refresh.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote

@@ -414,3 +414,28 @@ merging.
 Reason: project-local marker block selection may make AI tools pick up the
 right context repeatedly while preserving the existing principles:
 `explicit > magic`, `observer > controller`, and `reversible > ownership`.
+
+### 2026-05-16: Project-local AGENTS marker block format
+
+Future `agent-init select` and `agent-init remove` should use the marker block
+specified in `docs/marker-block.md`.
+
+The project-local tokens are:
+
+```text
+<!-- agent-life:start -->
+<!-- agent-life:end -->
+```
+
+Future selection may append or replace only that marker block in the current
+project's `AGENTS.md`. Future removal may remove only that marker block. If a
+future selection created an `AGENTS.md` containing only the marker block and
+whitespace, removal may delete the file as rollback. If any content exists
+outside the marker block, the file must remain.
+
+This remains a specification only. No implementation, AGENTS mutation logic,
+automatic parsing/merging, profile activation, `current-profile` write,
+shell/env mutation, orchestration, or `agent-core` content copying is added.
+
+Reason: the select/remove behavior needs a precise, reversible file boundary
+before implementation is considered.

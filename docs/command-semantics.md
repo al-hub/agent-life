@@ -15,6 +15,9 @@ The `ready` preparation boundary is documented in
 `agent-init ready` is the current output-only preparation command, and it may
 accept one explicit profile target.
 
+The project-local AGENTS marker block specification is documented in
+[`docs/marker-block.md`](docs/marker-block.md).
+
 The previous `profile` plus optional `topic` shortcut idea is under review. The
 simpler candidate model is a single context name:
 
@@ -226,6 +229,8 @@ Future direction:
   block in the current project's `AGENTS.md`.
 - The marker block should contain read-first references to the selected context,
   not copied or merged private content.
+- Marker block tokens, insertion, update, and rollback rules are defined in
+  [`docs/marker-block.md`](docs/marker-block.md).
 - Replaces only the previous `agent-life` marker block when changing selected
   context.
 - Creates a project-local selection reference, not a runtime activation.
@@ -248,6 +253,8 @@ Future direction:
 - Removes only the `agent-life` marker block from the current project's
   `AGENTS.md`.
 - Leaves all user-authored AGENTS content untouched.
+- May delete `AGENTS.md` only when the file was marker-only, as defined by
+  [`docs/marker-block.md`](docs/marker-block.md).
 - Does not delete or modify `agent-core`.
 - Does not change shell, runtime state, sessions, or profile activation.
 
@@ -358,6 +365,8 @@ Future project-local context selection may mutate the current project's
 - The command must not modify user-authored content outside the marker block.
 - The command must not write `current-profile`, activate profiles, source
   environment, mutate shell state, start sessions, or run daemons.
+- Detailed token, insert, update, remove, and remove-all rules live in
+  [`docs/marker-block.md`](docs/marker-block.md).
 
 Proposed Codex MVP marker target:
 

@@ -52,6 +52,10 @@ The marker block should contain read-first references to the selected
 `agent-core/profiles/<name>` files, especially the profile-local `AGENTS.md`.
 It should not copy or merge private memory into the project.
 
+The exact marker block tokens, shape, insertion rule, update rule, remove rule,
+and remove-all rollback policy are defined in
+[`docs/marker-block.md`](marker-block.md).
+
 Selection means:
 
 - Link the current project to one named context by reference.
