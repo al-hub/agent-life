@@ -16,7 +16,7 @@ The same structure can support other personal workflows such as investing, faith
 ## One-sentence definition
 
 `agent-life` prepares the working context before AI starts working and can, in a
-future explicit flow, connect a selected private context to the current
+project-local explicit flow, connect a selected private context to the current
 project's AI instruction surface.
 
 ## Shorter definition
@@ -286,6 +286,9 @@ agent-init help
 agent-init status
 agent-init list
 agent-init auto
+agent-init ready
+agent-init select <context>
+agent-init remove all
 agent-init doctor
 agent-init version
 ```

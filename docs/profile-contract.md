@@ -92,7 +92,7 @@ Rules:
 - Avoid overly broad names such as `all`, `misc`, or `general`.
 - Avoid temporary names such as `temp` or `test-only`.
 - Do not use reserved command names: `help`, `doctor`, `status`, `list`,
-  `auto`, `version`, or `ready`.
+  `auto`, `ready`, `select`, `remove`, or `version`.
 
 Good examples:
 

@@ -203,6 +203,9 @@ agent-init help
 agent-init status
 agent-init list
 agent-init auto
+agent-init ready
+agent-init select <context>
+agent-init remove all
 agent-init doctor
 agent-init version
 ```
@@ -215,12 +218,13 @@ agent-init [profile] [topic]
 
 Avoid option-heavy commands unless there is a strong reason.
 
-Keep `agent-init` as an observer/recommender unless an explicit decision changes that.
+Keep `agent-init` as an observer/recommender plus explicit project-local marker
+selection unless an explicit decision changes that.
 
 Profile names must not collide with reserved built-in commands:
 
 ```text
-help, doctor, status, list, auto, version
+help, doctor, status, list, auto, ready, select, remove, version
 ```
 
 ## Profile rule

@@ -501,3 +501,29 @@ Project-local status reporting designed:
   candidate.
 - Made no implementation, AGENTS.md modification, marker block expansion,
   runtime behavior, or parsing/merging changes.
+
+Project-local select/remove MVP implemented:
+
+- Decided the marker block specification is sufficient to implement the Codex
+  `AGENTS.md` target safely.
+- Implemented `agent-init select <context>` for one context only.
+- `select` requires `agent-core/profiles/<context>/AGENTS.md` to exist and
+  writes only the `agent-life` marker block in the current project's
+  `AGENTS.md`.
+- `select` appends the marker block when no marker exists, replaces only the
+  existing marker block when one exists, and refuses malformed or duplicate
+  marker tokens.
+- Implemented `agent-init remove all` as marker-only rollback.
+- `remove all` deletes `AGENTS.md` only when the file contains only the marker
+  block plus whitespace; otherwise it removes only the marker block and keeps
+  user-authored content.
+- Extended `agent-init status` to report project path, project `AGENTS.md`
+  presence, marker block state, selected context, context source path, and a
+  warning when the selected source is missing.
+- Added smoke coverage for marker block add, update without duplication,
+  status detection, missing source warning, marker-only removal, and preserving
+  existing project AGENTS content.
+- Preserved exclusions: no multiple contexts, context merge, priority rules,
+  `current-profile`, Claude/Copilot targets, non-AGENTS targets, AI CLI
+  handoff, RAG/LLM integration, profile activation, shell/env mutation,
+  tmux/session orchestration, daemon, or watcher behavior.

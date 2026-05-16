@@ -2,7 +2,7 @@
 
 _agent_init_completion() {
   local -a commands
-  commands=(help doctor status list auto ready version)
+  commands=(help doctor status list auto ready select remove version)
 
   case $CURRENT in
     2)

@@ -1,9 +1,10 @@
 # AGENTS.md Marker Block
 
-This document defines the project-local marker block that future
-`agent-init select` and `agent-init remove` commands may use.
+This document defines the project-local marker block that `agent-init select`
+and `agent-init remove all` use.
 
-It is a specification only. No command implements this behavior yet.
+The current MVP supports the Codex target through the current project's
+`AGENTS.md` file only.
 
 ## Purpose
 
@@ -40,7 +41,7 @@ There must be at most one `agent-life` marker block in a project `AGENTS.md`.
 
 ## Block Shape
 
-Future `agent-init select <context>` should write this shape:
+`agent-init select <context>` writes this shape:
 
 ```markdown
 <!-- agent-life:start -->
@@ -62,42 +63,42 @@ Rules:
 
 `<context>` is the selected context name.
 
-`<agent-core>` is the discovered private core path or a stable path expression
-chosen by the future implementation decision.
+`<agent-core>` is the discovered private core path.
 
 ## Insert Rule
 
 If the current project already has `AGENTS.md` and no `agent-life` marker block,
-future `select` should append the marker block to the end of the file.
+`select` appends the marker block to the end of the file.
 
 The append should preserve all existing content exactly, except for adding a
 separating blank line before the marker block when needed.
 
-Future `select` must not reorder, rewrite, normalize, or format existing
+`select` must not reorder, rewrite, normalize, or format existing
 `AGENTS.md` content.
 
 ## Create Rule
 
-If the current project has no `AGENTS.md`, future `select` may create one
-containing only the marker block.
+If the current project has no `AGENTS.md`, `select` may create one containing
+only the marker block.
 
 That file is considered fully owned by the marker block only while it contains
 no content outside the start/end tokens.
 
 ## Update Rule
 
-If `AGENTS.md` already contains one complete `agent-life` marker block, future
-`select <context>` should replace only the inclusive marker block range.
+If `AGENTS.md` already contains one complete `agent-life` marker block,
+`select <context>` replaces only the inclusive marker block range.
 
 It must preserve all content before the start token and after the end token
 exactly.
 
-If multiple marker blocks exist, or if only one token exists, future commands
-should refuse to modify the file and print manual repair guidance.
+If multiple marker blocks exist, if only one token exists, or if the end token
+appears before the start token, commands refuse to modify the file and print
+manual repair guidance.
 
 ## Remove Rule
 
-Future `agent-init remove` should remove only the inclusive marker block range.
+`agent-init remove all` removes only the inclusive marker block range.
 
 It must preserve all content before the start token and after the end token
 exactly.
@@ -106,18 +107,18 @@ It must not delete user-authored project guidance outside the marker block.
 
 ## Remove All Policy
 
-If `AGENTS.md` was created by future `select` and contains only the marker
-block plus whitespace, future `remove` may delete the whole `AGENTS.md` file.
+If `AGENTS.md` was created by `select` and contains only the marker block plus
+whitespace, `remove all` may delete the whole `AGENTS.md` file.
 
-If `AGENTS.md` contains any content outside the marker block, future `remove`
-must keep the file and remove only the marker block.
+If `AGENTS.md` contains any content outside the marker block, `remove all` must
+keep the file and remove only the marker block.
 
 This is the rollback rule for a selection that created a new project
 `AGENTS.md`.
 
 ## Forbidden Behavior
 
-Future marker block commands must not:
+Marker block commands must not:
 
 - Rewrite the whole `AGENTS.md`.
 - Modify content outside the marker block.
@@ -131,7 +132,7 @@ Future marker block commands must not:
 
 ## Status Semantics
 
-Future `agent-init status` may report:
+`agent-init status` may report:
 
 - no project `AGENTS.md`
 - project `AGENTS.md` exists with no selected context

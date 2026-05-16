@@ -52,8 +52,8 @@ dev-stuff
 ```
 
 Good names are readable and imply one briefing intent. Avoid reserved command
-names such as `help`, `doctor`, `status`, `list`, `auto`, `version`, and
-`ready`.
+names such as `help`, `doctor`, `status`, `list`, `auto`, `ready`, `select`,
+`remove`, and `version`.
 
 ## Public Sample Context
 

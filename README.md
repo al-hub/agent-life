@@ -16,8 +16,8 @@ For manual baseline-vs-ready evaluation, see [`docs/evaluation.md`](docs/evaluat
 ## One-sentence definition
 
 `agent-life` prepares the working context before AI starts working and, in a
-future explicit flow, can connect a selected private context to the current
-project's AI instruction surface.
+project-local explicit flow, can connect a selected private context to the
+current project's AI instruction surface.
 
 It is a public framework for:
 
@@ -54,10 +54,10 @@ It does not own `agent-core`.
 
 It does not clone private repositories, write secrets, install private memory, or activate profiles.
 
-Future project-local selection means linking a context reference into the
-current project's AI instruction surface. For Codex, the proposed MVP surface is
-the current project's `AGENTS.md` marker block. This is not profile activation
-and does not copy or merge `agent-core` files.
+Project-local selection means linking a context reference into the current
+project's AI instruction surface. For Codex, the MVP surface is the current
+project's `AGENTS.md` marker block. This is not profile activation and does not
+copy or merge `agent-core` files.
 
 ## Why agent-life exists
 
@@ -95,7 +95,7 @@ The point is to help AI start with fewer wrong assumptions.
 - a place for shared runtime semantics
 - a CLI surface for readiness inspection
 - a bridge between public framework and private context
-- a future project-local context switcher for AI instruction files
+- a project-local context switcher for AI instruction files
 - a way to make future AI sessions continue work without guessing
 
 ## What agent-life is not
@@ -112,7 +112,7 @@ The point is to help AI start with fewer wrong assumptions.
 
 It does not silently mutate your shell, PATH, aliases, runtime state, or profile activation.
 Explicit shell integration is optional, consent-based, and marker-block reversible.
-Future project-local context selection must follow the same rule: only explicit,
+Project-local context selection follows the same rule: only explicit,
 reversible marker-block edits in the current project are allowed, and only
 inside the `agent-life` marker block.
 
@@ -224,11 +224,11 @@ agent-init status
 agent-init list
 agent-init auto
 agent-init ready
+agent-init select <context>
+agent-init remove all
 agent-init doctor
 agent-init version
 ```
-
-Built-in commands are reserved words. They are not profile names.
 
 Built-in commands are reserved words. They are not profile names.
 

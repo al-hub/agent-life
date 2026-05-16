@@ -392,24 +392,23 @@ profiles as automatic runtime contexts.
 Reason: the project needs a practical way to inspect whether ready context
 improves answers before adding automation or shortcut behavior.
 
-### 2026-05-16: Candidate project-local marker block selection
+### 2026-05-16: Project-local marker block selection direction
 
-Candidate direction: extend `agent-life` from ready-only briefing toward an
-explicit project-local AI context switcher.
+Direction: extend `agent-life` from ready-only briefing toward an explicit
+project-local AI context switcher.
 
 In this model, `agent-life` connects a selected `agent-core` context to the
-current project's AI instruction surface. For the Codex MVP target, the proposed
-surface is the current project's `AGENTS.md` file.
+current project's AI instruction surface. For the Codex MVP target, the surface
+is the current project's `AGENTS.md` file.
 
-The future `select` command would write or refresh only an `agent-life` marker
-block with read-first references to the selected context. The future `remove`
-command would remove only that marker block. The future `status` command would
-report the current project's selected context state.
+The `select` command writes or refreshes only an `agent-life` marker block with
+read-first references to the selected context. The `remove all` command removes
+only that marker block. The `status` command reports the current project's
+selected context state.
 
-This is not implemented yet. It is not profile activation, not a
-`current-profile` write, not shell/env mutation, not tmux/session
-orchestration, not daemon/watch behavior, and not `agent-core` file copying or
-merging.
+This is not profile activation, not a `current-profile` write, not shell/env
+mutation, not tmux/session orchestration, not daemon/watch behavior, and not
+`agent-core` file copying or merging.
 
 Reason: project-local marker block selection may make AI tools pick up the
 right context repeatedly while preserving the existing principles:
@@ -433,9 +432,36 @@ future selection created an `AGENTS.md` containing only the marker block and
 whitespace, removal may delete the file as rollback. If any content exists
 outside the marker block, the file must remain.
 
-This remains a specification only. No implementation, AGENTS mutation logic,
-automatic parsing/merging, profile activation, `current-profile` write,
-shell/env mutation, orchestration, or `agent-core` content copying is added.
+The initial implementation now follows this specification for the Codex
+`AGENTS.md` target only. It does not add automatic parsing/merging, profile
+activation, `current-profile` writes, shell/env mutation, orchestration, or
+`agent-core` content copying.
 
 Reason: the select/remove behavior needs a precise, reversible file boundary
 before implementation is considered.
+
+### 2026-05-16: Implement project-local select/remove MVP
+
+`agent-init select <context>` is implemented for one selected context. It
+requires `agent-core/profiles/<context>/AGENTS.md` to exist, then writes or
+refreshes only the `agent-life` marker block in the current project's
+`AGENTS.md`.
+
+`agent-init remove all` is implemented as marker-only rollback. It removes only
+the marker block, and deletes `AGENTS.md` only when the file contains nothing
+except the marker block and whitespace.
+
+`agent-init status` now reports project path, project `AGENTS.md` presence,
+marker block state, selected context, context source path, and a warning when
+the referenced source is missing.
+
+Malformed or duplicate marker tokens cause select/remove to refuse mutation and
+require manual repair.
+
+This MVP intentionally does not support multiple contexts, context merging,
+priority rules, `current-profile`, Claude/Copilot targets, non-AGENTS targets,
+AI CLI handoff, RAG/LLM integration, profile activation, shell/env mutation,
+tmux/session orchestration, daemons, or watchers.
+
+Reason: the marker-block boundary is specific enough to implement safely while
+preserving existing project guidance outside the marker block.

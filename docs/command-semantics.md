@@ -43,11 +43,12 @@ attach      connect to an existing session
 switch      change current runtime profile
 ```
 
-Current MVP implements `inspect`, `recommend`, and `prepare` behavior.
+Current MVP implements `inspect`, `recommend`, `prepare`, `select`, and
+`remove` behavior.
 
-It does not implement project-local selection, removal, update, activation,
-attach, switch, shell mutation, tmux orchestration, session restore, state
-synchronization, AGENTS.md semantic parsing, RAG, or LLM integration.
+It does not implement update, activation, attach, switch, shell mutation, tmux
+orchestration, session restore, state synchronization, AGENTS.md semantic
+parsing, RAG, or LLM integration.
 
 See `docs/shell-boundary.md` for why plain child-process commands cannot mutate
 the parent shell.
@@ -63,22 +64,22 @@ plain-text labels, not a stable machine interface.
 ```text
 command              current semantic      current behavior
 agent-init help      inspect               show command surface
-agent-init status    inspect               report framework/core/state/profiles; future selected context status
+agent-init status    inspect               report framework/core/state/profiles and selected context status
 agent-init list      inspect               list discovered profiles
 agent-init auto      recommend             suggest a profile when unambiguous
 agent-init ready     prepare               show readiness briefing
 agent-init doctor    inspect               run best-effort diagnostics
 agent-init version   inspect               print framework/runtime version
 agent-init [context]  placeholder           future preparation shortcut concept
-agent-init select    placeholder           future project-local context selection
-agent-init remove    placeholder           future project-local marker removal
+agent-init select    select                select one project-local context
+agent-init remove    remove                remove project-local marker block
 agent-init update    placeholder           future project-local marker refresh
 ```
 
 Reserved built-ins:
 
 ```text
-help, doctor, status, list, auto, ready, version
+help, doctor, status, list, auto, ready, select, remove, version
 ```
 
 ## Command Details
@@ -127,21 +128,21 @@ Current behavior:
 
 It does not activate a profile or write `current-profile`.
 
-Future project-local behavior:
+Project-local behavior:
 
-- May show whether the current project has an `agent-life` marker block in
+- Shows whether the current project has an `agent-life` marker block in
   `AGENTS.md`.
-- May show the selected context name and referenced files from that marker
+- Shows the selected context name and referenced files from that marker
   block.
-- May show the current project path.
-- May show whether project `AGENTS.md` exists.
-- May show `selected context: none` when no complete marker block exists.
-- May show a context source path when a selected context is present.
-- May warn when the selected context source path is missing.
-- Must not repair, select, remove, refresh, or rewrite the marker block.
-- Must not inspect or modify content outside the marker block.
+- Shows the current project path.
+- Shows whether project `AGENTS.md` exists.
+- Shows `selected context: none` when no complete marker block exists.
+- Shows a context source path when a selected context is present.
+- Warns when the selected context source path is missing.
+- Does not repair, select, remove, refresh, or rewrite the marker block.
+- Does not inspect or modify content outside the marker block.
 
-Future project-local status output candidate:
+Project-local status output:
 
 ```text
 Framework: <framework-path>
@@ -155,7 +156,7 @@ Warnings:
 - selected context source missing: <path>
 ```
 
-This is a human-readable candidate shape, not a stable output protocol.
+This is human-readable output, not a stable output protocol.
 
 ### `agent-init list`
 
@@ -241,35 +242,33 @@ is made.
 
 ### `agent-init select <context>`
 
-Semantic: placeholder for project-local selection.
+Semantic: select.
 
-Future direction:
+Current behavior:
 
 - Connects one selected `agent-core` context to the current project.
 - For the Codex MVP target, writes or refreshes only an `agent-life` marker
   block in the current project's `AGENTS.md`.
-- The marker block should contain read-first references to the selected context,
+- The marker block contains read-first references to the selected context,
   not copied or merged private content.
 - Marker block tokens, insertion, update, and rollback rules are defined in
   [`docs/marker-block.md`](docs/marker-block.md).
 - Replaces only the previous `agent-life` marker block when changing selected
   context.
 - Creates a project-local selection reference, not a runtime activation.
-
-Current stage:
-
-- Not implemented.
+- Requires `agent-core/profiles/<context>/AGENTS.md` to exist.
 - Does not activate a profile.
 - Does not write `current-profile`.
 - Does not source environment or mutate shell state.
 - Does not copy, merge, or persist `agent-core` files into the project.
 - Does not modify content outside the `agent-life` marker block.
+- Refuses malformed or duplicate marker blocks and asks for manual repair.
 
-### `agent-init remove`
+### `agent-init remove all`
 
-Semantic: placeholder for project-local marker removal.
+Semantic: remove.
 
-Future direction:
+Current behavior:
 
 - Removes only the `agent-life` marker block from the current project's
   `AGENTS.md`.
@@ -278,10 +277,8 @@ Future direction:
   [`docs/marker-block.md`](docs/marker-block.md).
 - Does not delete or modify `agent-core`.
 - Does not change shell, runtime state, sessions, or profile activation.
-
-Current stage:
-
-- Not implemented.
+- Refuses malformed or duplicate marker blocks and asks for manual repair.
+- Currently supports only the explicit form `agent-init remove all`.
 
 ### `agent-init update`
 
@@ -353,7 +350,7 @@ Reserved command note:
 
 - Built-in commands remain reserved.
 - Context or profile names must not be `help`, `doctor`, `status`, `list`,
-  `auto`, `ready`, or `version`.
+  `auto`, `ready`, `select`, `remove`, or `version`.
 
 ## State Policy
 
@@ -374,11 +371,11 @@ Not allowed at this stage:
 
 ## Project-Local Marker Policy
 
-Future project-local context selection may mutate the current project's
+Project-local context selection may mutate the current project's
 `AGENTS.md`, but only under these constraints:
 
-- The command must be explicit, such as a future `agent-init select <context>`.
-- The mutation must be reversible through a future `agent-init remove`.
+- The command must be explicit, such as `agent-init select <context>`.
+- The mutation must be reversible through `agent-init remove all`.
 - The mutation must be project-local, not global.
 - The command may edit only the `agent-life` marker block.
 - The marker block may contain references to read first, not copied private

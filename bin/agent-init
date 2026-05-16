@@ -17,6 +17,8 @@ Current commands:
   list       List discovered profiles
   auto       Recommend a profile only
   ready      Prepare an AI work briefing
+  select     Select one project-local AI context
+  remove     Remove project-local agent-life selection
   version    Show installed version
 
 Current role:
@@ -31,7 +33,7 @@ Future convenience:
     Example: agent-init money dividend
 
 Reserved commands:
-  help, doctor, status, list, auto, version
+  help, doctor, status, list, auto, ready, select, remove, version
 
 Important:
   Profile shortcut is preparation-only.
@@ -195,6 +197,192 @@ warn_detail() {
   printf '       %s\n' "$1"
 }
 
+marker_start() {
+  printf '%s\n' "<!-- agent-life:start -->"
+}
+
+marker_end() {
+  printf '%s\n' "<!-- agent-life:end -->"
+}
+
+project_agents_path() {
+  printf '%s/AGENTS.md\n' "$PWD"
+}
+
+marker_token_count() {
+  local file token count
+  file="$1"
+  token="$2"
+
+  count="$(grep -F -x -c "$token" "$file" 2>/dev/null || true)"
+  printf '%s\n' "$count"
+}
+
+marker_state() {
+  local file start_count end_count
+  file="$1"
+
+  if [ ! -e "$file" ]; then
+    printf '%s\n' "missing"
+    return 0
+  fi
+
+  start_count="$(marker_token_count "$file" "$(marker_start)")"
+  end_count="$(marker_token_count "$file" "$(marker_end)")"
+
+  if [ "$start_count" -eq 0 ] && [ "$end_count" -eq 0 ]; then
+    printf '%s\n' "none"
+  elif [ "$start_count" -eq 1 ] && [ "$end_count" -eq 1 ]; then
+    if awk -v start="$(marker_start)" -v end="$(marker_end)" '
+      $0 == start {
+        if (seen_start || seen_end) {
+          exit 1
+        }
+        seen_start = 1
+        next
+      }
+      $0 == end {
+        if (!seen_start || seen_end) {
+          exit 1
+        }
+        seen_end = 1
+        next
+      }
+      END {
+        if (!seen_start || !seen_end) {
+          exit 1
+        }
+      }
+    ' "$file"; then
+      printf '%s\n' "found"
+    else
+      printf '%s\n' "malformed"
+    fi
+  else
+    printf '%s\n' "malformed"
+  fi
+}
+
+marker_field() {
+  local file field
+  file="$1"
+  field="$2"
+
+  awk -v start="$(marker_start)" -v end="$(marker_end)" -v field="$field" '
+    $0 == start { in_block = 1; next }
+    $0 == end { in_block = 0; want = ""; next }
+    !in_block { next }
+    field == "context" && $0 == "Selected context:" { want = "context"; next }
+    field == "source" && $0 == "Read first:" { want = "source"; next }
+    want && $0 ~ /^- / { print substr($0, 3); exit }
+  ' "$file"
+}
+
+marker_outside_has_content() {
+  local file
+  file="$1"
+
+  awk -v start="$(marker_start)" -v end="$(marker_end)" '
+    $0 == start { in_block = 1; next }
+    $0 == end { in_block = 0; next }
+    !in_block { print }
+  ' "$file" | grep -q '[^[:space:]]'
+}
+
+selected_context_block() {
+  local context source
+  context="$1"
+  source="$2"
+
+  cat <<EOF
+<!-- agent-life:start -->
+## Agent-life selected context
+
+Selected context:
+- $context
+
+Read first:
+- $source
+
+Rules:
+- Treat this context as guidance for the current AI session.
+- Do not modify agent-core files unless explicitly asked.
+- Follow project AGENTS.md and selected context together.
+- This is not activation, orchestration, or shell/runtime mutation.
+<!-- agent-life:end -->
+EOF
+}
+
+write_project_marker() {
+  local file block state tmp
+  file="$1"
+  block="$2"
+  state="$(marker_state "$file")"
+
+  case "$state" in
+    missing)
+      printf '%s\n' "$block" > "$file"
+      ;;
+    none)
+      tmp="$(mktemp)"
+      if [ -s "$file" ]; then
+        cat "$file" > "$tmp"
+        printf '\n\n%s\n' "$block" >> "$tmp"
+      else
+        printf '%s\n' "$block" > "$tmp"
+      fi
+      mv "$tmp" "$file"
+      ;;
+    found)
+      tmp="$(mktemp)"
+      awk -v start="$(marker_start)" -v end="$(marker_end)" -v block="$block" '
+        $0 == start { print block; in_block = 1; next }
+        $0 == end { in_block = 0; next }
+        !in_block { print }
+      ' "$file" > "$tmp"
+      mv "$tmp" "$file"
+      ;;
+    malformed)
+      die "project AGENTS.md has malformed agent-life marker block; repair manually"
+      ;;
+  esac
+}
+
+remove_project_marker() {
+  local file state tmp
+  file="$1"
+  state="$(marker_state "$file")"
+
+  case "$state" in
+    missing|none)
+      say "INFO" "Agent-life marker block: missing"
+      detail "Selected context: none"
+      return 0
+      ;;
+    malformed)
+      die "project AGENTS.md has malformed agent-life marker block; repair manually"
+      ;;
+    found)
+      if ! marker_outside_has_content "$file"; then
+        rm -f -- "$file"
+        say "OK" "Removed project AGENTS.md"
+        detail "Reason: file contained only the agent-life marker block"
+        return 0
+      fi
+
+      tmp="$(mktemp)"
+      awk -v start="$(marker_start)" -v end="$(marker_end)" '
+        $0 == start { in_block = 1; next }
+        $0 == end { in_block = 0; next }
+        !in_block { print }
+      ' "$file" > "$tmp"
+      mv "$tmp" "$file"
+      say "OK" "Removed agent-life marker block"
+      detail "Path: $file"
+      ;;
+  esac
+}
+
 print_core_discovery_reasoning() {
   local root label path value
   root="$1"
@@ -211,7 +399,7 @@ print_core_discovery_reasoning() {
 }
 
 print_status() {
-  local verbose root state core_result core core_source profiles joined
+  local verbose root state core_result core core_source profiles joined project agents marker selected source
   verbose="$1"
   root="$(framework_root)"
   state="$(state_path)"
@@ -219,6 +407,11 @@ print_status() {
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
   joined="$(list_profiles_raw "$core" | join_profiles)"
+  project="$PWD"
+  agents="$(project_agents_path)"
+  marker="$(marker_state "$agents")"
+  selected="none"
+  source="none"
 
   say "OK" "Framework detected"
   detail "Path: $root"
@@ -234,6 +427,41 @@ print_status() {
 
   say "INFO" "State path"
   detail "Path: $state"
+
+  say "INFO" "Project path"
+  detail "Path: $project"
+
+  if [ -f "$agents" ]; then
+    say "OK" "Project AGENTS.md: found"
+    detail "Path: $agents"
+  else
+    say "INFO" "Project AGENTS.md: missing"
+  fi
+
+  case "$marker" in
+    found)
+      selected="$(marker_field "$agents" "context")"
+      source="$(marker_field "$agents" "source")"
+      [ -n "$selected" ] || selected="none"
+      [ -n "$source" ] || source="none"
+      say "OK" "Agent-life marker block: found"
+      detail "Selected context: $selected"
+      detail "Context source: $source"
+      if [ "$source" != "none" ] && [ ! -f "$source" ]; then
+        say "WARN" "Selected context source missing"
+        warn_detail "Path: $source"
+      fi
+      ;;
+    malformed)
+      say "WARN" "Agent-life marker block: malformed"
+      warn_detail "Manual repair is required before select/remove can modify AGENTS.md"
+      ;;
+    missing|none)
+      say "INFO" "Agent-life marker block: missing"
+      detail "Selected context: none"
+      detail "Context source: none"
+      ;;
+  esac
 
   if [ "$joined" = "none" ]; then
     say "WARN" "Discovered profiles: none"
@@ -264,6 +492,46 @@ print_status() {
       say "INFO" "Public sample profiles are ignored for runtime discovery"
     fi
   fi
+}
+
+select_context() {
+  local context root core_result core source agents block
+  context="${1:-}"
+
+  [ -n "$context" ] || die "select requires one context argument"
+  case "$context" in
+    */*|.*|"") die "invalid context name: $context" ;;
+    help|doctor|status|list|auto|ready|select|remove|version)
+      die "reserved command cannot be used as context: $context"
+      ;;
+  esac
+
+  root="$(framework_root)"
+  core_result="$(agent_life_discover_core "$root")"
+  core="$(agent_life_core_path_from_result "$core_result")"
+  [ -n "$core" ] || die "agent-core was not found"
+
+  source="$core/profiles/$context/AGENTS.md"
+  [ -f "$source" ] || die "selected context source missing: $source"
+
+  agents="$(project_agents_path)"
+  block="$(selected_context_block "$context" "$source")"
+  write_project_marker "$agents" "$block"
+
+  say "OK" "Selected project context: $context"
+  detail "Project: $PWD"
+  detail "AGENTS.md: $agents"
+  detail "Context source: $source"
+  say "INFO" "Selection is a project-local read-first reference only."
+}
+
+remove_selection() {
+  local target agents
+  target="${1:-}"
+  [ "$target" = "all" ] || die "remove currently supports only: agent-init remove all"
+
+  agents="$(project_agents_path)"
+  remove_project_marker "$agents"
 }
 
 print_profiles() {
@@ -597,6 +865,18 @@ main() {
         die "ready accepts at most one profile argument"
       fi
       print_ready "${1:-}"
+      ;;
+    select)
+      if [ "$#" -ne 1 ]; then
+        die "select requires exactly one context argument"
+      fi
+      select_context "$1"
+      ;;
+    remove)
+      if [ "$#" -ne 1 ]; then
+        die "remove currently supports only: agent-init remove all"
+      fi
+      remove_selection "$1"
       ;;
     doctor)
       verbose="$(parse_verbose "$@")"

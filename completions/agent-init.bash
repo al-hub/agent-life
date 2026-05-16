@@ -8,7 +8,7 @@ _agent_init_completion() {
 
   case "$cword" in
     1)
-      COMPREPLY=($(compgen -W 'help doctor status list auto ready version' -- "$cur"))
+      COMPREPLY=($(compgen -W 'help doctor status list auto ready select remove version' -- "$cur"))
       ;;
   esac
 }

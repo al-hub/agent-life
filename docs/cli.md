@@ -13,6 +13,9 @@ The `ready` preparation boundary is documented in
 `agent-init ready` is the current output-only preparation command, and it may
 accept one explicit profile target.
 
+Project-local marker block behavior is documented in
+[`docs/marker-block.md`](docs/marker-block.md).
+
 ## Design Rules
 
 - Command is action.
@@ -49,6 +52,10 @@ Expected behavior:
 - Discover `agent-core`.
 - Show local state path.
 - List discovered profile names.
+- Show project path.
+- Show project `AGENTS.md` and `agent-life` marker block status.
+- Show selected context and context source, or `none`.
+- Warn when the selected context source is missing.
 - Support only `--verbose` for extra checks.
 
 Expected output:
@@ -61,6 +68,12 @@ Expected output:
      Source: sibling
 [INFO] State path
      Path: /home/user/.local/state/agent-life
+[INFO] Project path
+     Path: /path/to/project
+[OK] Project AGENTS.md: found
+[OK] Agent-life marker block: found
+     Selected context: repo-review
+     Context source: /path/to/agent-core/profiles/repo-review/AGENTS.md
 [OK] Discovered profiles: develop, stock, faith
 ```
 
@@ -127,6 +140,34 @@ Expected behavior:
 - Do not parse or merge recommended files.
 - Do not activate profiles, mutate shell or runtime state, or perform
   orchestration.
+
+### `agent-init select <context>`
+
+Select one project-local AI context for the current project.
+
+Current behavior:
+
+- Requires `agent-core/profiles/<context>/AGENTS.md` to exist.
+- Writes or refreshes only the `agent-life` marker block in project
+  `AGENTS.md`.
+- Appends the marker block when no marker exists.
+- Replaces only the existing marker block when changing context.
+- Refuses malformed or duplicate marker tokens.
+- Does not copy or merge `agent-core` files.
+- Does not activate profiles, write `current-profile`, mutate shell/env state,
+  or start orchestration.
+
+### `agent-init remove all`
+
+Remove the project-local `agent-life` marker block.
+
+Current behavior:
+
+- Removes only the `agent-life` marker block from project `AGENTS.md`.
+- Keeps all user-authored AGENTS content outside the marker block.
+- Deletes `AGENTS.md` only when the file contains only the marker block and
+  whitespace.
+- Refuses malformed or duplicate marker tokens.
 
 Expected output:
 
@@ -197,7 +238,7 @@ See `docs/ready-concept.md` for the intended preparation boundary.
 Reserved commands stay reserved:
 
 ```text
-help, doctor, status, list, auto, version
+help, doctor, status, list, auto, ready, select, remove, version
 ```
 
 Profile names must not collide with reserved commands.

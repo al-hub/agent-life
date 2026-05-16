@@ -54,6 +54,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Record the first `repo-review` baseline-vs-ready evaluation result.
 - [x] Define project-local `AGENTS.md` marker block specification.
 - [x] Design project-local marker block status reporting.
+- [x] Implement `agent-init select <context>` for Codex `AGENTS.md` marker blocks.
+- [x] Implement `agent-init remove all` marker-only rollback.
+- [x] Implement `agent-init status` project-local marker block reporting.
+- [x] Add smoke coverage for marker block add, update, status, and removal.
 
 ## Next
 
@@ -69,9 +73,6 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
-- [ ] Decide `agent-init select <context>` behavior and failure modes.
-- [ ] Decide `agent-init remove` command UX and malformed-marker failure modes.
-- [ ] Implement `agent-init status` project-local marker block reporting.
 - [ ] Decide whether `agent-init update` is needed for marker refresh.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
