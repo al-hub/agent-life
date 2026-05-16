@@ -173,9 +173,9 @@ print_status() {
   detail "Path: $state"
 
   if [ "$joined" = "none" ]; then
-    say "WARN" "Profiles: none"
+    say "WARN" "Discovered profiles: none"
   else
-    say "OK" "Profiles: $joined"
+    say "OK" "Discovered profiles: $joined"
   fi
 
   if [ "$verbose" = "1" ]; then
@@ -212,7 +212,7 @@ print_profiles() {
 
   if [ -z "$core" ]; then
     say "WARN" "Core path not found"
-    say "WARN" "Profiles: none"
+    say "WARN" "Discovered profiles: none"
     if [ "$verbose" = "1" ]; then
       echo
       echo "Reasoning:"
@@ -227,7 +227,7 @@ print_profiles() {
     say "OK" "Core path found"
     detail "Path: $core"
     say "WARN" "Profiles directory missing"
-    say "WARN" "Profiles: none"
+    say "WARN" "Discovered profiles: none"
     return 1
   fi
 
@@ -235,10 +235,10 @@ print_profiles() {
   count="$(list_profiles_raw "$core" | profile_count)"
 
   if [ "$count" -gt 0 ]; then
-    say "OK" "Profiles discovered: $joined"
+    say "OK" "Discovered profiles: $joined"
     list_profiles_raw "$core" | awk '{ print "     - " $0 }'
   else
-    say "WARN" "No runtime profiles discovered"
+    say "WARN" "Discovered profiles: none"
   fi
 
   if [ "$verbose" = "1" ]; then
@@ -263,7 +263,7 @@ auto_profile() {
 
   if [ -z "$core" ]; then
     say "WARN" "Core path not found"
-    say "INFO" "Auto Profile: none"
+    say "INFO" "Recommended profile: none"
     say "INFO" "Reason: agent-core was not found"
     return 1
   fi
@@ -279,14 +279,14 @@ $(list_profiles_raw "$core")
 EOF
 
   if [ -n "$selected" ]; then
-    say "OK" "Auto Profile: $selected"
+    say "OK" "Recommended profile: $selected"
     say "INFO" "Reason: current directory name matches a discovered profile"
   elif [ "$count" -eq 1 ]; then
     selected="$(list_profiles_raw "$core")"
-    say "OK" "Auto Profile: $selected"
+    say "OK" "Recommended profile: $selected"
     say "INFO" "Reason: only one profile is available"
   else
-    say "INFO" "Auto Profile: none"
+    say "INFO" "Recommended profile: none"
     say "INFO" "Reason: no unambiguous profile match"
   fi
 
@@ -298,7 +298,7 @@ EOF
     say "INFO" "Framework path"
     detail "Path: $root"
     print_core_discovery_reasoning "$root"
-    say "INFO" "Runtime profiles"
+    say "INFO" "Discovered profiles"
     detail "Profiles: $(list_profiles_raw "$core" | join_profiles)"
   fi
 }
@@ -421,7 +421,7 @@ print_doctor() {
   say "INFO" "Shell: $shell_name"
   echo
   echo "Notes:"
-  echo "- doctor is best-effort informational diagnostics."
+  echo "- doctor is diagnostics only."
   echo "- WARN does not always mean runtime failure."
   echo "- doctor does not repair, activate, switch, sync, or write runtime state."
 }

@@ -54,7 +54,7 @@ Expected output:
      Source: sibling
 [INFO] State path
      Path: /home/user/.local/state/agent-life
-[OK] Profiles: develop, stock, faith
+[OK] Discovered profiles: develop, stock, faith
 ```
 
 ### `agent-init list`
@@ -65,7 +65,7 @@ Expected behavior:
 
 - Do not hardcode profile names.
 - Treat each non-hidden directory under `profiles/` as a profile.
-- Print `Profiles: none` when no core or profile directory exists.
+- Print `Discovered profiles: none` when no core or profile directory exists.
 - Do not parse or activate profile contents.
 
 ### `agent-init auto`
