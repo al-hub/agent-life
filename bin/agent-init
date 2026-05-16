@@ -340,9 +340,11 @@ EOF
   echo "agent-init ready"
   echo
 
+  say "INFO" "Framework"
   say "OK" "Framework detected"
   detail "Path: $root"
 
+  say "INFO" "Core"
   if [ -n "$core" ]; then
     say "OK" "Core path found"
     detail "Path: $core"
@@ -350,14 +352,19 @@ EOF
   else
     say "WARN" "Core path not found"
     warn_detail "Source: $core_source"
+    warn_detail "Reason: no agent-core was discovered by any configured path"
   fi
 
+  say "INFO" "Profile"
   say "$level" "Suggested profile: $profile"
   say "INFO" "Reason: $reason"
 
   echo
   say "INFO" "Read first"
   detail "README.md"
+  detail "AGENTS.md"
+  detail "NEXT.md"
+  detail "DECISIONS.md"
   detail "docs/what-is-agent-life.md"
   detail "docs/cli.md"
   detail "docs/command-semantics.md"
@@ -368,12 +375,11 @@ EOF
 
   echo
   say "INFO" "Boundary reminders"
-  detail "ready does not run the task"
-  detail "ready does not activate profiles"
-  detail "ready does not mutate shell state"
-  detail "ready does not write current-profile"
-  detail "ready does not start tmux, sessions, or orchestration"
-  detail "ready does not parse AGENTS.md semantically"
+  detail "No task execution."
+  detail "No profile activation."
+  detail "No shell, env, or state mutation."
+  detail "No tmux, session, or orchestration."
+  detail "No semantic parsing of AGENTS.md."
 
   echo
   say "INFO" "Suggested verification"
@@ -383,10 +389,10 @@ EOF
 
   echo
   say "INFO" "Task brief"
-  detail "Goal:"
-  detail "Boundary:"
-  detail "Verification:"
-  detail "Next action:"
+  detail "Goal"
+  detail "Boundary"
+  detail "Verification"
+  detail "Next action"
 
   echo
   say "INFO" "Read-first files are recommendations only; no automatic parsing or merging occurs."

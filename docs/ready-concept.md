@@ -69,6 +69,9 @@ Profile: develop
 
 Read first:
 - README.md
+- AGENTS.md
+- NEXT.md
+- DECISIONS.md
 - docs/cli.md
 - agent-core/profiles/develop/AGENTS.md
 
