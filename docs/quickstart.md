@@ -40,6 +40,14 @@ AGENT_LIFE_SHELL_INTEGRATION=no "$HOME/.agent-life/framework/install.sh"
 See [`shell-integration.md`](shell-integration.md) for the explicit
 marker-block flow.
 
+After registering shell integration, source your shell rc file in the current
+terminal to make `agent-init` and completion available immediately:
+
+```sh
+source ~/.bashrc
+source ~/.zshrc
+```
+
 ## 2. Confirm The Framework
 
 ```sh

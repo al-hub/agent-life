@@ -328,7 +328,9 @@ print_next_steps() {
   log
   if [[ "$shell_state" == registered ]]; then
     log "  Shell integration: registered in $shell_rc_file"
-    log "  Reload your shell or source that file to use agent-init without a path."
+    log "  Reload your shell or run:"
+    log "    source \"$shell_rc_file\""
+    log "  That makes agent-init and completion available in the current shell."
     log "  The marker block above is the only shell rc change."
     log "  No aliases, symlinks, runtime state, or profile activation changes were made."
   else
@@ -366,7 +368,7 @@ EOF_BLOCK
 }
 
 prompt_for_shell_integration() {
-  local rc_file block answer input_fd output_fd
+  local rc_file block answer
   rc_file="$1"
   block="$2"
 
@@ -376,16 +378,8 @@ prompt_for_shell_integration() {
     return 1
   fi
 
-  if exec 3</dev/tty 4>/dev/tty 2>/dev/null; then
-    input_fd=3
-    output_fd=4
-  else
-    input_fd=0
-    output_fd=1
-  fi
-
-  printf '%s' "Register shell integration? [Y/n] " >&"$output_fd"
-  if ! IFS= read -r answer <&"$input_fd"; then
+  printf '%s' "Register shell integration? [Y/n] "
+  if ! IFS= read -r answer; then
     return 1
   fi
 

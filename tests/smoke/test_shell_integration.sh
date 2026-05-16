@@ -24,6 +24,7 @@ bash_install_output="$(
 assert_contains "$bash_install_output" "[INFO] Shell integration"
 assert_contains "$bash_install_output" "[OK] Shell integration marker block added"
 assert_contains "$bash_install_output" "Target file: $HOME/.bashrc"
+assert_contains "$bash_install_output" "source \"$HOME/.bashrc\""
 
 bashrc_contents="$(cat "$HOME/.bashrc")"
 assert_contains "$bashrc_contents" '# user bashrc'
@@ -31,6 +32,11 @@ assert_contains "$bashrc_contents" '# agent-life shell integration start'
 assert_contains "$bashrc_contents" '# agent-life shell integration end'
 count="$(grep -c '^# agent-life shell integration start$' "$HOME/.bashrc")"
 [ "$count" -eq 1 ] || fail "expected one bash marker block, found $count"
+
+bash_completion_output="$(
+  HOME="$HOME" bash --noprofile --norc -c '. "$HOME/.bashrc"; complete -p agent-init'
+)"
+assert_contains "$bash_completion_output" '_agent_init_completion'
 
 bash_refresh_output="$(
   SHELL=/bin/bash \
@@ -67,6 +73,7 @@ zsh_install_output="$(
 
 assert_contains "$zsh_install_output" "[OK] Shell integration marker block added"
 assert_contains "$zsh_install_output" "Target file: $HOME/.zshrc"
+assert_contains "$zsh_install_output" "source \"$HOME/.zshrc\""
 
 zshrc_contents="$(cat "$HOME/.zshrc")"
 assert_contains "$zshrc_contents" '# user zshrc'
@@ -74,6 +81,11 @@ assert_contains "$zshrc_contents" '# agent-life shell integration start'
 assert_contains "$zshrc_contents" '# agent-life shell integration end'
 count="$(grep -c '^# agent-life shell integration start$' "$HOME/.zshrc")"
 [ "$count" -eq 1 ] || fail "expected one zsh marker block, found $count"
+
+zsh_completion_output="$(
+  HOME="$HOME" zsh -ic 'source ~/.zshrc; whence -w _agent_init_completion'
+)"
+assert_contains "$zsh_completion_output" '_agent_init_completion: function'
 
 zsh_remove_output="$(
   SHELL=/bin/zsh \

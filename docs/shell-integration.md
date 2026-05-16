@@ -23,6 +23,14 @@ source "$HOME/.agent-life/framework/completions/agent-init.bash"
 The actual source line uses the detected shell and the installed framework path.
 The block is owned by `agent-life` only.
 
+After the block is registered, source the rc file in your current shell to make
+`agent-init` and completion available immediately:
+
+```sh
+source ~/.bashrc
+source ~/.zshrc
+```
+
 Non-interactive control:
 
 ```sh
