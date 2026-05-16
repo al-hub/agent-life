@@ -228,6 +228,15 @@ Reason: the boundary and meaning should be clear before any execution behavior
 is designed, so `ready` is not mistaken for activation, orchestration, or shell
 ownership.
 
+### 2026-05-16: `ready` MVP acceptance criteria are defined
+
+The `ready` concept now has a minimal boundary and success definition in
+`docs/ready-concept.md`, including minimum output, explicit non-goals, and the
+rule that recommended files are read-first guidance only.
+
+Reason: implementation should start from an agreed boundary, not from implicit
+behavior expansion.
+
 ### 2026-05-16: Built-in commands are reserved and profile shortcuts stay conceptual
 
 `help`, `doctor`, `status`, `list`, `auto`, and `version` are reserved built-in

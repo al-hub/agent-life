@@ -239,6 +239,12 @@ Ready concept documentation step completed:
 - Linked the concept from CLI and command-semantics docs so the shortcut stays
   documentation-only for now.
 
+Ready MVP acceptance step completed:
+
+- Added minimal MVP acceptance criteria to the ready concept doc.
+- Kept the criteria focused on boundary, diagnostics, verification, and a task
+  brief skeleton rather than execution or orchestration.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as

@@ -34,6 +34,30 @@ agent-init ready [profile] [topic]
 That relationship is documented here only.
 It is not implemented in the current MVP.
 
+## MVP Acceptance Criteria
+
+The first usable `ready` MVP should:
+
+- show the framework path
+- show the core discovery result
+- show a selected or suggested profile, or a no-profile warning
+- show a short recommended file list to read first
+- show boundary reminders
+- show suggested verification commands
+- show a short task brief skeleton
+
+The first usable `ready` MVP must not:
+
+- run the task
+- activate a profile
+- mutate shell state, environment variables, or runtime state
+- manage tmux sessions, daemons, or orchestration
+- parse `AGENTS.md` semantically
+
+Acceptance is about boundary and usefulness, not automation. The listed files
+are recommendations for a human or AI to read first; the command must not
+automatically parse or merge their contents.
+
 ## Example Shape
 
 ```text
@@ -62,76 +86,3 @@ Summarize the current goal, constraints, and next action.
 ```
 
 This document is for meaning and boundary definition only.
-*** Update File: /home/al-hub/workspace/agent-life/docs/cli.md
-@@
- Built-in commands are reserved words. Everything else is treated as future
- profile shortcut space, not a current activation path.
- 
-+For the future preparation flow concept, see `docs/ready-concept.md`.
-+
- ## Design Rules
-@@
- ### `agent-init help`
- 
- Show the command surface and design rules.
- 
- Current behavior:
- 
- - Prints reserved built-in commands and the future convenience shortcut concept.
- - Keeps syntax simple and action-centered.
-+- Points to the future `ready` concept as documentation only.
-@@
- ### `agent-init [profile] [topic]`
- 
- Semantic: placeholder.
- 
- Future direction:
- 
-- May act as a user-friendly shortcut to a future preparation-only `ready` flow.
-+- May act as a user-friendly shortcut to a future preparation-only `ready` flow.
- - May prepare a work context for a profile and optional topic.
- - May be used without arguments as a future auto-ready concept.
- - Planned shortcut for `agent-init ready [profile] [topic]`.
- - Does not define `current-profile` write behavior yet.
-+
-+See `docs/ready-concept.md` for the intended preparation boundary.
-*** Update File: /home/al-hub/workspace/agent-life/docs/command-semantics.md
-@@
- `agent-init` commands are intentionally simple. The current MVP is centered on
- inspection and discovery, not activation.
- 
- Built-in commands are reserved words. Profile names must not reuse them.
-+
-+The future `ready` concept is documented in `docs/ready-concept.md`.
-@@
- ### `agent-init help`
-@@
- Current behavior:
- 
- - Prints current commands.
- - Explains the current observer/recommender role.
- - Shows the future convenience shortcut concept.
-+- Does not implement `ready`.
- - Does not inspect private memory.
- - Does not write state.
-@@
- ### `agent-init [profile] [topic]`
-@@
- Future direction:
- 
- - May act as a user-friendly shortcut to a future preparation-only `ready` flow.
- - May prepare a work context for a profile and optional topic.
- - May be used without arguments as a future auto-ready concept.
- - Planned shortcut for `agent-init ready [profile] [topic]`.
- 
- Current stage:
- 
- - Not implemented.
- - Not a profile activation command.
- - Not a shell activation command.
- - Not a session restore command.
- - Not a `current-profile` write command.
- - Does not define `current-profile` write behavior yet.
-+
-+The shortcut remains a documentation-only concept until a future implementation
-+decision is made.
