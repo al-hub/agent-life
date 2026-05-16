@@ -43,11 +43,6 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Refine `agent-init help` output for current vs future behavior.
 - [x] Add official concept document for agent-life identity.
 - [x] Add lightweight smoke checks for help/status/version wording consistency.
-
-## Next
-
-### Right now
-
 - [x] Implement `agent-init ready` as an output-only preparation command.
 - [x] Support `agent-init ready <profile>` as an explicit target form.
 - [x] Document the single context naming model as a candidate simplification.
@@ -56,12 +51,19 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Add `profiles/repo-review/AGENTS.md` as a public-safe sample briefing.
 - [x] Add lightweight manual baseline-vs-ready evaluation workflow.
 - [x] Fix shell integration prompt and post-install reload guidance.
+- [x] Record the first `repo-review` baseline-vs-ready evaluation result.
+
+## Next
+
+### Right now
+
 - [ ] Decide whether `agent-init <context>` should be implemented as a
       shortcut to `agent-init ready <context>` or remain documentation-only.
-- [ ] Run a manual `repo-review` baseline-vs-ready evaluation and record the
-      result using `docs/evaluation.md`.
 - [ ] Decide whether `repo-review` needs wording changes after the first manual
       evaluation.
+- [ ] Decide whether to strengthen `repo-review` context for clearer future
+      baseline-vs-ready differentiation.
+- [ ] Record raw baseline and ready outputs in future evaluations.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
@@ -69,9 +71,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`
       template after private core structure exists.
-- [ ] Add shell completion stubs for bash and zsh.
 - [ ] Define profile loader behavior after command semantics are stable.
-- [ ] Expand smoke tests only when new observer behavior is added.
 
 ### Later
 
@@ -83,9 +83,3 @@ This file tracks the next concrete actions. Keep it actionable and current.
       separate controller command.
 - [ ] Decide whether lifecycle transitions should ever become a strict runtime
       state machine.
-- [ ] Add `agent-init develop` profile loading.
-- [ ] Add `agent-init stock` profile loading.
-- [ ] Add `agent-init auto` context detection.
-- [ ] Add `agent-init sync` for safe public/private context synchronization.
-- [ ] Add tests for shell scripts and CLI behavior.
-- [ ] Create private `agent-core` template structure.

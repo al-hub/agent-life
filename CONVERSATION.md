@@ -392,3 +392,43 @@ Shell integration install issue diagnosed and fixed:
 - Preserved constraints: no shell rc edits without consent, no edits outside
   the marker block, no aliases, no symlinks, no activation, no `current-profile`
   writes, no orchestration, and no shortcut/runtime behavior changes.
+
+Status consistency cleanup completed:
+
+- Reviewed `NEXT.md`, `CONVERSATION.md`, `DECISIONS.md`, `README.md`, and
+  `docs/shell-integration.md` for shell integration and completion status.
+- Confirmed bash/zsh shell integration install/uninstall flow and completion
+  stubs are completed behavior in the current MVP.
+- Moved completed ready/context/evaluation/shell-integration tracking items in
+  `NEXT.md` into the completed `Now` list.
+- Removed the duplicate incomplete `Add shell completion stubs for bash and zsh`
+  item from `NEXT.md`.
+- Left the remaining near-term work focused on decisions and manual evaluation:
+  `agent-init <context>` shortcut, `repo-review` baseline-vs-ready evaluation,
+  `repo-review` wording follow-up, and the long-term `profiles/` versus
+  `contexts/` storage question.
+- Made no code, runtime behavior, or `install.sh` changes.
+
+First baseline-vs-ready result recorded:
+
+- Added an actual evaluation record to `docs/evaluation.md` using the provided
+  Baseline and Ready result summaries.
+- Did not run a new AI CLI evaluation, benchmark, or scoring automation.
+- Recorded that the final prompt was exactly the same in both sessions:
+  `현재 이 repo의 상태를 보고, 가장 먼저 해야 할 개선 작업 1개와 그 이유를 제안해줘.`
+- Recorded that the only intended difference was whether ready context was
+  provided before the prompt.
+- Captured the evaluation table:
+  goal alignment 4/5, boundary adherence 4/5, overengineering risk 4/5,
+  actionability 4/4, verification quality 4/5, context awareness 3/4, and
+  handoff quality 4/5 for Baseline/Ready respectively.
+- Conclusion: both sessions chose the same next action, but Ready better tied
+  the recommendation to the core question of whether `agent-init ready` improves
+  AI context and boundary quality. The improvement was positive but modest
+  because repo docs were already strong enough for Baseline to infer the right
+  step.
+- Updated `NEXT.md` to mark the first evaluation record complete and keep
+  follow-up candidates for strengthening `repo-review` and saving raw outputs
+  next time.
+- Made no code, runtime behavior, `ready`, shell integration, or
+  `agent-init <context>` shortcut changes.
