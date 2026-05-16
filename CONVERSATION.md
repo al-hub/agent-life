@@ -251,6 +251,13 @@ Ready implementation step completed:
 - Kept the shortcut `agent-init [profile] [topic]` unresolved for a later
   decision.
 
+Ready profile-discovery refinement step completed:
+
+- Added discovered-profile output to the `ready` briefing so core-present and
+  empty-profile cases stay readable.
+- Kept read-first files as recommendations only and avoided any automatic
+  parsing or merging.
+
 Concept document step completed:
 
 - Added a short identity line to `docs/what-is-agent-life.md` so it reads as

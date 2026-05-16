@@ -327,11 +327,14 @@ auto_profile() {
 }
 
 print_ready() {
-  local root core_result core core_source profile_result profile level reason
+  local root core_result core core_source profile_result profile level reason profiles joined count
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
+  profiles="$(list_profiles_raw "$core")"
+  joined="$(list_profiles_raw "$core" | join_profiles)"
+  count="$(list_profiles_raw "$core" | profile_count)"
   profile_result="$(profile_candidate_result "$core")"
   IFS='|' read -r profile level reason <<EOF
 $profile_result
@@ -353,6 +356,16 @@ EOF
     say "WARN" "Core path not found"
     warn_detail "Source: $core_source"
     warn_detail "Reason: no agent-core was discovered by any configured path"
+  fi
+
+  say "INFO" "Discovered profiles"
+  if [ "$joined" = "none" ]; then
+    say "WARN" "Discovered profiles: none"
+  else
+    say "OK" "Discovered profiles: $joined"
+    if [ "$count" -gt 0 ]; then
+      printf '%s\n' "$profiles" | awk '{ print "     - " $0 }'
+    fi
   fi
 
   say "INFO" "Profile"

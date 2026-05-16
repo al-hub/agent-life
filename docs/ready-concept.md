@@ -42,6 +42,7 @@ The first usable `ready` MVP should:
 
 - show the framework path
 - show the core discovery result
+- show discovered profiles, or a no-profile warning
 - show a selected or suggested profile, or a no-profile warning
 - show a short recommended file list to read first
 - show boundary reminders

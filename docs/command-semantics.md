@@ -78,6 +78,7 @@ Current behavior:
 
 - Shows the framework path.
 - Shows the core discovery result.
+- Shows discovered profiles.
 - Suggests a profile when one can be identified.
 - Shows read-first files, boundary reminders, verification commands, and a
   short task brief skeleton.

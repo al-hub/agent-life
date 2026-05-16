@@ -118,6 +118,7 @@ Expected behavior:
 
 - Show the framework path.
 - Show the core discovery result.
+- Show discovered profiles.
 - Show a suggested profile or a no-profile warning.
 - Show read-first files, boundary reminders, verification commands, and a
   short task brief skeleton.
