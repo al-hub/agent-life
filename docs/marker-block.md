@@ -11,6 +11,11 @@ The current MVP supports the Codex target through the current project's
 The marker block connects one selected `agent-core` context to the current
 project's AI instruction surface.
 
+The marker block is the canonical representation of an `agent-life` context
+connection.
+
+Marker block is a window, not a copy.
+
 For the Codex MVP target, the instruction surface is:
 
 ```text
@@ -18,7 +23,8 @@ For the Codex MVP target, the instruction surface is:
 ```
 
 Selection is reference-only. It does not copy, merge, or parse private
-`agent-core` content.
+`agent-core` content. The block should stay small and contain only enough
+information to point the AI toward the selected `agent-core` context.
 
 ## Tokens
 
@@ -41,7 +47,13 @@ There must be at most one `agent-life` marker block in a project `AGENTS.md`.
 
 ## Block Shape
 
-`agent-init select <context>` writes this shape:
+`agent-init ready <context>` previews this shape on stdout.
+
+`agent-init select <context>` writes this shape to the current project's
+`AGENTS.md`.
+
+`agent-init <context>` is the decided shortcut for
+`agent-init select <context>`, but that shortcut is not implemented yet.
 
 ```markdown
 <!-- agent-life:start -->
@@ -75,6 +87,9 @@ separating blank line before the marker block when needed.
 
 `select` must not reorder, rewrite, normalize, or format existing
 `AGENTS.md` content.
+
+`ready <context>` must not insert anything. It is a dry-run marker block
+preview.
 
 ## Create Rule
 
@@ -129,6 +144,10 @@ Marker block commands must not:
 - Write `current-profile`.
 - Mutate shell or environment state.
 - Start tmux sessions, daemons, watchers, or orchestration.
+
+`ready <context>` must also not write project files. `select <context>` may
+write or update only the inclusive marker block range in the current project's
+`AGENTS.md`.
 
 ## Status Semantics
 

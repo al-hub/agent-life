@@ -1,7 +1,8 @@
 # Context Switching Demo
 
-This demo shows how `agent-init select`, `agent-init status`, and
-`agent-init remove all` are meant to be used in a real project.
+This demo shows how `agent-init <context>`, `agent-init select`,
+`agent-init status`, and `agent-init remove all` are meant to be used in a real
+project.
 
 The flow is project-local. It does not activate a profile or copy private
 context into the project. It connects one selected `agent-core` context to the
@@ -13,6 +14,15 @@ For the current Codex MVP target, the instruction surface is:
 ```text
 <target-project>/AGENTS.md
 ```
+
+The decided shortcut semantics are:
+
+```text
+agent-init <context> = agent-init select <context>
+```
+
+That shortcut is documented target behavior. Until it is implemented, use the
+explicit `agent-init select <context>` form.
 
 ## Basic Flow
 
@@ -40,6 +50,12 @@ Select a context for this project:
 agent-init select repo-review
 ```
 
+Shortcut target form:
+
+```sh
+agent-init repo-review
+```
+
 Start Codex from the same project:
 
 ```sh
@@ -57,11 +73,23 @@ agent-init remove all
 Use this when the next AI session should review the current repository with the
 `repo-review` context.
 
+Current explicit form:
+
 ```sh
 cd target-project
 agent-init status
 agent-init list
 agent-init select repo-review
+codex
+```
+
+Shortcut target form:
+
+```sh
+cd target-project
+agent-init status
+agent-init list
+agent-init repo-review
 codex
 ```
 
@@ -88,6 +116,14 @@ agent-init select infographic-format-a
 codex
 ```
 
+Shortcut target form:
+
+```sh
+cd target-project
+agent-init infographic-format-a
+codex
+```
+
 Inside Codex:
 
 ```text
@@ -98,6 +134,13 @@ Switch the same project to another context:
 
 ```sh
 agent-init select infographic-format-b
+codex
+```
+
+Shortcut target form:
+
+```sh
+agent-init infographic-format-b
 codex
 ```
 
@@ -124,6 +167,14 @@ agent-init select cpp-review
 codex
 ```
 
+Shortcut target form:
+
+```sh
+cd target-project
+agent-init cpp-review
+codex
+```
+
 Inside Codex:
 
 ```text
@@ -134,6 +185,13 @@ Switch to the Java review context:
 
 ```sh
 agent-init select java-review
+codex
+```
+
+Shortcut target form:
+
+```sh
+agent-init java-review
 codex
 ```
 
@@ -151,6 +209,9 @@ agent-init remove all
 
 ## What Select Does
 
+`agent-init <context>` is the decided shortcut for
+`agent-init select <context>`.
+
 `agent-init select <context>`:
 
 - requires `agent-core/profiles/<context>/AGENTS.md` to exist
@@ -164,6 +225,9 @@ agent-init remove all
 `select` is not activation. It does not source environment, write
 `current-profile`, start a session, attach tmux, run a daemon, or mutate shell
 state.
+
+The marker block is a window, not a copy. It points Codex toward the selected
+`agent-core` context without copying or merging private content.
 
 ## What Remove All Does
 

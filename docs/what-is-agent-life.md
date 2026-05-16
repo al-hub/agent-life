@@ -138,13 +138,15 @@ agent-init auto
 
 ### Project-local context selection
 
-Future `select` and `remove` commands may connect or disconnect a selected
-`agent-core` context from the current project.
+`select` and `remove all` connect or disconnect a selected `agent-core` context
+from the current project.
 
-For the Codex MVP target, the proposed instruction surface is the current
-project's `AGENTS.md` file. Selection would write only an explicit
-`agent-life` marker block containing read-first references to the selected
-context.
+For the Codex MVP target, the instruction surface is the current project's
+`AGENTS.md` file. Selection writes only an explicit `agent-life` marker block
+containing read-first references to the selected context.
+
+The marker block is a window, not a copy. It points at the selected private
+context without copying or merging that context into the project.
 
 This is not profile activation. It does not source environment, write
 `current-profile`, copy `agent-core` files, merge private memory, or start any

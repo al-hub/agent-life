@@ -1,27 +1,53 @@
 # Ready Concept
 
-`ready` is a preparation flow for AI work contexts.
+`ready` is a marker-block preview flow for AI work contexts.
 
-The current minimal command is `agent-init ready`, with an optional explicit
-profile target such as `agent-init ready develop`.
+The decided target command is `agent-init ready <context>`.
 
-`ready` prints a briefing for the current session. It does not connect that
-briefing to a project file.
+`ready <context>` prints the same `agent-life` marker block that
+`agent-init select <context>` would write into the current project's
+`AGENTS.md`, but it prints the block to stdout only.
 
-The simpler shortcut concept now under review is:
+That makes `ready <context>` a dry-run for the project-local context
+connection.
 
 ```text
-agent-init
-agent-init <context>
-agent-init ready <context>
+agent-init ready repo-review
 ```
 
-`agent-init` means a default ready briefing. `agent-init <context>` would be a
-future shortcut for a context-specific ready briefing. `agent-init ready
-<context>` is the explicit form.
+Means:
 
-In this concept, a context is a single AI-ready briefing name. If a combination
-is useful, it should be named as one kebab-case context such as `python-arch`,
+```text
+preview the repo-review marker block, with no file mutation
+```
+
+The marker block is the canonical representation of an `agent-life` context
+connection. It is a small window pointing at `agent-core`, not a copy of private
+context.
+
+## Command Relationship
+
+The marker-block-centered command model is:
+
+```text
+agent-init ready <context>   preview the context marker block on stdout
+agent-init select <context>  write/update that marker block in project AGENTS.md
+agent-init <context>         shortcut for agent-init select <context>
+agent-init remove all        remove only the agent-life marker block
+agent-init status            inspect the current project marker block
+```
+
+`ready` is useful when the user wants to inspect what would be connected before
+writing it. `select` is useful when the user wants the current project to carry
+a durable, reversible reference to the selected AI context.
+
+This document records target semantics. The current implementation may still
+show the older readiness briefing until the CLI is updated.
+
+## Context Names
+
+A context is a single AI-ready context name. If a combination is useful, it
+should be named as one kebab-case context such as `python-arch`,
 `money-dividend`, or `faith-nehemiah`. The CLI should not compose contexts from
 multiple free arguments like `agent-init python arch`.
 
@@ -51,9 +77,9 @@ temp
 dev-stuff
 ```
 
-Good names are readable and imply one briefing intent. Avoid reserved command
-names such as `help`, `doctor`, `status`, `list`, `auto`, `ready`, `select`,
-`remove`, and `version`.
+Good names are readable and imply one context intent. Avoid reserved command
+names such as `help`, `doctor`, `status`, `list`, `auto`, `version`, `ready`,
+`select`, `remove`, and `update`.
 
 ## Public Sample Context
 
@@ -68,125 +94,119 @@ It is useful because it gives an AI a concrete review lens:
 - risks and unclear boundaries
 - verification habits
 
-`repo-review` is a briefing context, not automatic analysis. It does not make
-`agent-init repo-review` work, does not activate a profile, and does not change
-the current `ready` behavior. Runtime discovery still reads private
-`agent-core/profiles/*`; public sample profiles are templates only.
+`repo-review` is a context, not automatic analysis. When the shortcut is
+implemented, `agent-init repo-review` should mean
+`agent-init select repo-review`.
 
-It describes what `agent-init` should prepare before work begins:
+Runtime discovery still reads private `agent-core/profiles/*`; public sample
+profiles are templates only.
+
+The selected context describes what an AI should read before work begins:
 
 - detected framework
 - detected core
-- selected or suggested profile
+- selected or suggested context
 - relevant files to read first
 - boundary reminders
 - suggested verification commands
 - a task brief skeleton
 
-`ready` does not run the task.
+`ready <context>` does not run the task.
 It does not activate a profile.
 It does not mutate shell state, environment variables, or runtime state.
 It does not manage tmux sessions, daemons, or orchestration.
+It does not write `AGENTS.md`.
+It does not copy or merge `agent-core` files.
 
 ## Ready Versus Select
 
-`ready` and the future `select` flow solve different problems.
+`ready` and `select` solve different problems using the same marker block.
 
 ```text
-ready   print a one-time briefing for the current AI session
-select  connect a context reference to the current project's AI instruction file
-remove  remove only that project-local context reference
-status  report whether a project-local context reference is selected
+ready   preview the marker block without file mutation
+select  write/update the marker block in the current project's AI instruction file
+remove  remove only that project-local marker block
+status  report whether a project-local marker block is selected
 ```
 
-For the Codex MVP target, `select` would use the current project's `AGENTS.md`
-as the AI instruction surface. It would write only an explicit `agent-life`
-marker block with read-first references to the selected `agent-core` context.
+For the Codex MVP target, `select` uses the current project's `AGENTS.md` as
+the AI instruction surface. It writes only an explicit `agent-life` marker
+block with read-first references to the selected `agent-core` context.
+
+`ready <context>` should use the same marker block generation logic as
+`select <context>`. The preview and the written marker block must not drift.
 
 `select` is not activation. It must not source environment, write
 `current-profile`, mutate shell state, start orchestration, copy `agent-core`
 files, merge private memory, or edit content outside the `agent-life` marker
 block.
 
-`ready` remains useful when the user wants a transient briefing without
-project-local mutation. `select` is useful when the user wants the current
-project to carry a durable, reversible reference to the selected AI context.
+`ready` remains useful when the user wants a dry-run preview without
+project-local mutation.
 
 ## Relationship To The CLI Shortcut
 
-The user-facing future shortcut candidate is:
+The user-facing shortcut decision is:
 
 ```text
-agent-init [context]
+agent-init <context>
 ```
 
 Its intended internal meaning is:
 
 ```text
-agent-init ready [context]
+agent-init select <context>
 ```
 
-That relationship is documented here only.
-The shortcut is not implemented in the current MVP.
+That relationship is documented here, but implementation is deferred to a
+future code change.
 
-The shortcut must remain preparation-only. It must not activate a profile,
-source environment, mutate shell state, write `current-profile`, attach a
-session, start orchestration, or automatically parse and merge private
-memory/prompts/workflows.
+The shortcut must remain project-local marker-block mutation only. It must not
+activate a profile, source environment, mutate shell state, write
+`current-profile`, attach a session, start orchestration, or automatically
+parse and merge private memory/prompts/workflows.
 
 ## MVP Acceptance Criteria
 
-The first usable `ready` MVP should:
+The marker-block preview implementation should:
 
-- show the framework path
-- show the core discovery result
-- show discovered profiles, or a no-profile warning
-- show a selected, suggested, or requested profile, or a no-profile warning
-- show a short recommended file list to read first
-- show boundary reminders
-- show suggested verification commands
-- show a short task brief skeleton
+- resolve the requested context through `agent-core`
+- generate the same marker block as `select`
+- print the marker block to stdout
+- keep the marker block small and reference-only
+- make no file changes
+- preserve the `select` and `remove all` marker block invariants
 
-The first usable `ready` MVP must not:
+The marker-block preview implementation must not:
 
 - run the task
 - activate a profile
 - mutate shell state, environment variables, or runtime state
 - manage tmux sessions, daemons, or orchestration
 - parse `AGENTS.md` semantically
+- write `AGENTS.md`
+- copy or merge `agent-core` contents
 
-Acceptance is about boundary and usefulness, not automation. The listed files
-are recommendations for a human or AI to read first; the command must not
-automatically parse or merge their contents.
+Acceptance is about preview accuracy and boundary clarity, not automation.
 
 ## Example Shape
 
 ```text
-Framework: detected
-Core: detected
-Profile: develop
+<!-- agent-life:start -->
+## Agent-life selected context
+
+Selected context:
+- repo-review
 
 Read first:
-- README.md
-- AGENTS.md
-- NEXT.md
-- DECISIONS.md
-- docs/cli.md
-- agent-core/profiles/develop/AGENTS.md
+- <agent-core>/profiles/repo-review/AGENTS.md
 
-Boundary reminders:
-- do not activate profiles
-- do not write current-profile
-- do not mutate shell state
-- do not start orchestration
-
-Suggested verification:
-- ./bin/agent-init doctor
-- ./bin/agent-init status
-- sh tests/smoke/run.sh
-
-Task brief:
-Summarize the current goal, constraints, and next action.
+Rules:
+- Treat this context as guidance for the current AI session.
+- Do not modify agent-core files unless explicitly asked.
+- Follow project AGENTS.md and selected context together.
+- This is not activation, orchestration, or shell/runtime mutation.
+<!-- agent-life:end -->
 ```
 
 This document is for meaning and boundary definition only.

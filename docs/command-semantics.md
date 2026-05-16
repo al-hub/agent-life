@@ -1,7 +1,8 @@
 # Command Semantics
 
 `agent-init` commands are intentionally simple. The current MVP is centered on
-inspection, discovery, and output-only preparation, not activation.
+inspection, discovery, and explicit project-local context connection, not
+activation.
 
 The emerging direction extends `agent-life` toward project-local AI context
 switching: connecting a selected `agent-core` context to the current project's
@@ -12,39 +13,55 @@ them.
 
 The `ready` preparation boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
-`agent-init ready` is the current output-only preparation command, and it may
-accept one explicit profile target.
+The decided target meaning is that `agent-init ready <context>` previews the
+same marker block that `select` would write, without modifying files.
 
 The project-local AGENTS marker block specification is documented in
 [`docs/marker-block.md`](docs/marker-block.md).
 
-The previous `profile` plus optional `topic` shortcut idea is under review. The
-simpler candidate model is a single context name:
+The previous `profile` plus optional `topic` shortcut idea is replaced by a
+single context name:
 
 ```text
-agent-init [context]
-agent-init ready [context]
+agent-init <context>
+agent-init ready <context>
 ```
 
-In this model, `context` means an AI-ready briefing context, not an executable
-app, shell activation target, or runtime state transition.
+In this model, `context` means one AI-ready context connection, not an
+executable app, shell activation target, or runtime state transition.
+
+The decided target meaning is:
+
+```text
+agent-init ready <context>   preview the context marker block on stdout
+agent-init select <context>  write/update that marker block in project AGENTS.md
+agent-init <context>         shortcut for agent-init select <context>
+agent-init remove all        remove only the agent-life marker block
+agent-init status            inspect the current project marker block
+```
+
+The marker block is the canonical representation of an `agent-life` context
+connection. It is a small reference window into `agent-core`, not a copy of
+private context.
 
 ## Semantic Types
 
 ```text
-inspect     read and report runtime facts
-recommend   suggest a profile without switching or activating it
-prepare     show a readiness briefing without mutating runtime state
-select      connect a context reference to the current project's AI instructions
-remove      remove only the agent-life project-local marker block
-update      refresh an existing project-local context marker block
-activate    prepare shell/runtime environment
-attach      connect to an existing session
-switch      change current runtime profile
+inspect      read and report runtime facts
+recommend    suggest a profile without switching or activating it
+preview      print the marker block that would connect a context
+select       connect a context reference to the current project's AI instructions
+shortcut     shorthand for a longer explicit command
+remove       remove only the agent-life project-local marker block
+update       refresh an existing project-local context marker block
+activate     prepare shell/runtime environment
+attach       connect to an existing session
+switch       change current runtime profile
 ```
 
-Current MVP implements `inspect`, `recommend`, `prepare`, `select`, and
-`remove` behavior.
+Current MVP implements `inspect`, `recommend`, `select`, and `remove`
+behavior. Marker-block preview and the bare context shortcut are decided target
+semantics, but are not implemented in this step.
 
 It does not implement update, activation, attach, switch, shell mutation, tmux
 orchestration, session restore, state synchronization, AGENTS.md semantic
@@ -62,24 +79,25 @@ plain-text labels, not a stable machine interface.
 ## Command Table
 
 ```text
-command              current semantic      current behavior
-agent-init help      inspect               show command surface
-agent-init status    inspect               report framework/core/state/profiles and selected context status
-agent-init list      inspect               list discovered profiles
-agent-init auto      recommend             suggest a profile when unambiguous
-agent-init ready     prepare               show readiness briefing
-agent-init doctor    inspect               run best-effort diagnostics
-agent-init version   inspect               print framework/runtime version
-agent-init [context]  placeholder           future preparation shortcut concept
-agent-init select    select                select one project-local context
-agent-init remove    remove                remove project-local marker block
-agent-init update    placeholder           future project-local marker refresh
+command                  semantic      target behavior
+agent-init help          inspect       show command surface
+agent-init status        inspect       report framework/core/state/profiles and selected context status
+agent-init list          inspect       list discovered profiles
+agent-init auto          recommend     suggest a profile when unambiguous
+agent-init ready         preview       show default readiness information
+agent-init ready <ctx>   preview       print marker block preview, no file mutation
+agent-init <ctx>         shortcut      shortcut for agent-init select <ctx>
+agent-init select <ctx>  select        select one project-local context
+agent-init remove all    remove        remove project-local marker block
+agent-init doctor        inspect       run best-effort diagnostics
+agent-init version       inspect       print framework/runtime version
+agent-init update        placeholder   future project-local marker refresh
 ```
 
 Reserved built-ins:
 
 ```text
-help, doctor, status, list, auto, ready, select, remove, version
+help, doctor, status, list, auto, version, ready, select, remove, update
 ```
 
 ## Command Details
@@ -92,14 +110,14 @@ Current behavior:
 
 - Prints current commands.
 - Explains the current observer/recommender role.
-- Shows the current `ready` briefing command and the future convenience
-  shortcut concept.
+- Shows the current `ready`, `select`, and `remove` command surface.
+- May describe the documented bare context shortcut target once implemented.
 - Does not inspect private memory.
 - Does not write state.
 
 ### `agent-init ready`
 
-Semantic: prepare.
+Semantic: preview.
 
 Current behavior:
 
@@ -113,6 +131,17 @@ Current behavior:
 - Does not parse or merge recommended files.
 - Does not activate a profile.
 - Does not write `current-profile`.
+
+Target marker-block behavior:
+
+- `agent-init ready <context>` previews the exact marker block that
+  `agent-init select <context>` would write.
+- The preview is printed to stdout.
+- It must share marker block generation logic with `select` so preview and
+  write behavior do not drift.
+- It does not modify `AGENTS.md` or any other file.
+- It does not activate a profile, source environment, write `current-profile`,
+  start sessions, or copy/merge `agent-core` files.
 
 ### `agent-init status`
 
@@ -216,17 +245,18 @@ Current behavior:
 - Does not inspect profiles.
 - Does not write state.
 
-### `agent-init [context]`
+### `agent-init <context>`
 
-Semantic: placeholder.
+Semantic: shortcut.
 
-Future direction:
+Decided target behavior:
 
-- May act as a user-friendly shortcut to a preparation-only `ready` flow.
-- May prepare a work context for one named briefing context.
-- May be used without arguments as a future default-ready concept.
-- Planned shortcut candidate for `agent-init ready [context]`.
-- Does not accept multiple context arguments in the current candidate model.
+- `agent-init <context>` is a shortcut for `agent-init select <context>`.
+- It writes or updates the same project-local `AGENTS.md` marker block as
+  `select`.
+- It accepts one context name only.
+- It is not used when `<context>` is a reserved command.
+- Reserved command names keep their command meaning.
 
 Current stage:
 
@@ -235,10 +265,10 @@ Current stage:
 - Not a shell activation command.
 - Not a session restore command.
 - Not a `current-profile` write command.
-- Does not define `current-profile` write behavior yet.
+- Does not copy or merge private `agent-core` content.
 
-The shortcut remains documentation-only until a future implementation decision
-is made.
+The shortcut decision is documented here, but implementation is deferred to a
+future code change.
 
 ### `agent-init select <context>`
 
@@ -251,6 +281,8 @@ Current behavior:
   block in the current project's `AGENTS.md`.
 - The marker block contains read-first references to the selected context,
   not copied or merged private content.
+- The marker block is the canonical context connection representation.
+- The marker block is a window, not a copy.
 - Marker block tokens, insertion, update, and rollback rules are defined in
   [`docs/marker-block.md`](docs/marker-block.md).
 - Replaces only the previous `agent-life` marker block when changing selected
@@ -296,10 +328,10 @@ Current stage:
 
 - Not implemented.
 
-## Context Naming Model Candidate
+## Context Naming Model
 
-The single context naming model is under consideration to avoid growing a CLI
-grammar around profile/topic combinations.
+The single context naming model is the chosen direction for the bare shortcut.
+It avoids growing a CLI grammar around profile/topic combinations.
 
 Preferred shape:
 
@@ -321,7 +353,7 @@ agent-init work arch python
 agent-init money dividend report
 ```
 
-Candidate rules:
+Rules:
 
 - A context is one kebab-case name chosen by a human.
 - One context name should express one briefing intent.
@@ -334,7 +366,7 @@ Candidate rules:
 - Over-abbreviated names are discouraged.
 - The CLI should not interpret multiple free arguments as context composition.
 - The CLI should not automatically parse, merge, or layer context pieces.
-- Context names are preparation targets only.
+- Context names are project-local context connection targets.
 - Context names do not activate profiles, source environment, mutate shell
   state, write `current-profile`, attach sessions, or start orchestration.
 

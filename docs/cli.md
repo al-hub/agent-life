@@ -2,16 +2,17 @@
 
 `agent-init` is the command entry point for `agent-life`.
 
-The CLI prepares and inspects an AI-ready work context around public framework,
-private core, local state, and discovered profiles.
+The CLI prepares, inspects, and connects an AI-ready work context around public
+framework, private core, local state, discovered profiles, and project-local
+marker blocks.
 
-Built-in commands are reserved words. Everything else is treated as future
-profile shortcut space, not a current activation path.
+Built-in commands are reserved words. The decided target for any non-reserved
+single context argument is `agent-init select <context>`, not activation.
 
-The `ready` preparation boundary is documented in
+The `ready` preview boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
-`agent-init ready` is the current output-only preparation command, and it may
-accept one explicit profile target.
+The decided target meaning is that `agent-init ready <context>` previews the
+marker block that `select` would write without modifying files.
 
 Project-local marker block behavior is documented in
 [`docs/marker-block.md`](docs/marker-block.md).
@@ -37,10 +38,9 @@ Show the command surface and design rules.
 
 Current behavior:
 
-- Prints reserved built-in commands and the future convenience shortcut concept.
+- Prints reserved built-in commands and documented command direction.
 - Keeps syntax simple and action-centered.
-- Describes the current `ready` briefing command and the future convenience
-  shortcut concept.
+- Describes the current `ready`, `select`, and `remove` command surface.
 
 ### `agent-init status`
 
@@ -126,7 +126,7 @@ Print the CLI version.
 
 ### `agent-init ready`
 
-Prepare an AI-ready work briefing.
+Preview an AI-ready context marker block.
 
 Expected behavior:
 
@@ -140,6 +140,27 @@ Expected behavior:
 - Do not parse or merge recommended files.
 - Do not activate profiles, mutate shell or runtime state, or perform
   orchestration.
+
+Target behavior for `agent-init ready <context>`:
+
+- Resolve `agent-core/profiles/<context>/AGENTS.md`.
+- Print the same marker block that `agent-init select <context>` would write.
+- Do not write `AGENTS.md` or any other file.
+- Share marker block generation logic with `select` to prevent drift.
+
+### `agent-init <context>`
+
+Shortcut for `agent-init select <context>`.
+
+Target behavior:
+
+- Treat one non-reserved argument as a context name.
+- Write or update the project-local marker block exactly as `select` would.
+- Do not treat reserved commands as contexts.
+- Do not activate profiles, write `current-profile`, mutate shell/env state,
+  copy `agent-core` files, or start orchestration.
+
+This shortcut is documented as the target semantics but is not implemented yet.
 
 ### `agent-init select <context>`
 
@@ -203,47 +224,48 @@ These commands remain planned but are not part of the current MVP:
 
 - `agent-init sync`
 
-## Future Convenience
+## Context Shortcut
 
-Future user-facing shortcut shape may be:
+The decided shortcut shape is:
 
 ```text
-agent-init [profile] [topic]
+agent-init <context>
 ```
 
 Meaning:
 
 ```text
-Prepare an AI-ready work context.
+agent-init select <context>
 ```
 
-This is preparation-only and remains unimplemented today.
+This is project-local marker-block mutation only. It remains unimplemented
+today.
 
 Examples:
 
 ```text
-agent-init develop
-agent-init money dividend
-agent-init faith nehemiah
+agent-init repo-review
+agent-init infographic-format-a
+agent-init cpp-review
 ```
 
-Planned shortcut for:
+Dry-run preview:
 
 ```text
-agent-init ready [profile] [topic]
+agent-init ready <context>
 ```
 
-See `docs/ready-concept.md` for the intended preparation boundary.
+See `docs/ready-concept.md` for the marker-block preview boundary.
 
 Reserved commands stay reserved:
 
 ```text
-help, doctor, status, list, auto, ready, select, remove, version
+help, doctor, status, list, auto, version, ready, select, remove, update
 ```
 
 Profile names must not collide with reserved commands.
-The shortcut must not be described as activation, attach, shell mutation, or
-`current-profile` write behavior.
+The shortcut must not be described as activation, attach, shell mutation,
+`current-profile` write behavior, or `agent-core` content copying.
 
 ## Path Discovery
 

@@ -62,13 +62,16 @@ This file tracks the next concrete actions. Keep it actionable and current.
       `AGENTS.md` marker block safety.
 - [x] Add a project-local context switching demo document for
       `select`/`status`/`remove all`.
+- [x] Decide and document `agent-init <context>` as the shortcut for
+      `agent-init select <context>`.
 
 ## Next
 
 ### Right now
 
-- [ ] Decide whether `agent-init <context>` should be implemented as a
-      shortcut to `agent-init ready <context>` or remain documentation-only.
+- [ ] Implement `agent-init ready <context>` as marker block preview/dry-run.
+- [ ] Implement `agent-init <context>` as a shortcut for
+      `agent-init select <context>`.
 - [ ] Decide whether `repo-review` needs wording changes after the first manual
       evaluation.
 - [ ] Decide whether to strengthen `repo-review` context for clearer future

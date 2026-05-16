@@ -60,6 +60,9 @@ project's AI instruction surface. For Codex, the MVP surface is the current
 project's `AGENTS.md` marker block. This is not profile activation and does not
 copy or merge `agent-core` files.
 
+The marker block is a window, not a copy. It points the AI toward the selected
+`agent-core` context without copying private context into the project.
+
 ## Why agent-life exists
 
 Without preparation, AI tools often start by guessing:
@@ -226,11 +229,16 @@ agent-init status
 agent-init list
 agent-init auto
 agent-init ready
+agent-init ready <context>   # target: preview marker block, no file mutation
 agent-init select <context>
+agent-init <context>         # target shortcut for select <context>
 agent-init remove all
 agent-init doctor
 agent-init version
 ```
+
+The bare context shortcut is a documented decision, not implemented in this
+step. Until it lands, use `agent-init select <context>`.
 
 Built-in commands are reserved words. They are not profile names.
 
@@ -265,63 +273,55 @@ Deferred:
 - session restore
 - environment activation
 
-## Future convenience
+## Context Shortcut Decision
 
-Future user-facing preparation shorthand may look like this:
+The documented target shortcut is:
 
 ```text
-agent-init [profile] [topic]
+agent-init <context>
 ```
 
 Meaning:
 
 ```text
-Prepare the current work context before an AI CLI or coding agent starts working.
+agent-init select <context>
 ```
 
 Examples:
 
 ```text
-agent-init develop
-agent-init money dividend
-agent-init faith nehemiah
+agent-init repo-review
+agent-init infographic-format-a
+agent-init cpp-review
 ```
 
-The shortcut should remain preparation-only.
+The shortcut is project-local marker-block mutation only. It is explicit and
+reversible, but it is not activation.
 
 ```text
-[profile] [topic] ≠ activate
-[profile] [topic] ≠ attach
-[profile] [topic] ≠ shell mutation
-[profile] [topic] ≠ write current-profile
-[profile] [topic] ≠ orchestration
+agent-init <context> ≠ activate
+agent-init <context> ≠ attach
+agent-init <context> ≠ shell mutation
+agent-init <context> ≠ write current-profile
+agent-init <context> ≠ orchestration
 ```
 
-Planned shortcut for:
+The dry-run form is:
 
 ```text
-agent-init ready [profile] [topic]
+agent-init ready <context>
 ```
 
-Possible future preparation output:
+It should preview the same marker block that `select` would write, without
+modifying files.
+
+Marker block preview shape:
 
 ```text
-[OK] Framework detected
-[OK] Core found
-[OK] Profile found: develop
-
-Read first:
-  AGENTS.md
-  NEXT.md
-  DECISIONS.md
-
-Suggested verification:
-  sh tests/smoke/run.sh
-
-Task brief skeleton:
-  Goal:
-  Boundary:
-  Verification:
+<!-- agent-life:start -->
+## Agent-life selected context
+...
+<!-- agent-life:end -->
 ```
 
 ## Core Discovery

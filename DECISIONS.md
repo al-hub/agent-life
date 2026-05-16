@@ -218,16 +218,15 @@ Reason: the current need is lightweight semantic regression coverage for
 bootstrap, discovery, `doctor`, `list`, and `auto`, not a full correctness proof
 or heavy CI framework.
 
-### 2026-05-16: `agent-init ready` is output-only preparation
+### 2026-05-16: `agent-init ready` started as output-only preparation
 
 `agent-init ready` is implemented as a preparation command that prints a
 readiness briefing and does not mutate runtime state. It may accept one
 explicit profile target, but it does not activate profiles or write
 `current-profile`.
 
-The future user-facing shortcut remains unimplemented and documented only as a
-concept. The earlier `agent-init [profile] [topic]` shape is now being
-reconsidered in favor of a single context name.
+This was the original ready MVP. It is superseded for future target semantics
+by the 2026-05-17 marker-block preview decision below.
 
 Reason: the command can be useful without becoming activation, orchestration,
 shell ownership, or state persistence.
@@ -241,15 +240,13 @@ rule that recommended files are read-first guidance only.
 Reason: implementation should start from an agreed boundary, not from implicit
 behavior expansion.
 
-### 2026-05-16: Built-in commands are reserved and profile shortcuts stay conceptual
+### 2026-05-16: Built-in commands are reserved
 
 `help`, `doctor`, `status`, `list`, `auto`, and `version` are reserved built-in
 commands. Profile names must not reuse them.
 
-Future user-facing shorthand was initially documented as `agent-init [profile]
-[topic]`, a preparation-only concept for a future `ready` flow. That shortcut
-shape is now under review and may become the simpler single-context form
-documented later in this file.
+This was later expanded to include `ready`, `select`, `remove`, and `update` as
+reserved command names.
 
 Reason: users should not have to memorize a hidden `ready` keyword to understand
 the future preparation direction, but current behavior must stay explicit and
@@ -273,8 +270,8 @@ surface: curl/bootstrap install, core discovery, built-in observer commands,
 output-only `ready`, profile-aware `ready <profile>`, and lightweight smoke
 tests are all in place.
 
-The intentionally deferred areas remain deferred: `agent-init [profile]
-[topic]`, `ready <profile> <topic>`, `current-profile` writes, activation,
+The intentionally deferred areas remain deferred: shortcut implementation,
+marker-block preview implementation, `current-profile` writes, activation,
 shell/env mutation, source/eval wrappers, tmux/session orchestration,
 daemons/watchers, AGENTS/NEXT/DECISIONS parsing or merging, and RAG/LLM
 integration.
@@ -303,26 +300,26 @@ After registration, users must source the target rc file, such as
 Reason: pathless `agent-init` access and completion support are useful, but the
 project still must avoid hidden shell ownership and keep rc edits reversible.
 
-### 2026-05-16: Single context naming model under consideration
+### 2026-05-16: Single context naming model chosen
 
-The previous future shortcut shape `agent-init [profile] [topic]` is being
-reconsidered in favor of a simpler single-context model:
+The previous future shortcut shape `agent-init [profile] [topic]` is replaced
+by a simpler single-context model:
 
 ```text
-agent-init [context]
-agent-init ready [context]
+agent-init <context>
+agent-init ready <context>
 ```
 
-In this candidate model, combinations are named by humans as one kebab-case
+In this model, combinations are named by humans as one kebab-case
 context, such as `python-arch`, `money-dividend`, or `faith-nehemiah`. The CLI
 does not interpret multiple free arguments like `agent-init python arch` as
 context composition.
 
 Current runtime behavior is unchanged. `profiles/<name>` remains the discovered
 private directory structure and can be understood as the current container for a
-named briefing context. No `contexts/` rename, shortcut implementation,
-activation, shell/env mutation, `current-profile` write, orchestration, or
-automatic parsing/merging is decided or implemented.
+named context. No `contexts/` rename, shortcut implementation, activation,
+shell/env mutation, `current-profile` write, orchestration, or automatic
+parsing/merging is implemented.
 
 Reason: a single context name keeps the user-facing preparation model simpler
 than a profile/topic grammar while preserving the existing private profile
@@ -465,3 +462,31 @@ tmux/session orchestration, daemons, or watchers.
 
 Reason: the marker-block boundary is specific enough to implement safely while
 preserving existing project guidance outside the marker block.
+
+### 2026-05-17: Bare context shortcut maps to select
+
+The marker block is the canonical representation of an `agent-life` context
+connection.
+
+`agent-init ready <context>` is defined as a dry-run marker block preview. It
+prints the same marker block that `select` would write, but does not mutate
+files.
+
+`agent-init select <context>` writes or updates that marker block in the
+current project's `AGENTS.md`.
+
+`agent-init <context>` is defined as a shortcut for
+`agent-init select <context>`, not for `ready <context>`.
+
+Reserved command names keep their command meaning and must not be treated as
+context shortcuts: `help`, `doctor`, `status`, `list`, `auto`, `version`,
+`ready`, `select`, `remove`, and `update`.
+
+This decision preserves the no-hidden-mutation philosophy by allowing only
+explicit, reversible, project-local marker-block mutation. It does not add
+activation, shell/env mutation, `current-profile`, tmux/session orchestration,
+daemon/watch behavior, RAG/LLM integration, or `agent-core` content copying.
+
+Reason: users need a short command for the common context switching path, while
+the durable representation should remain the same small marker block. The
+marker block is a window, not a copy.

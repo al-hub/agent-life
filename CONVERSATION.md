@@ -556,3 +556,22 @@ Context switching demo documented:
   `agent-core` by reference rather than copying or merging private files.
 - Linked the demo from `README.md`.
 - Made documentation-only changes; no implementation files changed.
+
+Bare context shortcut semantics decided and documented:
+
+- Decided that the marker block is the canonical representation of an
+  `agent-life` context connection.
+- Defined `agent-init ready <context>` as a marker block preview/dry-run that
+  prints the same block `select` would write, with no file mutation.
+- Defined `agent-init select <context>` as writing or updating that marker
+  block in the current project's `AGENTS.md`.
+- Defined `agent-init <context>` as the shortcut for
+  `agent-init select <context>`, not for `ready <context>`.
+- Recorded that reserved commands keep command meaning and must not be treated
+  as shortcut contexts: `help`, `doctor`, `status`, `list`, `auto`, `version`,
+  `ready`, `select`, `remove`, and `update`.
+- Added the principle: marker block is a window, not a copy.
+- Updated command semantics, ready concept, marker block spec, context switching
+  demo, README, CLI/profile/concept docs, decisions, and next actions.
+- Made documentation-only changes; no implementation files changed and existing
+  select/remove marker logic stayed untouched.
