@@ -66,6 +66,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       `agent-init select <context>`.
 - [x] Implement `agent-init <context>` as a shortcut for
       `agent-init select <context>`.
+- [x] Add dedicated smoke coverage for `agent-init <context>` shortcut safety.
 
 ## Next
 

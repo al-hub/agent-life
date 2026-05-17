@@ -592,3 +592,16 @@ Bare context shortcut implemented:
 - Did not change select/remove marker block logic, ready behavior, activation,
   shell/env state, `current-profile`, tmux/session behavior, daemon/watch
   behavior, or `agent-core` copy/merge behavior.
+
+Shortcut smoke coverage strengthened:
+
+- Added `tests/smoke/test_shortcut.sh` as a dedicated POSIX smoke test for
+  `agent-init <context>`.
+- Covered bare `agent-init repo-review` creating the project-local marker
+  block, `remove all` preserving marker-outside content, reserved commands not
+  being treated as shortcuts, missing context failure behavior, and
+  multi-argument rejection.
+- Kept the test isolated with temporary `HOME`, project, and `agent-core`
+  directories.
+- `tests/smoke/run.sh` already discovers `test_*.sh`, so no runner change was
+  needed.
