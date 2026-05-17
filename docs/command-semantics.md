@@ -78,7 +78,7 @@ plain-text labels, not a stable machine interface.
 ## Command Table
 
 ```text
-command                  semantic      target behavior
+command                  semantic      behavior
 agent-init help          inspect       show command surface
 agent-init status        inspect       report framework/core/state/profiles and selected context status
 agent-init list          inspect       list discovered profiles

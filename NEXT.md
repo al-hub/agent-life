@@ -69,6 +69,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Add dedicated smoke coverage for `agent-init <context>` shortcut safety.
 - [x] Implement `agent-init ready <context>` as marker block preview/dry-run
       using shared marker block generation.
+- [x] Strengthen context switching demo around shortcut-first usage and
+      ready-preview behavior.
 
 ## Next
 

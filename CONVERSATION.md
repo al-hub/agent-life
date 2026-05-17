@@ -622,3 +622,17 @@ Ready/select marker block generation aligned:
 - Did not change marker block meaning, marker-outside behavior, activation,
   shell/env state, `current-profile`, orchestration, daemon/watch behavior, or
   `agent-core` copy/merge behavior.
+
+Context switching demo strengthened for shortcut-first usage:
+
+- Updated `docs/demo-context-switching.md` so the main flow uses
+  `agent-init <context>` as the primary selection command.
+- Clarified that `agent-init ready <context>` previews the same marker block
+  without writing files, while shortcut/select writes or updates the project
+  `AGENTS.md` marker block.
+- Expanded infographic switching examples around
+  `infographic-format-a` and `infographic-format-b`.
+- Expanded development switching examples around `cpp-review`, `java-review`,
+  and `arch-review`.
+- Kept the update documentation-only; no runtime behavior or marker block logic
+  changed.

@@ -1,6 +1,6 @@
 # Context Switching Demo
 
-This demo shows how `agent-init <context>`, `agent-init select`,
+This demo shows how `agent-init <context>`, `agent-init ready <context>`,
 `agent-init status`, and `agent-init remove all` are meant to be used in a real
 project.
 
@@ -21,7 +21,9 @@ The decided shortcut semantics are:
 agent-init <context> = agent-init select <context>
 ```
 
-The explicit `agent-init select <context>` form remains available.
+The explicit `agent-init select <context>` form remains available. Use
+`agent-init ready <context>` when you want to preview the marker block without
+writing it.
 
 ## Basic Flow
 
@@ -46,12 +48,6 @@ agent-init list
 Select a context for this project:
 
 ```sh
-agent-init select repo-review
-```
-
-Shortcut target form:
-
-```sh
 agent-init repo-review
 ```
 
@@ -71,18 +67,6 @@ agent-init remove all
 
 Use this when the next AI session should review the current repository with the
 `repo-review` context.
-
-Current explicit form:
-
-```sh
-cd target-project
-agent-init status
-agent-init list
-agent-init select repo-review
-codex
-```
-
-Shortcut target form:
 
 ```sh
 cd target-project
@@ -104,18 +88,16 @@ When finished:
 agent-init remove all
 ```
 
+Equivalent explicit select form:
+
+```sh
+agent-init select repo-review
+```
+
 ## Infographic Format Switching
 
 This example shows the intended switching shape when two private contexts define
 different output formats.
-
-```sh
-cd target-project
-agent-init select infographic-format-a
-codex
-```
-
-Shortcut target form:
 
 ```sh
 cd target-project
@@ -132,18 +114,9 @@ Inside Codex:
 Switch the same project to another context:
 
 ```sh
-agent-init select infographic-format-b
-codex
-```
-
-Shortcut target form:
-
-```sh
 agent-init infographic-format-b
 codex
 ```
-
-Inside Codex:
 
 ```text
 문서1.doc를 인포그래픽 format B로 만들어줘
@@ -155,26 +128,30 @@ Clean up the project-local selection:
 agent-init remove all
 ```
 
-## Development Context Switching
-
-This example shows the same project being reviewed through two different
-language-focused contexts.
+Preview either marker block without writing it:
 
 ```sh
-cd target-project
-agent-init select cpp-review
-codex
+agent-init ready infographic-format-a
+agent-init ready infographic-format-b
 ```
 
-Shortcut target form:
+Equivalent explicit select forms:
+
+```sh
+agent-init select infographic-format-a
+agent-init select infographic-format-b
+```
+
+## Development Context Switching
+
+This example shows the same project being reviewed through language-specific
+and architecture-focused contexts.
 
 ```sh
 cd target-project
 agent-init cpp-review
 codex
 ```
-
-Inside Codex:
 
 ```text
 C++ 코드 구조와 위험을 점검해줘
@@ -183,21 +160,23 @@ C++ 코드 구조와 위험을 점검해줘
 Switch to the Java review context:
 
 ```sh
-agent-init select java-review
-codex
-```
-
-Shortcut target form:
-
-```sh
 agent-init java-review
 codex
 ```
 
-Inside Codex:
-
 ```text
 Java 쪽 영향과 인터페이스를 점검해줘
+```
+
+Switch to the architecture review context:
+
+```sh
+agent-init arch-review
+codex
+```
+
+```text
+전체 구조 관점에서 개선 후보를 제안해줘
 ```
 
 Clean up when finished:
@@ -206,9 +185,28 @@ Clean up when finished:
 agent-init remove all
 ```
 
-## What Select Does
+Preview without writing:
 
-`agent-init <context>` is the decided shortcut for
+```sh
+agent-init ready cpp-review
+agent-init ready java-review
+agent-init ready arch-review
+```
+
+Equivalent explicit select forms:
+
+```sh
+agent-init select cpp-review
+agent-init select java-review
+agent-init select arch-review
+```
+
+## Preview Versus Select
+
+`agent-init ready <context>` prints the marker block to stdout and does not
+modify project files.
+
+`agent-init <context>` is the shortcut for
 `agent-init select <context>`.
 
 `agent-init select <context>`:
