@@ -92,7 +92,7 @@ agent-init remove all    remove        remove project-local marker block
 agent-init doctor        inspect       run best-effort diagnostics
 agent-init version       inspect       print framework/runtime version
 agent-init update        placeholder   future framework update command
-agent-init fzf           placeholder   future one-page context selector
+agent-init fzf           ui            one-page context selector with fzf
 ```
 
 Reserved built-ins:
@@ -337,9 +337,9 @@ Current stage:
 
 ### `agent-init fzf`
 
-Semantic: placeholder for an optional interactive selector UI.
+Semantic: optional interactive selector UI.
 
-MVP direction:
+Current behavior:
 
 - Shows discovered contexts in an `fzf` list.
 - Lets the user search context names.
@@ -347,12 +347,31 @@ MVP direction:
 - Pressing Enter runs `agent-init select <context>`.
 - Pressing Esc quits without changing project files.
 - Acts as a thin wrapper around existing `agent-init` commands.
+- Uses `agent-init list --tsv` as the list source.
+- Uses the first TSV column as the context name.
+- Treats the second TSV column as display-only description text.
 
 Required command foundations:
 
 - `agent-init list --tsv` for machine-friendly context rows.
 - `agent-init ready <context>` for marker block preview.
 - `agent-init select <context>` for project-local selection.
+
+Example:
+
+```sh
+agent-init fzf
+```
+
+When `fzf` is not installed, the command prints fallback commands and exits
+without changing files:
+
+```text
+agent-init list
+agent-init ready <context>
+agent-init select <context>
+agent-init remove all
+```
 
 Description convention:
 
@@ -390,7 +409,7 @@ Boundary:
 
 Current stage:
 
-- Not implemented.
+- Implemented for search, preview, and select only.
 
 ## Context Naming Model
 
@@ -446,8 +465,7 @@ Reserved command note:
 
 - Built-in commands remain reserved.
 - Context or profile names must not be `help`, `doctor`, `status`, `list`,
-  `auto`, `version`, `ready`, `select`, `remove`, or `update`.
-- `fzf` should become reserved if and when `agent-init fzf` is implemented.
+  `auto`, `version`, `ready`, `select`, `remove`, `fzf`, or `update`.
 
 ## State Policy
 

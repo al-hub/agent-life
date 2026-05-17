@@ -20,6 +20,7 @@ Current commands:
   ready      Prepare an AI work briefing
   select     Select one project-local AI context
   remove     Remove project-local agent-life selection
+  fzf        Search, preview, and select a context with fzf
   version    Show installed version
 
 Shortcut:
@@ -31,7 +32,7 @@ Current role:
   It does not activate profiles, mutate shell state, attach sessions, or orchestrate runtime.
 
 Reserved commands:
-  help, doctor, status, list, auto, version, ready, select, remove, update
+  help, doctor, status, list, auto, version, ready, select, remove, fzf, update
 
 Important:
   Context selection writes only a reversible project-local AGENTS.md marker block.
@@ -46,6 +47,21 @@ die() {
 
 script_dir() {
   cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd
+}
+
+script_path() {
+  local source dir
+  source="${BASH_SOURCE[0]}"
+
+  case "$source" in
+    */*)
+      dir="$(cd -- "$(dirname -- "$source")" && pwd)"
+      printf '%s/%s\n' "$dir" "$(basename -- "$source")"
+      ;;
+    *)
+      command -v -- "$source"
+      ;;
+  esac
 }
 
 framework_root() {
@@ -108,6 +124,46 @@ list_profiles_raw() {
   done
 
   return 0
+}
+
+profile_description() {
+  local core profile file description
+  core="$1"
+  profile="$2"
+  file="$core/profiles/$profile/AGENTS.md"
+  description="-"
+
+  if [ -r "$file" ]; then
+    description="$(awk '
+      /^Description:[[:space:]]*/ {
+        sub(/^Description:[[:space:]]*/, "")
+        print
+        found = 1
+        exit
+      }
+      END {
+        if (!found) {
+          exit 1
+        }
+      }
+    ' "$file" 2>/dev/null || true)"
+    [ -n "$description" ] || description="-"
+  fi
+
+  printf '%s\n' "$description" | tr '\t' ' '
+}
+
+list_profiles_tsv() {
+  local core profile description
+  core="$1"
+
+  while IFS= read -r profile; do
+    [ -n "$profile" ] || continue
+    description="$(profile_description "$core" "$profile")"
+    printf '%s\t%s\n' "$profile" "$description"
+  done <<EOF
+$(list_profiles_raw "$core")
+EOF
 }
 
 join_profiles() {
@@ -511,7 +567,10 @@ select_context() {
   [ -n "$context" ] || die "select requires one context argument"
   case "$context" in
     */*|.*|"") die "invalid context name: $context" ;;
-    help|doctor|status|list|auto|ready|select|remove|version)
+    *[!abcdefghijklmnopqrstuvwxyz0123456789-]*)
+      die "invalid context name: $context"
+      ;;
+    help|doctor|status|list|auto|ready|select|remove|fzf|version|update)
       die "reserved command cannot be used as context: $context"
       ;;
   esac
@@ -542,13 +601,17 @@ remove_selection() {
 }
 
 print_profiles() {
-  local verbose root core_result core profiles joined count
+  local verbose format root core_result core profiles joined count
   verbose="$1"
+  format="$2"
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
 
   if [ -z "$core" ]; then
+    if [ "$format" = "tsv" ]; then
+      return 1
+    fi
     say "WARN" "Core path not found"
     say "WARN" "Discovered profiles: none"
     if [ "$verbose" = "1" ]; then
@@ -562,6 +625,9 @@ print_profiles() {
 
   profiles="$(profiles_dir "$core")"
   if [ ! -d "$profiles" ]; then
+    if [ "$format" = "tsv" ]; then
+      return 1
+    fi
     say "OK" "Core path found"
     detail "Path: $core"
     say "WARN" "Profiles directory missing"
@@ -571,6 +637,12 @@ print_profiles() {
 
   joined="$(list_profiles_raw "$core" | join_profiles)"
   count="$(list_profiles_raw "$core" | profile_count)"
+
+  if [ "$format" = "tsv" ]; then
+    list_profiles_tsv "$core"
+    [ "$count" -gt 0 ]
+    return $?
+  fi
 
   if [ "$count" -gt 0 ]; then
     say "OK" "Discovered profiles: $joined"
@@ -587,6 +659,54 @@ print_profiles() {
     detail "Path: $profiles"
     say "INFO" "Public sample profiles are ignored for runtime discovery"
   fi
+}
+
+print_fzf_fallback() {
+  say "WARN" "fzf command not found"
+  say "INFO" "Install fzf to use the interactive selector."
+  echo
+  echo "Fallback commands:"
+  echo "  agent-init list"
+  echo "  agent-init ready <context>"
+  echo "  agent-init select <context>"
+  echo "  agent-init remove all"
+}
+
+run_fzf_selector() {
+  local self rows selected context
+  self="$(script_path)"
+
+  if ! command -v fzf >/dev/null 2>&1; then
+    print_fzf_fallback
+    return 0
+  fi
+
+  rows="$("$self" list --tsv 2>/dev/null || true)"
+  if [ -z "$rows" ]; then
+    say "WARN" "No contexts available for fzf"
+    say "INFO" "Run agent-init list for discovery diagnostics."
+    return 0
+  fi
+
+  selected="$(
+    printf '%s\n' "$rows" |
+      AGENT_INIT_SELF="$self" fzf \
+        --delimiter "$(printf '\t')" \
+        --with-nth 1,2 \
+        --preview '"$AGENT_INIT_SELF" ready {1}' \
+        --preview-window 'right:60%:wrap'
+  )" || {
+    say "INFO" "fzf selection cancelled"
+    return 0
+  }
+
+  context="$(printf '%s\n' "$selected" | awk -F '\t' '{ print $1 }')"
+  if [ -z "$context" ]; then
+    say "WARN" "No context selected"
+    return 0
+  fi
+
+  "$self" select "$context"
 }
 
 auto_profile() {
@@ -854,8 +974,24 @@ parse_verbose() {
   printf '%s\n' "$verbose"
 }
 
+parse_list_args() {
+  local verbose format arg
+  verbose=0
+  format="human"
+
+  for arg in "$@"; do
+    case "$arg" in
+      --verbose) verbose=1 ;;
+      --tsv) format="tsv" ;;
+      *) die "unknown option: $arg" ;;
+    esac
+  done
+
+  printf '%s|%s\n' "$verbose" "$format"
+}
+
 main() {
-  local command verbose
+  local command verbose list_args list_format
   command="${1:-help}"
   shift || true
 
@@ -868,8 +1004,11 @@ main() {
       print_status "$verbose"
       ;;
     list)
-      verbose="$(parse_verbose "$@")"
-      print_profiles "$verbose"
+      list_args="$(parse_list_args "$@")"
+      IFS='|' read -r verbose list_format <<EOF
+$list_args
+EOF
+      print_profiles "$verbose" "$list_format"
       ;;
     auto)
       verbose="$(parse_verbose "$@")"
@@ -895,6 +1034,12 @@ main() {
       ;;
     update)
       die "update is reserved but not implemented"
+      ;;
+    fzf)
+      if [ "$#" -ne 0 ]; then
+        die "fzf accepts no arguments"
+      fi
+      run_fzf_selector
       ;;
     doctor)
       verbose="$(parse_verbose "$@")"

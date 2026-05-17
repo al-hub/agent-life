@@ -25,16 +25,16 @@ The explicit `agent-init select <context>` form remains available. Use
 `agent-init ready <context>` when you want to preview the marker block without
 writing it.
 
-Future optional selector:
+Optional selector:
 
 ```sh
 agent-init fzf
 ```
 
-The planned `fzf` flow is only a thin selector for the same commands:
-search contexts, preview with `agent-init ready <context>`, press Enter to run
-`agent-init select <context>`, or press Esc to quit. It is not required for the
-flows below.
+The `fzf` flow is only a thin selector for the same commands: search contexts
+from `agent-init list --tsv`, preview with `agent-init ready <context>`, press
+Enter to run `agent-init select <context>`, or press Esc to quit. It is not
+required for the flows below.
 
 ## Basic Flow
 
@@ -54,6 +54,12 @@ List contexts discovered from `agent-core`:
 
 ```sh
 agent-init list
+```
+
+Optionally search and select from one screen:
+
+```sh
+agent-init fzf
 ```
 
 Select a context for this project:

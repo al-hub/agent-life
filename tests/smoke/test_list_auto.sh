@@ -9,6 +9,7 @@ trap 'rm -rf "$SMOKE_TMP_BASE"' EXIT HUP INT TERM
 
 core="$SMOKE_TMP_BASE/agent-core"
 make_core "$core" "develop"
+printf 'Description: development context\n# develop\n' > "$core/profiles/develop/AGENTS.md"
 mkdir -p "$HOME/.agent-life"
 printf 'default-core-path=%s\n' "$core" > "$HOME/.agent-life/config"
 
@@ -17,6 +18,9 @@ assert_contains "$list_output" "[OK] Discovered profiles: develop"
 assert_contains "$list_output" "     - develop"
 assert_contains "$list_output" "Discovered profiles"
 assert_contains "$list_output" "Public sample profiles are ignored for runtime discovery"
+
+tsv_output="$("$ROOT/bin/agent-init" list --tsv)"
+assert_contains "$tsv_output" "develop	development context"
 
 auto_output="$("$ROOT/bin/agent-init" auto --verbose)"
 assert_contains "$auto_output" "[OK] Recommended profile: develop"

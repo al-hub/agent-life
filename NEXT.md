@@ -77,6 +77,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       only, with private `agent-core` update deferred.
 - [x] Define `agent-init fzf` MVP UX as an experimental thin selector around
       existing commands.
+- [x] Implement `agent-init list --tsv` for fzf-friendly context rows.
+- [x] Implement `agent-init fzf` MVP as search, ready-preview, and select only.
 
 ## Next
 
@@ -99,8 +101,6 @@ This file tracks the next concrete actions. Keep it actionable and current.
       command such as `agent-init core update`.
 - [ ] Decide whether `agent-init show <context>` is needed after observing
       real context switching friction.
-- [ ] Implement `agent-init list --tsv` for fzf-friendly context rows.
-- [ ] Implement `agent-init fzf` MVP as search, ready-preview, and select only.
 - [ ] Decide later whether fzf remove/status keybindings are worth adding.
 - [ ] Decide later whether context descriptions should remain first-line
       `Description:` only.

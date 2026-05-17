@@ -683,3 +683,29 @@ fzf MVP UX documented:
   description convention for MVP; no YAML/TOML/frontmatter metadata.
 - Updated command semantics, demo, marker block docs, decisions, and next
   actions only. No implementation or runtime behavior changed.
+
+fzf MVP implemented:
+
+- Added `agent-init list --tsv` as a machine-friendly context row source.
+- TSV rows use the first column for the context name and the second column for
+  display-only description text.
+- Description extraction reads the first `Description:` line from
+  `agent-core/profiles/<context>/AGENTS.md`; missing descriptions show `-`.
+- Added `agent-init fzf` as an optional thin wrapper around existing commands.
+- `agent-init fzf` checks `command -v fzf` before doing discovery work.
+- When `fzf` is missing, it prints fallback commands:
+  `agent-init list`, `agent-init ready <context>`,
+  `agent-init select <context>`, and `agent-init remove all`.
+- When `fzf` is present, the list source is `agent-init list --tsv`, preview is
+  `agent-init ready <context>`, Enter delegates to
+  `agent-init select <context>`, and Esc exits without changing files.
+- The fzf wrapper resolves the current `agent-init` script path and reuses that
+  path inside preview/select commands.
+- Added smoke coverage for `list --tsv` and the fzf-missing fallback path.
+- Updated command semantics and context switching demo docs from planned to
+  implemented fzf MVP behavior.
+- Preserved boundaries: no new state, no `agent-core` mutation, no marker block
+  logic duplication, no activation, no `current-profile`, no shell/env
+  mutation, no tmux/session orchestration, no daemon/watcher, no RAG/LLM
+  integration, no rename, no multi-select, no context merge, and no
+  remove/status fzf keybindings.
