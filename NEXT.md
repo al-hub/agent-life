@@ -73,6 +73,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       ready-preview behavior.
 - [x] Add privacy-safe field record template for real project context switching
       observations.
+- [x] Define `agent-init update` candidate scope as public framework update
+      only, with private `agent-core` update deferred.
 
 ## Next
 
@@ -88,7 +90,11 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
-- [ ] Decide whether `agent-init update` is needed for marker refresh.
+- [ ] Decide whether and how to implement `agent-init update` as a public
+      framework update wrapper around the existing bootstrap update flow.
+- [ ] Decide whether marker block refresh needs a separate explicit command.
+- [ ] Decide whether private `agent-core` update needs a future separate
+      command such as `agent-init core update`.
 - [ ] Decide whether `agent-init show <context>` is needed after observing
       real context switching friction.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote

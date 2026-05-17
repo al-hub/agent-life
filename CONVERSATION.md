@@ -650,3 +650,20 @@ Project-local context switching field record prepared:
   details and to decide later whether a future `agent-init show <context>` is
   needed.
 - Made documentation-only changes; no runtime behavior changed.
+
+Update semantics scoped:
+
+- Documented `agent-init update` as a reserved future command for updating only
+  the public `agent-life` framework checkout.
+- Aligned the candidate behavior with existing bootstrap update semantics:
+  rerun `install.sh` or use a best-effort `git pull --ff-only` on the framework
+  checkout.
+- Explicitly excluded selected-context changes, project `AGENTS.md` marker
+  block changes, private `agent-core` update, implicit shell rc edits,
+  activation, `current-profile`, and orchestration.
+- Deferred private `agent-core` update to a possible future separate command
+  such as `agent-init core update`.
+- Noted that marker block refresh, if needed, should be designed as a separate
+  explicit command rather than overloading framework update.
+- Made documentation-only changes; no runtime behavior, `install.sh`, shell
+  integration, or marker logic changed.

@@ -239,6 +239,9 @@ agent-init version
 
 The bare context shortcut delegates to `agent-init select <context>`.
 
+`agent-init update` is reserved for a future public framework update command.
+For now, rerun `install.sh` to update the framework checkout.
+
 Built-in commands are reserved words. They are not profile names.
 
 Design rules:
@@ -369,6 +372,10 @@ Bootstrap behavior:
 - performs lightweight validation
 - prints manual next-step guidance
 - may register or remove a reversible marker block in bash or zsh rc files
+
+Framework update currently means rerunning `install.sh`. It updates only the
+public framework checkout and does not update private `agent-core`, change
+selected context, or modify project `AGENTS.md` marker blocks.
 
 The installer does not edit:
 

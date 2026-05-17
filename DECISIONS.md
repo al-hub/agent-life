@@ -490,3 +490,26 @@ daemon/watch behavior, RAG/LLM integration, or `agent-core` content copying.
 Reason: users need a short command for the common context switching path, while
 the durable representation should remain the same small marker block. The
 marker block is a window, not a copy.
+
+### 2026-05-17: Update scope starts with public framework only
+
+`agent-init update` is reserved for a future public `agent-life` framework
+update command.
+
+The initial scope should update only the public framework checkout, likely by
+wrapping the existing safe bootstrap update behavior or instructing the user to
+rerun `install.sh`. Existing shell integration should remain in place unless
+the user explicitly requests a shell integration change.
+
+`agent-init update` must not change selected context, write or refresh project
+`AGENTS.md` marker blocks, update private `agent-core`, copy or merge
+`agent-core` files, mutate shell rc files implicitly, activate profiles, write
+`current-profile`, or start orchestration.
+
+Private `agent-core` update remains deferred. If needed, it should be designed
+later as a separate explicit command, for example `agent-init core update`,
+because private repositories may contain sensitive or workflow-specific state.
+
+Reason: framework update and private core update have different risk profiles.
+The public framework can use a reversible git update model; private core update
+must stay user-owned until a separate boundary is designed.

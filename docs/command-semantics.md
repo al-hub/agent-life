@@ -53,7 +53,7 @@ preview      print the marker block that would connect a context
 select       connect a context reference to the current project's AI instructions
 shortcut     shorthand for a longer explicit command
 remove       remove only the agent-life project-local marker block
-update       refresh an existing project-local context marker block
+update       update the public agent-life framework checkout
 activate     prepare shell/runtime environment
 attach       connect to an existing session
 switch       change current runtime profile
@@ -90,7 +90,7 @@ agent-init select <ctx>  select        select one project-local context
 agent-init remove all    remove        remove project-local marker block
 agent-init doctor        inspect       run best-effort diagnostics
 agent-init version       inspect       print framework/runtime version
-agent-init update        placeholder   future project-local marker refresh
+agent-init update        placeholder   future framework update command
 ```
 
 Reserved built-ins:
@@ -304,15 +304,30 @@ Current behavior:
 
 ### `agent-init update`
 
-Semantic: placeholder for project-local marker refresh.
+Semantic: placeholder for public framework update.
 
 Future direction:
 
-- Refreshes an existing project-local `agent-life` marker block from the
-  currently selected context reference.
-- Must fail or report guidance when no marker block exists instead of guessing a
-  context.
-- Must not parse, merge, or rewrite content outside the marker block.
+- Updates only the public `agent-life` framework checkout.
+- Uses the same safe update model as bootstrap: an existing framework checkout
+  may be updated with best-effort `git pull --ff-only`, or the user may rerun
+  `install.sh`.
+- Preserves shell integration unless the user explicitly requests a shell
+  integration change through an explicit option or installer flow.
+- Does not change the selected context.
+- Does not create, update, refresh, or remove project `AGENTS.md` marker
+  blocks.
+- Does not update, clone, fetch, or modify private `agent-core`.
+- Does not copy or merge `agent-core` files.
+- Does not mutate shell rc files unless an explicit shell integration option is
+  used.
+
+Out of scope for this command:
+
+- `agent-core` update. A future separate command such as
+  `agent-init core update` may be considered later.
+- Marker block refresh. A future explicit command should be designed separately
+  if marker refresh becomes necessary.
 
 Current stage:
 

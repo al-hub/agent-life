@@ -159,6 +159,9 @@ This is manual. The bootstrap script does not modify PATH automatically.
 
 ## Update
 
+Current supported update flow is to rerun the bootstrap script. The reserved
+future `agent-init update` command is not implemented yet.
+
 Run the bootstrap script again:
 
 ```sh
@@ -167,6 +170,11 @@ curl -fsSL https://raw.githubusercontent.com/al-hub/agent-life/main/install.sh |
 
 Existing installs are updated with a best-effort `git pull --ff-only`. If the
 pull fails, the checkout is left in place for manual inspection.
+
+This updates only the public `agent-life` framework checkout. It does not
+update private `agent-core`, change the selected project context, edit project
+`AGENTS.md` marker blocks, or modify shell integration unless you explicitly
+request shell integration through the installer.
 
 ## Remove
 
