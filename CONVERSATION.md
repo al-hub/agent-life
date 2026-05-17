@@ -709,3 +709,20 @@ fzf MVP implemented:
   mutation, no tmux/session orchestration, no daemon/watcher, no RAG/LLM
   integration, no rename, no multi-select, no context merge, and no
   remove/status fzf keybindings.
+
+fzf smoke/fallback coverage strengthened:
+
+- Expanded `tests/smoke/test_fzf.sh` to create an isolated temporary `HOME`,
+  temporary project, and temporary `agent-core`.
+- Added `agent-init list --tsv` verification using a `repo-review` context with
+  a `Description:` line.
+- Added `agent-init ready repo-review` verification for marker block preview
+  output without writing project `AGENTS.md`.
+- Kept `agent-init fzf` fallback verification in a PATH where `fzf` is absent.
+- Confirmed fallback output includes `agent-init list`,
+  `agent-init ready <context>`, `agent-init select <context>`, and
+  `agent-init remove all`.
+- Documented manual fzf checks in the context switching demo.
+- Preserved test constraints: no interactive fzf automation, no expect/pty,
+  no pytest/bats/TAP, no full output snapshots, no real HOME mutation, no real
+  project `AGENTS.md` mutation, and no fzf test dependency.

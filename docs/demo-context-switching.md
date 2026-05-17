@@ -36,6 +36,18 @@ from `agent-init list --tsv`, preview with `agent-init ready <context>`, press
 Enter to run `agent-init select <context>`, or press Esc to quit. It is not
 required for the flows below.
 
+Manual fallback checks:
+
+```sh
+agent-init list --tsv
+agent-init ready repo-review
+agent-init fzf
+```
+
+If `fzf` is not installed, `agent-init fzf` should print fallback commands
+instead of failing. Interactive `fzf` behavior is intentionally verified
+manually, not through automated smoke tests.
+
 ## Basic Flow
 
 Move into the project where the AI will work:
