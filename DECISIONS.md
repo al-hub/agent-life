@@ -546,3 +546,42 @@ YAML/TOML/frontmatter metadata for this MVP.
 Reason: `fzf` is useful for searching and previewing contexts, but the core
 agent-life boundary remains explicit, reversible, project-local marker-block
 mutation only.
+
+### 2026-05-18: fzf follow-up features remain deferred
+
+The `agent-init fzf` MVP scope is fixed at search, preview, and select.
+
+`agent-init fzf` continues to use:
+
+```text
+source = agent-init list --tsv
+preview = agent-init ready <context>
+select = agent-init select <context>
+quit = Esc
+```
+
+`agent-init show <context>` is a later candidate only. It may be useful if the
+fzf preview needs a cleaner display than `ready <context>`, but the current MVP
+keeps `ready <context>` as the preview command.
+
+Remove and status keybindings are later candidates only. `remove all` remains
+an explicit command because it is destructive. `status` remains an explicit
+command because fzf keybindings add UI complexity and can conflict with
+terminal behavior.
+
+Rename is excluded from the MVP because it may require private
+`agent-core/profiles/<context>` directory mutation and could break existing
+marker block references or other human references. If shorter or alternate
+names become necessary, aliasing may be considered later as a separate concept
+that does not rename the underlying context directory.
+
+Multi-select and context merge remain future candidates only. They introduce
+ordering, conflict, precedence, and merge semantics that are outside the current
+single selected context model.
+
+Command palette behavior remains excluded because it would expand `fzf` from a
+single-purpose selector into a broader UI surface.
+
+Reason: keeping fzf narrow protects the current invariant that context
+switching is one explicit project-local marker block reference to one selected
+context, with no private core mutation or hidden runtime behavior.

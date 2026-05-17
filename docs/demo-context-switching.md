@@ -81,6 +81,12 @@ merge contexts, rename contexts, multi-select contexts, activate profiles,
 write `current-profile`, mutate shell state, start sessions, or change the
 meaning of `ready`, `select`, `status`, or `remove`.
 
+The MVP does not provide remove/status keybindings, rename, alias management,
+multi-select, context merge, or command palette behavior. Those remain explicit
+commands or future candidates. In particular, renaming a context could mutate
+private `agent-core` directories and break existing references, so it is not
+part of the selector.
+
 `remove all` stays an explicit command:
 
 ```sh

@@ -745,3 +745,26 @@ fzf context switching demo strengthened:
   search/preview/select UI with command fallback.
 - Made documentation-only changes; no implementation, runtime behavior, or
   marker block logic changed.
+
+fzf follow-up scope deferred:
+
+- Recorded a durable decision that `agent-init fzf` MVP remains fixed at
+  search, `ready <context>` preview, Enter-to-select, and Esc-to-quit.
+- Kept `agent-init show <context>` as a later candidate only, in case fzf
+  preview needs a cleaner display than `ready <context>`.
+- Kept remove/status keybindings as later candidates only because remove is
+  destructive and status keybindings can conflict with terminal behavior.
+- Excluded rename from the MVP because it can mutate private
+  `agent-core/profiles/<context>` directories and break existing marker block
+  or human references.
+- Kept alias support as a future candidate if alternate names are needed
+  without renaming the underlying context directory.
+- Kept multi-select and context merge as future candidates only because they
+  require precedence, conflict, ordering, and merge semantics.
+- Kept command palette behavior excluded so fzf remains a single-purpose
+  selector rather than a broader UI surface.
+- Updated `DECISIONS.md`, `NEXT.md`, `docs/command-semantics.md`, and
+  `docs/demo-context-switching.md`.
+- Documentation-only change: no implementation, `agent-core` mutation, rename,
+  alias, multi-select, command palette, runtime behavior, or marker block logic
+  was added.

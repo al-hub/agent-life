@@ -102,9 +102,14 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether marker block refresh needs a separate explicit command.
 - [ ] Decide whether private `agent-core` update needs a future separate
       command such as `agent-init core update`.
-- [ ] Decide whether `agent-init show <context>` is needed after observing
-      real context switching friction.
-- [ ] Decide later whether fzf remove/status keybindings are worth adding.
+- [ ] Later candidate: decide whether `agent-init show <context>` is needed
+      after observing real fzf preview friction.
+- [ ] Later candidate: decide whether fzf remove/status keybindings are worth
+      adding without destructive surprises or terminal keybinding conflicts.
+- [ ] Later candidate: decide whether alias support is needed without renaming
+      private `agent-core` context directories.
+- [ ] Later candidate: decide whether multi-select or context merge should ever
+      be supported after precedence/conflict semantics are designed.
 - [ ] Decide later whether context descriptions should remain first-line
       `Description:` only.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
@@ -119,7 +124,9 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether any future command should support explicit multi-context
       composition; current candidate direction is no.
-- [ ] Decide whether rename, alias, or multi-select should ever be supported.
+- [ ] Decide whether context rename should ever be supported; current candidate
+      direction is no because it can mutate private `agent-core` directories
+      and break references.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a
       separate controller command.
 - [ ] Decide whether lifecycle transitions should ever become a strict runtime

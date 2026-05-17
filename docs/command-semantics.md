@@ -390,7 +390,8 @@ Out of scope for MVP:
 
 - `ctrl-r` remove all.
 - `ctrl-s` status. This can conflict with terminal flow control.
-- Rename, alias, or profile directory mutation.
+- Rename or profile directory mutation.
+- Alias management.
 - Multi-select.
 - Context merge or layering.
 - `y/N/all` confirmation UI.
@@ -406,6 +407,20 @@ Boundary:
 - Destructive actions such as `remove all` remain explicit commands.
 - It must not mutate shell state, write `current-profile`, start tmux/session
   orchestration, run daemons, or integrate RAG/LLM behavior.
+
+Deferred follow-up candidates:
+
+- `agent-init show <context>` if `ready <context>` becomes too verbose for fzf
+  preview.
+- remove/status keybindings if the UI can avoid destructive surprises and
+  terminal keybinding conflicts.
+- alias support if alternate context names are needed without renaming private
+  `agent-core` directories.
+- multi-select or context merge only after explicit precedence and conflict
+  semantics are designed.
+
+Rename remains excluded because it can mutate private `agent-core` directory
+names and break existing marker block or human references.
 
 Current stage:
 
