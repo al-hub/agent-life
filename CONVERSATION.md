@@ -726,3 +726,22 @@ fzf smoke/fallback coverage strengthened:
 - Preserved test constraints: no interactive fzf automation, no expect/pty,
   no pytest/bats/TAP, no full output snapshots, no real HOME mutation, no real
   project `AGENTS.md` mutation, and no fzf test dependency.
+
+fzf context switching demo strengthened:
+
+- Added a dedicated `Fzf Context Selector` section to
+  `docs/demo-context-switching.md`.
+- Documented the basic `agent-init fzf` flow: search, preview, Enter to select,
+  and Esc to quit.
+- Added the equivalent command fallback flow with `agent-init list`,
+  `agent-init ready <context>`, `agent-init select <context>`,
+  `agent-init <context>`, and `agent-init remove all`.
+- Expanded infographic and development context switching examples to show fzf
+  selection before launching Codex.
+- Clarified that fzf is optional convenience UI and a marker block management
+  wrapper, not activation, merge, rename, multi-select, shell mutation,
+  `agent-core` mutation, or a replacement for explicit `remove all`.
+- Added a short README mention of `agent-init fzf` as optional
+  search/preview/select UI with command fallback.
+- Made documentation-only changes; no implementation, runtime behavior, or
+  marker block logic changed.

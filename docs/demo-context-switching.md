@@ -48,6 +48,48 @@ If `fzf` is not installed, `agent-init fzf` should print fallback commands
 instead of failing. Interactive `fzf` behavior is intentionally verified
 manually, not through automated smoke tests.
 
+## Fzf Context Selector
+
+Use `agent-init fzf` when you want a single-screen selector for discovered
+contexts:
+
+```sh
+cd target-project
+agent-init fzf
+```
+
+In the selector:
+
+- Type to search context names and descriptions.
+- Read the preview window, which is powered by `agent-init ready <context>`.
+- Press Enter to run `agent-init select <context>`.
+- Press Esc to quit without changing project files.
+
+The same work is always available without `fzf`:
+
+```sh
+agent-init list
+agent-init ready <context>
+agent-init select <context>
+agent-init <context>
+agent-init remove all
+```
+
+`fzf` is optional convenience UI. It is a wrapper around marker block
+management commands, not a separate runtime. It does not modify `agent-core`,
+merge contexts, rename contexts, multi-select contexts, activate profiles,
+write `current-profile`, mutate shell state, start sessions, or change the
+meaning of `ready`, `select`, `status`, or `remove`.
+
+`remove all` stays an explicit command:
+
+```sh
+agent-init remove all
+```
+
+The marker block is a window, not a copy. It points the project `AGENTS.md` at
+one selected `agent-core` context without copying or merging private content.
+
 ## Basic Flow
 
 Move into the project where the AI will work:
@@ -128,9 +170,16 @@ agent-init select repo-review
 This example shows the intended switching shape when two private contexts define
 different output formats.
 
+With `fzf`:
+
 ```sh
 cd target-project
-agent-init infographic-format-a
+agent-init fzf
+```
+
+In `fzf`, choose `infographic-format-a`.
+
+```sh
 codex
 ```
 
@@ -143,7 +192,12 @@ Inside Codex:
 Switch the same project to another context:
 
 ```sh
-agent-init infographic-format-b
+agent-init fzf
+```
+
+In `fzf`, choose `infographic-format-b`.
+
+```sh
 codex
 ```
 
@@ -167,6 +221,8 @@ agent-init ready infographic-format-b
 Equivalent explicit select forms:
 
 ```sh
+agent-init infographic-format-a
+agent-init infographic-format-b
 agent-init select infographic-format-a
 agent-init select infographic-format-b
 ```
@@ -176,9 +232,17 @@ agent-init select infographic-format-b
 This example shows the same project being reviewed through language-specific
 and architecture-focused contexts.
 
+With `fzf`, choose `cpp-review`, start Codex, then repeat with `java-review`
+and `arch-review`:
+
 ```sh
 cd target-project
-agent-init cpp-review
+agent-init fzf
+```
+
+In `fzf`, choose `cpp-review`.
+
+```sh
 codex
 ```
 
@@ -189,7 +253,12 @@ C++ 코드 구조와 위험을 점검해줘
 Switch to the Java review context:
 
 ```sh
-agent-init java-review
+agent-init fzf
+```
+
+In `fzf`, choose `java-review`.
+
+```sh
 codex
 ```
 
@@ -200,7 +269,12 @@ Java 쪽 영향과 인터페이스를 점검해줘
 Switch to the architecture review context:
 
 ```sh
-agent-init arch-review
+agent-init fzf
+```
+
+In `fzf`, choose `arch-review`.
+
+```sh
 codex
 ```
 
@@ -225,6 +299,9 @@ agent-init ready arch-review
 Equivalent explicit select forms:
 
 ```sh
+agent-init cpp-review
+agent-init java-review
+agent-init arch-review
 agent-init select cpp-review
 agent-init select java-review
 agent-init select arch-review

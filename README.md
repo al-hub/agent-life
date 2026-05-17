@@ -232,12 +232,19 @@ agent-init ready
 agent-init ready <context>   # preview marker block, no file mutation
 agent-init select <context>
 agent-init <context>         # shortcut for select <context>
+agent-init fzf               # optional search/preview/select UI
 agent-init remove all
 agent-init doctor
 agent-init version
 ```
 
 The bare context shortcut delegates to `agent-init select <context>`.
+
+`agent-init fzf` is optional convenience UI. It searches contexts from
+`agent-init list --tsv`, previews with `agent-init ready <context>`, and selects
+by invoking `agent-init select <context>`. If `fzf` is unavailable, use
+`agent-init list`, `agent-init ready <context>`, and
+`agent-init select <context>` or the `agent-init <context>` shortcut directly.
 
 `agent-init update` is reserved for a future public framework update command.
 For now, rerun `install.sh` to update the framework checkout.

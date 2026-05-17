@@ -81,6 +81,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Implement `agent-init fzf` MVP as search, ready-preview, and select only.
 - [x] Strengthen `agent-init fzf` smoke coverage for fallback, `list --tsv`,
       and `ready <context>`.
+- [x] Strengthen fzf context switching demo and README optional UI guidance.
 
 ## Next
 
