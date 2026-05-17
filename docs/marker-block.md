@@ -55,6 +55,12 @@ There must be at most one `agent-life` marker block in a project `AGENTS.md`.
 `agent-init <context>` is the decided shortcut for
 `agent-init select <context>`.
 
+Future `agent-init fzf` is only an optional selector wrapper around the same
+marker block commands. It should preview this block with
+`agent-init ready <context>` and select by invoking
+`agent-init select <context>`. It must not create a second marker format or
+copy `agent-core` contents.
+
 ```markdown
 <!-- agent-life:start -->
 ## Agent-life selected context

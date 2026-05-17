@@ -54,6 +54,7 @@ select       connect a context reference to the current project's AI instruction
 shortcut     shorthand for a longer explicit command
 remove       remove only the agent-life project-local marker block
 update       update the public agent-life framework checkout
+ui           thin interactive wrapper around existing commands
 activate     prepare shell/runtime environment
 attach       connect to an existing session
 switch       change current runtime profile
@@ -91,6 +92,7 @@ agent-init remove all    remove        remove project-local marker block
 agent-init doctor        inspect       run best-effort diagnostics
 agent-init version       inspect       print framework/runtime version
 agent-init update        placeholder   future framework update command
+agent-init fzf           placeholder   future one-page context selector
 ```
 
 Reserved built-ins:
@@ -333,6 +335,63 @@ Current stage:
 
 - Not implemented.
 
+### `agent-init fzf`
+
+Semantic: placeholder for an optional interactive selector UI.
+
+MVP direction:
+
+- Shows discovered contexts in an `fzf` list.
+- Lets the user search context names.
+- Shows a preview window powered by `agent-init ready <context>`.
+- Pressing Enter runs `agent-init select <context>`.
+- Pressing Esc quits without changing project files.
+- Acts as a thin wrapper around existing `agent-init` commands.
+
+Required command foundations:
+
+- `agent-init list --tsv` for machine-friendly context rows.
+- `agent-init ready <context>` for marker block preview.
+- `agent-init select <context>` for project-local selection.
+
+Description convention:
+
+- A context may include a lightweight line-based description in its
+  `AGENTS.md`.
+- The description line shape is:
+
+```text
+Description: short human-readable context summary
+```
+
+- If no `Description:` line exists, the description may be empty or `-`.
+- Do not introduce YAML, TOML, frontmatter, or heavy metadata for the MVP.
+
+Out of scope for MVP:
+
+- `ctrl-r` remove all.
+- `ctrl-s` status. This can conflict with terminal flow control.
+- Rename, alias, or profile directory mutation.
+- Multi-select.
+- Context merge or layering.
+- `y/N/all` confirmation UI.
+- Command palette behavior.
+- `agent-core` mutation.
+
+Boundary:
+
+- `fzf` is not a new execution engine.
+- `fzf` must not change selected context except by invoking
+  `agent-init select <context>`.
+- Remove/status remain explicit commands in the MVP.
+- Destructive actions such as `remove all` remain explicit commands.
+- It must not mutate shell state, write `current-profile`, start tmux/session
+  orchestration, run daemons, or integrate RAG/LLM behavior.
+
+Current stage:
+
+- Not implemented.
+
 ## Context Naming Model
 
 The single context naming model is the chosen direction for the bare shortcut.
@@ -387,7 +446,8 @@ Reserved command note:
 
 - Built-in commands remain reserved.
 - Context or profile names must not be `help`, `doctor`, `status`, `list`,
-  `auto`, `ready`, `select`, `remove`, or `version`.
+  `auto`, `version`, `ready`, `select`, `remove`, or `update`.
+- `fzf` should become reserved if and when `agent-init fzf` is implemented.
 
 ## State Policy
 

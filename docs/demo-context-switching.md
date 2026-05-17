@@ -25,6 +25,17 @@ The explicit `agent-init select <context>` form remains available. Use
 `agent-init ready <context>` when you want to preview the marker block without
 writing it.
 
+Future optional selector:
+
+```sh
+agent-init fzf
+```
+
+The planned `fzf` flow is only a thin selector for the same commands:
+search contexts, preview with `agent-init ready <context>`, press Enter to run
+`agent-init select <context>`, or press Esc to quit. It is not required for the
+flows below.
+
 ## Basic Flow
 
 Move into the project where the AI will work:

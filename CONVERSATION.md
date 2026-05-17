@@ -667,3 +667,19 @@ Update semantics scoped:
   explicit command rather than overloading framework update.
 - Made documentation-only changes; no runtime behavior, `install.sh`, shell
   integration, or marker logic changed.
+
+fzf MVP UX documented:
+
+- Defined `agent-init fzf` as an experimental one-page context selector, not a
+  new execution engine.
+- MVP flow: search contexts, preview with `agent-init ready <context>`, Enter
+  runs `agent-init select <context>`, Esc quits.
+- Required foundations: `agent-init list --tsv`, `agent-init ready <context>`,
+  and `agent-init select <context>`.
+- Excluded remove/status keybindings, rename, alias, multi-select, context
+  merge, confirmation UI, command palette behavior, and `agent-core` mutation
+  from the MVP.
+- Documented lightweight `Description:` line extraction as the only context
+  description convention for MVP; no YAML/TOML/frontmatter metadata.
+- Updated command semantics, demo, marker block docs, decisions, and next
+  actions only. No implementation or runtime behavior changed.

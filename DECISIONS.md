@@ -513,3 +513,36 @@ because private repositories may contain sensitive or workflow-specific state.
 Reason: framework update and private core update have different risk profiles.
 The public framework can use a reversible git update model; private core update
 must stay user-owned until a separate boundary is designed.
+
+### 2026-05-17: fzf MVP is an optional thin selector
+
+`agent-init fzf` is an experimental UI candidate for context search, preview,
+and selection.
+
+The MVP scope is intentionally narrow:
+
+```text
+agent-init fzf
+search context list
+preview = agent-init ready <context>
+Enter = agent-init select <context>
+Esc = quit
+```
+
+`fzf` is not a new execution engine. It should call existing `agent-init`
+commands rather than implementing separate context logic. The required
+foundations are `agent-init list --tsv`, `agent-init ready <context>`, and
+`agent-init select <context>`.
+
+The MVP excludes remove/status keybindings, rename, alias, multi-select,
+context merge, command palette behavior, confirmation UI, and `agent-core`
+mutation. `remove all` remains an explicit command because it is destructive.
+`ctrl-s` status is excluded because it can conflict with terminal flow control.
+
+Context descriptions may use a lightweight first `Description:` line in
+`AGENTS.md`. Missing descriptions may be empty or `-`. Do not introduce
+YAML/TOML/frontmatter metadata for this MVP.
+
+Reason: `fzf` is useful for searching and previewing contexts, but the core
+agent-life boundary remains explicit, reversible, project-local marker-block
+mutation only.

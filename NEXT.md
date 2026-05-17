@@ -75,6 +75,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       observations.
 - [x] Define `agent-init update` candidate scope as public framework update
       only, with private `agent-core` update deferred.
+- [x] Define `agent-init fzf` MVP UX as an experimental thin selector around
+      existing commands.
 
 ## Next
 
@@ -97,6 +99,11 @@ This file tracks the next concrete actions. Keep it actionable and current.
       command such as `agent-init core update`.
 - [ ] Decide whether `agent-init show <context>` is needed after observing
       real context switching friction.
+- [ ] Implement `agent-init list --tsv` for fzf-friendly context rows.
+- [ ] Implement `agent-init fzf` MVP as search, ready-preview, and select only.
+- [ ] Decide later whether fzf remove/status keybindings are worth adding.
+- [ ] Decide later whether context descriptions should remain first-line
+      `Description:` only.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`
@@ -109,6 +116,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide when `current-profile` may be written and by which command.
 - [ ] Decide whether any future command should support explicit multi-context
       composition; current candidate direction is no.
+- [ ] Decide whether rename, alias, or multi-select should ever be supported.
 - [ ] Decide whether activation should use source/eval, wrapper functions, or a
       separate controller command.
 - [ ] Decide whether lifecycle transitions should ever become a strict runtime
