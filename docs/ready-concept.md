@@ -94,9 +94,8 @@ It is useful because it gives an AI a concrete review lens:
 - risks and unclear boundaries
 - verification habits
 
-`repo-review` is a context, not automatic analysis. When the shortcut is
-implemented, `agent-init repo-review` should mean
-`agent-init select repo-review`.
+`repo-review` is a context, not automatic analysis. `agent-init repo-review`
+means `agent-init select repo-review`.
 
 Runtime discovery still reads private `agent-core/profiles/*`; public sample
 profiles are templates only.
@@ -158,8 +157,7 @@ Its intended internal meaning is:
 agent-init select <context>
 ```
 
-That relationship is documented here, but implementation is deferred to a
-future code change.
+That relationship is implemented by delegating to the existing select handler.
 
 The shortcut must remain project-local marker-block mutation only. It must not
 activate a profile, source environment, mutate shell state, write

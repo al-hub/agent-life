@@ -575,3 +575,20 @@ Bare context shortcut semantics decided and documented:
   demo, README, CLI/profile/concept docs, decisions, and next actions.
 - Made documentation-only changes; no implementation files changed and existing
   select/remove marker logic stayed untouched.
+
+Bare context shortcut implemented:
+
+- Updated `bin/agent-init` so one non-reserved argument routes to the existing
+  `select_context` handler.
+- `agent-init repo-review` now behaves like
+  `agent-init select repo-review`.
+- Reserved commands keep command routing. `update` is reserved and reports that
+  it is not implemented.
+- Multi-argument shortcut attempts fail with explicit usage guidance instead of
+  composing contexts.
+- Updated help output and smoke coverage for the shortcut, reserved `update`,
+  and multi-argument rejection.
+- Updated docs and handoff files to describe the shortcut as implemented.
+- Did not change select/remove marker block logic, ready behavior, activation,
+  shell/env state, `current-profile`, tmux/session behavior, daemon/watch
+  behavior, or `agent-core` copy/merge behavior.

@@ -9,6 +9,7 @@ agent-init - prepare AI-ready work context
 
 Usage:
   agent-init <command>
+  agent-init <context>
 
 Current commands:
   help       Show this help
@@ -21,22 +22,19 @@ Current commands:
   remove     Remove project-local agent-life selection
   version    Show installed version
 
+Shortcut:
+  agent-init <context>
+    Shortcut for: agent-init select <context>
+
 Current role:
   agent-init is a lightweight observer/recommender.
   It does not activate profiles, mutate shell state, attach sessions, or orchestrate runtime.
 
-Future convenience:
-  agent-init [profile] [topic]
-    Prepare an AI-ready work context.
-    Planned shortcut for: agent-init ready [profile] [topic]
-    Example: agent-init develop
-    Example: agent-init money dividend
-
 Reserved commands:
-  help, doctor, status, list, auto, ready, select, remove, version
+  help, doctor, status, list, auto, version, ready, select, remove, update
 
 Important:
-  Profile shortcut is preparation-only.
+  Context selection writes only a reversible project-local AGENTS.md marker block.
   It is not activation, attach, shell mutation, write current-profile, or orchestration.
 EOF
 }
@@ -878,6 +876,9 @@ main() {
       fi
       remove_selection "$1"
       ;;
+    update)
+      die "update is reserved but not implemented"
+      ;;
     doctor)
       verbose="$(parse_verbose "$@")"
       print_doctor "$verbose"
@@ -886,7 +887,11 @@ main() {
       echo "agent-init $VERSION"
       ;;
     *)
-      die "unknown command: $command"
+      if [ "$#" -eq 0 ]; then
+        select_context "$command"
+        return 0
+      fi
+      die "context shortcut accepts exactly one context argument: agent-init <context>"
       ;;
   esac
 }

@@ -231,14 +231,13 @@ agent-init auto
 agent-init ready
 agent-init ready <context>   # target: preview marker block, no file mutation
 agent-init select <context>
-agent-init <context>         # target shortcut for select <context>
+agent-init <context>         # shortcut for select <context>
 agent-init remove all
 agent-init doctor
 agent-init version
 ```
 
-The bare context shortcut is a documented decision, not implemented in this
-step. Until it lands, use `agent-init select <context>`.
+The bare context shortcut delegates to `agent-init select <context>`.
 
 Built-in commands are reserved words. They are not profile names.
 

@@ -160,7 +160,7 @@ Target behavior:
 - Do not activate profiles, write `current-profile`, mutate shell/env state,
   copy `agent-core` files, or start orchestration.
 
-This shortcut is documented as the target semantics but is not implemented yet.
+This shortcut delegates to the existing `select` handler.
 
 ### `agent-init select <context>`
 
@@ -238,8 +238,7 @@ Meaning:
 agent-init select <context>
 ```
 
-This is project-local marker-block mutation only. It remains unimplemented
-today.
+This is project-local marker-block mutation only.
 
 Examples:
 

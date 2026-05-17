@@ -53,7 +53,7 @@ There must be at most one `agent-life` marker block in a project `AGENTS.md`.
 `AGENTS.md`.
 
 `agent-init <context>` is the decided shortcut for
-`agent-init select <context>`, but that shortcut is not implemented yet.
+`agent-init select <context>`.
 
 ```markdown
 <!-- agent-life:start -->

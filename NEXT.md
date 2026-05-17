@@ -64,14 +64,14 @@ This file tracks the next concrete actions. Keep it actionable and current.
       `select`/`status`/`remove all`.
 - [x] Decide and document `agent-init <context>` as the shortcut for
       `agent-init select <context>`.
+- [x] Implement `agent-init <context>` as a shortcut for
+      `agent-init select <context>`.
 
 ## Next
 
 ### Right now
 
 - [ ] Implement `agent-init ready <context>` as marker block preview/dry-run.
-- [ ] Implement `agent-init <context>` as a shortcut for
-      `agent-init select <context>`.
 - [ ] Decide whether `repo-review` needs wording changes after the first manual
       evaluation.
 - [ ] Decide whether to strengthen `repo-review` context for clearer future

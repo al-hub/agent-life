@@ -21,8 +21,7 @@ The decided shortcut semantics are:
 agent-init <context> = agent-init select <context>
 ```
 
-That shortcut is documented target behavior. Until it is implemented, use the
-explicit `agent-init select <context>` form.
+The explicit `agent-init select <context>` form remains available.
 
 ## Basic Flow
 

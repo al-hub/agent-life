@@ -103,3 +103,33 @@ assert_contains "$status_after" "[OK] Project AGENTS.md: found"
 assert_contains "$status_after" "[OK] Agent-life marker block: found"
 assert_contains "$status_after" "Selected context: context-b"
 assert_contains "$status_after" "Context source: $core/profiles/context-b/AGENTS.md"
+
+# Shortcut form delegates to select for one non-reserved context argument.
+shortcut_project="$SMOKE_TMP_BASE/shortcut-project"
+mkdir -p "$shortcut_project"
+printf '%s\n' '# Shortcut project guidance' > "$shortcut_project/AGENTS.md"
+
+shortcut_output="$(cd "$shortcut_project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" context-a)"
+
+assert_contains "$shortcut_output" "[OK] Selected project context: context-a"
+shortcut_agents="$(cat "$shortcut_project/AGENTS.md")"
+assert_contains "$shortcut_agents" '# Shortcut project guidance'
+assert_contains "$shortcut_agents" '- context-a'
+assert_contains "$shortcut_agents" "- $core/profiles/context-a/AGENTS.md"
+assert_one_marker "$shortcut_project/AGENTS.md"
+
+set +e
+multi_arg_output="$(cd "$shortcut_project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" context-a extra 2>&1)"
+multi_arg_status="$?"
+set -e
+
+[ "$multi_arg_status" -ne 0 ] || fail "expected multi-argument shortcut to fail"
+assert_contains "$multi_arg_output" "context shortcut accepts exactly one context argument"
+
+set +e
+reserved_output="$(cd "$shortcut_project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" update 2>&1)"
+reserved_status="$?"
+set -e
+
+[ "$reserved_status" -ne 0 ] || fail "expected reserved update command to fail"
+assert_contains "$reserved_output" "update is reserved but not implemented"

@@ -59,9 +59,9 @@ attach       connect to an existing session
 switch       change current runtime profile
 ```
 
-Current MVP implements `inspect`, `recommend`, `select`, and `remove`
-behavior. Marker-block preview and the bare context shortcut are decided target
-semantics, but are not implemented in this step.
+Current MVP implements `inspect`, `recommend`, `select`, `remove`, and the bare
+context shortcut behavior. Marker-block preview remains a decided target
+semantic for `ready <context>`.
 
 It does not implement update, activation, attach, switch, shell mutation, tmux
 orchestration, session restore, state synchronization, AGENTS.md semantic
@@ -260,15 +260,15 @@ Decided target behavior:
 
 Current stage:
 
-- Not implemented.
+- Implemented as routing to `select_context`.
 - Not a profile activation command.
 - Not a shell activation command.
 - Not a session restore command.
 - Not a `current-profile` write command.
 - Does not copy or merge private `agent-core` content.
 
-The shortcut decision is documented here, but implementation is deferred to a
-future code change.
+The shortcut delegates to the existing select handler rather than reimplementing
+marker block logic.
 
 ### `agent-init select <context>`
 
