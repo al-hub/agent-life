@@ -196,6 +196,121 @@ Verification issue observed:
 Next adjustment to docs or context:
 ```
 
+## Project-Local Context Switching Field Record
+
+Use this section to record real project-local context switching observations
+without exposing private project details.
+
+Status: pending first real project record.
+
+Do not paste private source code, document contents, credentials, customer
+names, account details, or private `agent-core` material. Generalize project
+names and task content when needed.
+
+### Record Template
+
+````markdown
+# agent-life context switching field record
+
+Date:
+Evaluator:
+Target project:
+Repository commit:
+AI CLI/model:
+Contexts used:
+- repo-review
+- infographic-format-a
+- infographic-format-b
+
+## Commands Used
+
+```sh
+agent-init status
+agent-init list
+agent-init <context>
+codex
+agent-init remove all
+```
+
+## Marker Block Check
+
+- `AGENTS.md` existed before selection:
+- `agent-init <context>` created or updated the `agent-life` marker block:
+- Selected context shown in marker block:
+- Read-first path shown in marker block:
+- Existing `AGENTS.md` content outside the marker block was preserved:
+- `agent-init remove all` removed only the marker block:
+
+## Codex Context Observation
+
+- Evidence Codex noticed the selected context:
+- Evidence Codex followed the selected context boundaries:
+- Evidence Codex ignored or missed the selected context:
+- Any prompt wording needed to make Codex use the context:
+
+## Context Switching Observation
+
+- Context A:
+- Task prompt:
+- Answer direction and quality:
+
+- Context B:
+- Task prompt:
+- Answer direction and quality:
+
+- Difference observed after switching:
+
+## Friction
+
+- Confusing command output:
+- Missing status/list information:
+- Unclear context names:
+- Marker block visibility issue:
+- Cleanup or remove issue:
+
+## Follow-Up Candidates
+
+- Context wording to improve:
+- `status` output improvement:
+- `list` or future `show` improvement:
+- Additional target support to consider:
+- Docs/demo update needed:
+````
+
+### Example Context Sets
+
+Infographic format switching:
+
+```text
+infographic-format-a
+infographic-format-b
+```
+
+Development review switching:
+
+```text
+cpp-review
+java-review
+arch-review
+```
+
+Repository review:
+
+```text
+repo-review
+```
+
+### Current Open Observation Questions
+
+- Does Codex visibly follow the selected context from the marker block without
+  extra prompting?
+- Does switching from one context to another change the answer direction in a
+  useful way?
+- Are context names discoverable enough from `agent-init list` alone?
+- Does `agent-init status` show enough information before starting Codex?
+- Is a future `agent-init show <context>` command needed to preview a context
+  reference or source path without selecting it?
+
 ## Evaluation Record: agent-life self-evaluation
 
 Date: 2026-05-16

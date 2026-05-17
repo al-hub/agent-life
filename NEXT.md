@@ -71,11 +71,15 @@ This file tracks the next concrete actions. Keep it actionable and current.
       using shared marker block generation.
 - [x] Strengthen context switching demo around shortcut-first usage and
       ready-preview behavior.
+- [x] Add privacy-safe field record template for real project context switching
+      observations.
 
 ## Next
 
 ### Right now
 
+- [ ] Fill the first project-local context switching field record after a real
+      Codex run, using generalized project details only.
 - [ ] Decide whether `repo-review` needs wording changes after the first manual
       evaluation.
 - [ ] Decide whether to strengthen `repo-review` context for clearer future
@@ -85,6 +89,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
 - [ ] Decide whether `agent-init update` is needed for marker refresh.
+- [ ] Decide whether `agent-init show <context>` is needed after observing
+      real context switching friction.
 - [ ] Decide the canonical public raw `install.sh` URL after repository remote
       is final.
 - [ ] Decide whether quickstart should mention a public sample `agent-core`

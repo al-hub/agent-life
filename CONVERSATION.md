@@ -636,3 +636,17 @@ Context switching demo strengthened for shortcut-first usage:
   and `arch-review`.
 - Kept the update documentation-only; no runtime behavior or marker block logic
   changed.
+
+Project-local context switching field record prepared:
+
+- Added a privacy-safe field record template to `docs/evaluation.md` for real
+  `agent-init <context>` / Codex usage.
+- The template records commands used, marker block creation/removal checks,
+  Codex context-following evidence, context A/B answer differences, friction,
+  and follow-up candidates.
+- Left the actual record status as pending because no real target project name
+  or Codex observations were provided in this session.
+- Added NEXT items to fill the first real field record with generalized project
+  details and to decide later whether a future `agent-init show <context>` is
+  needed.
+- Made documentation-only changes; no runtime behavior changed.
