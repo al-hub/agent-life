@@ -45,15 +45,30 @@ assert_contains "$ready_output" "Read-first files are recommendations only; no a
 
 requested_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready develop)"
 
-assert_contains "$requested_output" "[OK] Requested profile: develop"
-assert_contains "$requested_output" "requested profile exists in agent-core"
-assert_contains "$requested_output" "agent-core/profiles/develop/AGENTS.md"
+assert_contains "$requested_output" '<!-- agent-life:start -->'
+assert_contains "$requested_output" 'Selected context:'
+assert_contains "$requested_output" '- develop'
+assert_contains "$requested_output" 'Read first:'
+assert_contains "$requested_output" "- $core/profiles/develop/AGENTS.md"
+assert_contains "$requested_output" 'Rules:'
+assert_contains "$requested_output" 'This is not activation, orchestration, or shell/runtime mutation.'
+assert_contains "$requested_output" '<!-- agent-life:end -->'
 
-missing_profile_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready missing-profile)"
+preview_project="$SMOKE_TMP_BASE/preview-project"
+mkdir -p "$preview_project"
+select_output="$(cd "$preview_project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" select develop)"
+assert_contains "$select_output" "[OK] Selected project context: develop"
+selected_block="$(cat "$preview_project/AGENTS.md")"
+[ "$requested_output" = "$selected_block" ] || fail "expected ready preview to match selected marker block"
 
-assert_contains "$missing_profile_output" "[WARN] Requested profile: missing-profile"
-assert_contains "$missing_profile_output" "requested profile is missing from agent-core"
-assert_not_contains "$missing_profile_output" "agent-core/profiles/missing-profile/AGENTS.md"
+set +e
+missing_profile_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready missing-profile 2>&1)"
+missing_profile_status="$?"
+set -e
+
+[ "$missing_profile_status" -ne 0 ] || fail "expected missing ready context to fail"
+assert_contains "$missing_profile_output" "selected context source missing:"
+assert_contains "$missing_profile_output" "$core/profiles/missing-profile/AGENTS.md"
 
 empty_core="$SMOKE_TMP_BASE/empty-core"
 mkdir -p "$empty_core/profiles"

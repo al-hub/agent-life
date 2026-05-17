@@ -605,3 +605,20 @@ Shortcut smoke coverage strengthened:
   directories.
 - `tests/smoke/run.sh` already discovers `test_*.sh`, so no runner change was
   needed.
+
+Ready/select marker block generation aligned:
+
+- Reused the existing `selected_context_block` helper as the canonical marker
+  block generator for both `ready <context>` and `select <context>`.
+- Added `context_source_path` to centralize context source validation for
+  ready/select paths.
+- `agent-init ready <context>` now prints the marker block to stdout without
+  writing project files.
+- `agent-init select <context>` continues to write/update the same marker block
+  in project `AGENTS.md`.
+- Added smoke coverage that compares `ready develop` output exactly with the
+  marker block written by `select develop`.
+- No-argument `agent-init ready` still shows the existing readiness briefing.
+- Did not change marker block meaning, marker-outside behavior, activation,
+  shell/env state, `current-profile`, orchestration, daemon/watch behavior, or
+  `agent-core` copy/merge behavior.

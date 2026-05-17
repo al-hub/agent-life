@@ -311,6 +311,18 @@ Rules:
 EOF
 }
 
+context_source_path() {
+  local core context source
+  core="$1"
+  context="$2"
+
+  [ -n "$core" ] || die "agent-core was not found"
+  source="$core/profiles/$context/AGENTS.md"
+  [ -f "$source" ] || die "selected context source missing: $source"
+
+  printf '%s\n' "$source"
+}
+
 write_project_marker() {
   local file block state tmp
   file="$1"
@@ -507,10 +519,7 @@ select_context() {
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
-  [ -n "$core" ] || die "agent-core was not found"
-
-  source="$core/profiles/$context/AGENTS.md"
-  [ -f "$source" ] || die "selected context source missing: $source"
+  source="$(context_source_path "$core" "$context")"
 
   agents="$(project_agents_path)"
   block="$(selected_context_block "$context" "$source")"
@@ -617,6 +626,14 @@ print_ready() {
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
   requested="${1:-}"
+
+  if [ -n "$requested" ]; then
+    local source
+    source="$(context_source_path "$core" "$requested")"
+    selected_context_block "$requested" "$source"
+    return 0
+  fi
+
   profiles="$(list_profiles_raw "$core")"
   joined="$(list_profiles_raw "$core" | join_profiles)"
   count="$(list_profiles_raw "$core" | profile_count)"

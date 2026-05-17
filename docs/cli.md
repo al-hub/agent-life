@@ -11,8 +11,8 @@ single context argument is `agent-init select <context>`, not activation.
 
 The `ready` preview boundary is documented in
 [`docs/ready-concept.md`](docs/ready-concept.md).
-The decided target meaning is that `agent-init ready <context>` previews the
-marker block that `select` would write without modifying files.
+`agent-init ready <context>` previews the marker block that `select` would
+write without modifying files.
 
 Project-local marker block behavior is documented in
 [`docs/marker-block.md`](docs/marker-block.md).
@@ -141,10 +141,10 @@ Expected behavior:
 - Do not activate profiles, mutate shell or runtime state, or perform
   orchestration.
 
-Target behavior for `agent-init ready <context>`:
+Behavior for `agent-init ready <context>`:
 
 - Resolve `agent-core/profiles/<context>/AGENTS.md`.
-- Print the same marker block that `agent-init select <context>` would write.
+- Print the same marker block that `agent-init select <context>` writes.
 - Do not write `AGENTS.md` or any other file.
 - Share marker block generation logic with `select` to prevent drift.
 

@@ -59,9 +59,8 @@ attach       connect to an existing session
 switch       change current runtime profile
 ```
 
-Current MVP implements `inspect`, `recommend`, `select`, `remove`, and the bare
-context shortcut behavior. Marker-block preview remains a decided target
-semantic for `ready <context>`.
+Current MVP implements `inspect`, `recommend`, `select`, `remove`, the bare
+context shortcut, and marker-block preview for `ready <context>`.
 
 It does not implement update, activation, attach, switch, shell mutation, tmux
 orchestration, session restore, state synchronization, AGENTS.md semantic
@@ -121,24 +120,15 @@ Semantic: preview.
 
 Current behavior:
 
-- Shows the framework path.
-- Shows the core discovery result.
-- Shows discovered profiles.
-- Suggests a profile, or reports a requested profile.
-- May accept one explicit profile target.
-- Shows read-first files, boundary reminders, verification commands, and a
-  short task brief skeleton.
+- With no context argument, shows the existing readiness briefing.
+- With one context argument, previews the exact marker block that
+  `agent-init select <context>` would write.
+- Prints the marker block to stdout.
+- Shares marker block generation logic with `select` so preview and write
+  behavior do not drift.
 - Does not parse or merge recommended files.
 - Does not activate a profile.
 - Does not write `current-profile`.
-
-Target marker-block behavior:
-
-- `agent-init ready <context>` previews the exact marker block that
-  `agent-init select <context>` would write.
-- The preview is printed to stdout.
-- It must share marker block generation logic with `select` so preview and
-  write behavior do not drift.
 - It does not modify `AGENTS.md` or any other file.
 - It does not activate a profile, source environment, write `current-profile`,
   start sessions, or copy/merge `agent-core` files.

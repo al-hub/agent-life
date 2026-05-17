@@ -41,8 +41,8 @@ agent-init status            inspect the current project marker block
 writing it. `select` is useful when the user wants the current project to carry
 a durable, reversible reference to the selected AI context.
 
-This document records target semantics. The current implementation may still
-show the older readiness briefing until the CLI is updated.
+This behavior is implemented for `agent-init ready <context>`. The no-argument
+`agent-init ready` form still shows the older readiness briefing.
 
 ## Context Names
 
@@ -166,7 +166,7 @@ parse and merge private memory/prompts/workflows.
 
 ## MVP Acceptance Criteria
 
-The marker-block preview implementation should:
+The marker-block preview implementation:
 
 - resolve the requested context through `agent-core`
 - generate the same marker block as `select`

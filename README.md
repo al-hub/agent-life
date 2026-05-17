@@ -229,7 +229,7 @@ agent-init status
 agent-init list
 agent-init auto
 agent-init ready
-agent-init ready <context>   # target: preview marker block, no file mutation
+agent-init ready <context>   # preview marker block, no file mutation
 agent-init select <context>
 agent-init <context>         # shortcut for select <context>
 agent-init remove all

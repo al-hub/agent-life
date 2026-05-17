@@ -62,8 +62,10 @@ list_output="$(cd "$project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" l
 assert_contains "$list_output" "[OK] Discovered profiles: repo-review"
 
 ready_output="$(cd "$project" && AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready repo-review)"
-assert_contains "$ready_output" "agent-init ready"
-assert_contains "$ready_output" "Requested profile: repo-review"
+assert_contains "$ready_output" '<!-- agent-life:start -->'
+assert_contains "$ready_output" '- repo-review'
+assert_contains "$ready_output" "- $core/profiles/repo-review/AGENTS.md"
+assert_contains "$ready_output" '<!-- agent-life:end -->'
 
 agents_contents="$(cat "$project/AGENTS.md")"
 assert_contains "$agents_contents" '# Existing project guidance'

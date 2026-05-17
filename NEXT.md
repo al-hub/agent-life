@@ -67,12 +67,13 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Implement `agent-init <context>` as a shortcut for
       `agent-init select <context>`.
 - [x] Add dedicated smoke coverage for `agent-init <context>` shortcut safety.
+- [x] Implement `agent-init ready <context>` as marker block preview/dry-run
+      using shared marker block generation.
 
 ## Next
 
 ### Right now
 
-- [ ] Implement `agent-init ready <context>` as marker block preview/dry-run.
 - [ ] Decide whether `repo-review` needs wording changes after the first manual
       evaluation.
 - [ ] Decide whether to strengthen `repo-review` context for clearer future
