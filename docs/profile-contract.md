@@ -182,9 +182,14 @@ agent-life/
 Current public sample contexts include:
 
 ```text
-develop       software development context
-stock         market-analysis context
-repo-review   repository review briefing context
+develop        software development context
+stock          market-analysis context
+repo-review    repository review briefing context
+task-brief     rough request to copy-ready Codex task brief
+impl-plan      small implementation plan before editing
+codex-review   review Codex output against request, scope, and safety
+diff-review    pre-commit git diff risk review
+work-summary   concise handoff summary for the next session
 ```
 
 Future public-safe reusable contexts may include examples such as
@@ -196,6 +201,18 @@ itself. It is a public-safe briefing context for repo state analysis,
 improvement candidates, risks, and verification habits. It is not an automatic
 analysis feature. Public context discovery is not implemented yet and this
 section does not change runtime behavior.
+
+Public default contexts should stay short and operational:
+
+- Use one context for one work mode.
+- Include one `Description:` line for future list and fzf display.
+- Prefer role, focus, avoid, output shape, and verification habit sections.
+- Keep guidance public-safe and reusable across projects.
+- Avoid private examples, credentials, account details, company specifics, and
+  personal workflow material.
+- Avoid long rule sets that over-constrain the AI.
+- Remember that the marker block is a window, not a copy; public context bodies
+  are referenced by source path rather than copied into project `AGENTS.md`.
 
 ## Minimal Structure
 

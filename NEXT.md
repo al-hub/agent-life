@@ -83,6 +83,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
       and `ready <context>`.
 - [x] Strengthen fzf context switching demo and README optional UI guidance.
 - [x] Document public plus private context discovery as a candidate model.
+- [x] Add five public-safe default context AGENTS files.
 
 ## Next
 
@@ -100,6 +101,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
       separate migration.
 - [ ] Decide whether to implement public `agent-life/profiles/*` runtime
       discovery as fallback/default contexts.
+- [ ] Implement public `agent-life/profiles/*` runtime discovery if the hybrid
+      model is accepted.
 - [ ] If public discovery is implemented, preserve private
       `agent-core/profiles/*` as highest priority.
 - [ ] If public discovery is implemented, ensure same-name private contexts

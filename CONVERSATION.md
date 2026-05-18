@@ -790,3 +790,24 @@ Public plus private context discovery candidate documented:
   marker block logic change, select/remove/status/list/fzf behavior change,
   private `agent-core` file change, or public/private boundary relaxation was
   made.
+
+Public default contexts added:
+
+- Added five public-safe default context files under `agent-life/profiles/`,
+  each as a single `AGENTS.md` with a one-line `Description:` for future
+  list/fzf display.
+- Added `task-brief` for turning rough user requests into copy-ready Codex task
+  briefs.
+- Added `impl-plan` for planning small implementations before editing files.
+- Added `codex-review` for reviewing Codex-made changes or proposals against
+  the original request, scope, and safety.
+- Added `diff-review` for pre-commit git diff risk review and go/no-go
+  recommendations.
+- Added `work-summary` for concise public-safe handoff summaries.
+- Updated the profile contract with public default context writing criteria and
+  added a short demo section showing the new public contexts as future
+  fresh-install candidates.
+- Left `profiles/repo-review/AGENTS.md` unchanged.
+- No runtime discovery behavior changed: `list`, `fzf`, `ready`, `select`,
+  `status`, marker block logic, shell/env behavior, RAG/LLM integration, and
+  private `agent-core` files were not changed.

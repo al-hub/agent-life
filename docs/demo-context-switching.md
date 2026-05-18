@@ -72,8 +72,19 @@ Candidate public contexts could include:
 
 ```text
 repo-review
-python-arch
-infographic-basic
+task-brief
+impl-plan
+codex-review
+diff-review
+work-summary
+```
+
+Examples:
+
+```sh
+agent-init ready task-brief
+agent-init ready impl-plan
+agent-init ready diff-review
 ```
 
 After private `agent-core` is connected, private contexts would take priority.
