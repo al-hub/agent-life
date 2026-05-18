@@ -103,11 +103,32 @@ profiles_dir() {
   printf '%s/profiles\n' "$1"
 }
 
-list_profiles_raw() {
-  local core profiles name found
+public_profiles_dir() {
+  printf '%s/profiles\n' "$1"
+}
+
+list_profile_names_from_dir() {
+  local profiles path name
+  profiles="$1"
+
+  if [ ! -d "$profiles" ]; then
+    return 0
+  fi
+
+  for path in "$profiles"/*; do
+    [ -d "$path" ] || continue
+    name="$(basename -- "$path")"
+    case "$name" in
+      .*|'') continue ;;
+    esac
+    printf '%s\n' "$name"
+  done
+}
+
+list_private_profiles_raw() {
+  local core profiles name
   core="$1"
   profiles="$(profiles_dir "$core")"
-  found=0
 
   if [ -z "$core" ] || [ ! -d "$profiles" ]; then
     return 0
@@ -120,17 +141,74 @@ list_profiles_raw() {
       .*|'') continue ;;
     esac
     printf '%s\n' "$name"
-    found=1
   done
 
   return 0
 }
 
+list_contexts_raw() {
+  local root core
+  root="$1"
+  core="$2"
+
+  {
+    list_private_profiles_raw "$core"
+    list_profile_names_from_dir "$(public_profiles_dir "$root")"
+  } | awk 'NF && !seen[$0] { seen[$0] = 1; print }'
+}
+
+context_source_path_or_empty() {
+  local root core context private_source public_source
+  root="$1"
+  core="$2"
+  context="$3"
+
+  if [ -n "$core" ]; then
+    private_source="$core/profiles/$context/AGENTS.md"
+    if [ -f "$private_source" ]; then
+      printf '%s\n' "$private_source"
+      return 0
+    fi
+  else
+    private_source="<agent-core>/profiles/$context/AGENTS.md"
+  fi
+
+  public_source="$(public_profiles_dir "$root")/$context/AGENTS.md"
+  if [ -f "$public_source" ]; then
+    printf '%s\n' "$public_source"
+    return 0
+  fi
+
+  return 1
+}
+
+context_source_path() {
+  local root core context private_source public_source source
+  root="$1"
+  core="$2"
+  context="$3"
+
+  if source="$(context_source_path_or_empty "$root" "$core" "$context")"; then
+    printf '%s\n' "$source"
+    return 0
+  fi
+
+  if [ -n "$core" ]; then
+    private_source="$core/profiles/$context/AGENTS.md"
+  else
+    private_source="<agent-core>/profiles/$context/AGENTS.md"
+  fi
+  public_source="$(public_profiles_dir "$root")/$context/AGENTS.md"
+
+  die "selected context source missing: $private_source or $public_source"
+}
+
 profile_description() {
-  local core profile file description
-  core="$1"
-  profile="$2"
-  file="$core/profiles/$profile/AGENTS.md"
+  local root core profile file description
+  root="$1"
+  core="$2"
+  profile="$3"
+  file="$(context_source_path_or_empty "$root" "$core" "$profile" || true)"
   description="-"
 
   if [ -r "$file" ]; then
@@ -153,16 +231,17 @@ profile_description() {
   printf '%s\n' "$description" | tr '\t' ' '
 }
 
-list_profiles_tsv() {
-  local core profile description
-  core="$1"
+list_contexts_tsv() {
+  local root core profile description
+  root="$1"
+  core="$2"
 
   while IFS= read -r profile; do
     [ -n "$profile" ] || continue
-    description="$(profile_description "$core" "$profile")"
+    description="$(profile_description "$root" "$core" "$profile")"
     printf '%s\t%s\n' "$profile" "$description"
   done <<EOF
-$(list_profiles_raw "$core")
+$(list_contexts_raw "$root" "$core")
 EOF
 }
 
@@ -175,16 +254,12 @@ profile_count() {
 }
 
 profile_candidate_result() {
-  local core cwd_name count selected profile
-  core="$1"
+  local root core cwd_name count selected profile
+  root="$1"
+  core="$2"
   cwd_name="$(basename -- "$PWD")"
   count=0
   selected=""
-
-  if [ -z "$core" ]; then
-    printf '%s|%s|%s\n' "none" "WARN" "agent-core was not found"
-    return 0
-  fi
 
   while IFS= read -r profile; do
     [ -n "$profile" ] || continue
@@ -193,13 +268,13 @@ profile_candidate_result() {
       selected="$profile"
     fi
   done <<EOF
-$(list_profiles_raw "$core")
+$(list_contexts_raw "$root" "$core")
 EOF
 
   if [ -n "$selected" ]; then
     printf '%s|%s|%s\n' "$selected" "OK" "current directory name matches a discovered profile"
   elif [ "$count" -eq 1 ]; then
-    selected="$(list_profiles_raw "$core")"
+    selected="$(list_contexts_raw "$root" "$core")"
     printf '%s|%s|%s\n' "$selected" "OK" "only one profile is available"
   else
     printf '%s|%s|%s\n' "none" "WARN" "no unambiguous profile match"
@@ -207,20 +282,15 @@ EOF
 }
 
 requested_profile_result() {
-  local core requested profile_path
-  core="$1"
-  requested="$2"
+  local root core requested
+  root="$1"
+  core="$2"
+  requested="$3"
 
-  if [ -z "$core" ]; then
-    printf '%s|%s|%s\n' "none" "WARN" "agent-core was not found"
-    return 0
-  fi
-
-  profile_path="$core/profiles/$requested"
-  if [ -d "$profile_path" ]; then
-    printf '%s|%s|%s\n' "$requested" "OK" "requested profile exists in agent-core"
+  if context_source_path_or_empty "$root" "$core" "$requested" >/dev/null 2>&1; then
+    printf '%s|%s|%s\n' "$requested" "OK" "requested context exists"
   else
-    printf '%s|%s|%s\n' "$requested" "WARN" "requested profile is missing from agent-core"
+    printf '%s|%s|%s\n' "$requested" "WARN" "requested context is missing"
   fi
 }
 
@@ -367,18 +437,6 @@ Rules:
 EOF
 }
 
-context_source_path() {
-  local core context source
-  core="$1"
-  context="$2"
-
-  [ -n "$core" ] || die "agent-core was not found"
-  source="$core/profiles/$context/AGENTS.md"
-  [ -f "$source" ] || die "selected context source missing: $source"
-
-  printf '%s\n' "$source"
-}
-
 write_project_marker() {
   local file block state tmp
   file="$1"
@@ -472,7 +530,7 @@ print_status() {
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
-  joined="$(list_profiles_raw "$core" | join_profiles)"
+  joined="$(list_contexts_raw "$root" "$core" | join_profiles)"
   project="$PWD"
   agents="$(project_agents_path)"
   marker="$(marker_state "$agents")"
@@ -551,11 +609,17 @@ print_status() {
     fi
 
     if [ -n "$core" ] && [ -d "$(profiles_dir "$core")" ]; then
-      say "OK" "Profiles directory found"
+      say "OK" "Private profiles directory found"
       detail "Path: $(profiles_dir "$core")"
     else
-      say "WARN" "Profiles directory missing"
-      say "INFO" "Public sample profiles are ignored for runtime discovery"
+      say "WARN" "Private profiles directory missing"
+    fi
+
+    if [ -d "$(public_profiles_dir "$root")" ]; then
+      say "OK" "Public profiles directory found"
+      detail "Path: $(public_profiles_dir "$root")"
+    else
+      say "WARN" "Public profiles directory missing"
     fi
   fi
 }
@@ -578,7 +642,7 @@ select_context() {
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
-  source="$(context_source_path "$core" "$context")"
+  source="$(context_source_path "$root" "$core" "$context")"
 
   agents="$(project_agents_path)"
   block="$(selected_context_block "$context" "$source")"
@@ -601,52 +665,41 @@ remove_selection() {
 }
 
 print_profiles() {
-  local verbose format root core_result core profiles joined count
+  local verbose format root core_result core private_profiles public_profiles joined count
   verbose="$1"
   format="$2"
   root="$(framework_root)"
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
 
-  if [ -z "$core" ]; then
-    if [ "$format" = "tsv" ]; then
-      return 1
-    fi
-    say "WARN" "Core path not found"
-    say "WARN" "Discovered profiles: none"
-    if [ "$verbose" = "1" ]; then
-      echo
-      echo "Reasoning:"
-      print_core_discovery_reasoning "$root"
-      say "INFO" "Public sample profiles are ignored for runtime discovery"
-    fi
-    return 1
+  private_profiles=""
+  if [ -n "$core" ]; then
+    private_profiles="$(profiles_dir "$core")"
   fi
+  public_profiles="$(public_profiles_dir "$root")"
 
-  profiles="$(profiles_dir "$core")"
-  if [ ! -d "$profiles" ]; then
-    if [ "$format" = "tsv" ]; then
-      return 1
-    fi
-    say "OK" "Core path found"
-    detail "Path: $core"
-    say "WARN" "Profiles directory missing"
-    say "WARN" "Discovered profiles: none"
-    return 1
-  fi
-
-  joined="$(list_profiles_raw "$core" | join_profiles)"
-  count="$(list_profiles_raw "$core" | profile_count)"
+  joined="$(list_contexts_raw "$root" "$core" | join_profiles)"
+  count="$(list_contexts_raw "$root" "$core" | profile_count)"
 
   if [ "$format" = "tsv" ]; then
-    list_profiles_tsv "$core"
+    list_contexts_tsv "$root" "$core"
     [ "$count" -gt 0 ]
     return $?
   fi
 
+  if [ -z "$core" ]; then
+    say "WARN" "Core path not found"
+  fi
+
+  if [ -n "$core" ] && [ ! -d "$private_profiles" ]; then
+    say "OK" "Core path found"
+    detail "Path: $core"
+    say "WARN" "Private profiles directory missing"
+  fi
+
   if [ "$count" -gt 0 ]; then
     say "OK" "Discovered profiles: $joined"
-    list_profiles_raw "$core" | awk '{ print "     - " $0 }'
+    list_contexts_raw "$root" "$core" | awk '{ print "     - " $0 }'
   else
     say "WARN" "Discovered profiles: none"
   fi
@@ -655,9 +708,13 @@ print_profiles() {
     echo
     echo "Reasoning:"
     print_core_discovery_reasoning "$root"
-    say "INFO" "Discovered profiles directory"
-    detail "Path: $profiles"
-    say "INFO" "Public sample profiles are ignored for runtime discovery"
+    if [ -n "$private_profiles" ]; then
+      say "INFO" "Private profiles directory"
+      detail "Path: $private_profiles"
+    fi
+    say "INFO" "Public profiles directory"
+    detail "Path: $public_profiles"
+    say "INFO" "Discovery priority: private overrides public by context name"
   fi
 }
 
@@ -718,12 +775,9 @@ auto_profile() {
 
   if [ -z "$core" ]; then
     say "WARN" "Core path not found"
-    say "INFO" "Recommended profile: none"
-    say "INFO" "Reason: agent-core was not found"
-    return 1
   fi
 
-  profile_result="$(profile_candidate_result "$core")"
+  profile_result="$(profile_candidate_result "$root" "$core")"
   print_profile_candidate "Recommended profile" "$profile_result"
 
   if [ "$verbose" = "1" ]; then
@@ -735,7 +789,7 @@ auto_profile() {
     detail "Path: $root"
     print_core_discovery_reasoning "$root"
     say "INFO" "Discovered profiles"
-    detail "Discovered profiles: $(list_profiles_raw "$core" | join_profiles)"
+    detail "Discovered profiles: $(list_contexts_raw "$root" "$core" | join_profiles)"
   fi
 }
 
@@ -749,19 +803,19 @@ print_ready() {
 
   if [ -n "$requested" ]; then
     local source
-    source="$(context_source_path "$core" "$requested")"
+    source="$(context_source_path "$root" "$core" "$requested")"
     selected_context_block "$requested" "$source"
     return 0
   fi
 
-  profiles="$(list_profiles_raw "$core")"
-  joined="$(list_profiles_raw "$core" | join_profiles)"
-  count="$(list_profiles_raw "$core" | profile_count)"
+  profiles="$(list_contexts_raw "$root" "$core")"
+  joined="$(list_contexts_raw "$root" "$core" | join_profiles)"
+  count="$(list_contexts_raw "$root" "$core" | profile_count)"
   if [ -n "$requested" ]; then
-    profile_result="$(requested_profile_result "$core" "$requested")"
+    profile_result="$(requested_profile_result "$root" "$core" "$requested")"
     profile_result_label="Requested profile"
   else
-    profile_result="$(profile_candidate_result "$core")"
+    profile_result="$(profile_candidate_result "$root" "$core")"
     profile_result_label="Suggested profile"
   fi
   IFS='|' read -r profile level reason <<EOF
@@ -810,8 +864,8 @@ EOF
   detail "docs/cli.md"
   detail "docs/command-semantics.md"
   detail "docs/ready-concept.md"
-  if [ "$profile" != "none" ] && [ -n "$core" ] && [ -d "$core/profiles/$profile" ]; then
-    detail "agent-core/profiles/$profile/AGENTS.md"
+  if [ "$profile" != "none" ]; then
+    detail "$(context_source_path "$root" "$core" "$profile")"
   fi
 
   echo
@@ -848,7 +902,7 @@ print_doctor() {
   core_result="$(agent_life_discover_core "$root")"
   core="$(agent_life_core_path_from_result "$core_result")"
   core_source="$(agent_life_core_source_from_result "$core_result")"
-  profiles="$(list_profiles_raw "$core")"
+  profiles="$(list_contexts_raw "$root" "$core")"
   joined="$(printf '%s\n' "$profiles" | join_profiles)"
   count="$(printf '%s\n' "$profiles" | profile_count)"
   shell_name="$(basename -- "${SHELL:-unknown}")"
@@ -930,10 +984,7 @@ print_doctor() {
   elif [ -n "$core" ]; then
     say "WARN" "Discovered profiles: none"
   else
-    say "WARN" "Profile discovery unavailable"
-    if [ "$verbose" = "1" ]; then
-      say "INFO" "Public sample profiles are ignored for runtime discovery"
-    fi
+    say "WARN" "Discovered profiles: none"
   fi
 
   if [ -d "$state" ]; then

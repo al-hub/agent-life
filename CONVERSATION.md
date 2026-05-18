@@ -811,3 +811,32 @@ Public default contexts added:
 - No runtime discovery behavior changed: `list`, `fzf`, `ready`, `select`,
   `status`, marker block logic, shell/env behavior, RAG/LLM integration, and
   private `agent-core` files were not changed.
+
+Hybrid context discovery implemented:
+
+- Extended `bin/agent-init` discovery from private-only to hybrid
+  private-plus-public context resolution.
+- Discovery now reads private `agent-core/profiles/*` first and public
+  `agent-life/profiles/*` second.
+- Same-name private contexts override public contexts for `list --tsv`,
+  `ready <context>`, `select <context>`, and the bare
+  `agent-init <context>` shortcut.
+- `context_source_path` now resolves the actual selected source path and marker
+  blocks point at that resolved file.
+- Public contexts are available when private `agent-core` is missing, including
+  `task-brief` through `agent-init ready task-brief` and
+  `agent-init task-brief`.
+- `status` and `doctor` now report public discovered profiles instead of
+  treating profile discovery as unavailable solely because core is missing.
+- `fzf` continues to use `list --tsv`, `ready <context>`, and
+  `select <context>` as a thin wrapper; no new fzf behavior or keybindings were
+  added.
+- Added smoke coverage for agent-core-missing public fallback and private
+  override of a same-name public context.
+- Updated `DECISIONS.md`, `docs/command-semantics.md`,
+  `docs/profile-contract.md`, `docs/demo-context-switching.md`, and
+  `NEXT.md`.
+- Preserved boundaries: no `agent-core` file mutation, no marker block meaning
+  change, no marker-outside edits, no context body copying, no activation, no
+  shell/env mutation, no `current-profile` write, no RAG/LLM integration, and
+  no multi-context merge.

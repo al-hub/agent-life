@@ -38,11 +38,10 @@ activation, shell mutation, or `current-profile` writes.
 
 ## Project-Local Connection Model
 
-Current context selection connects a profile/context from `agent-core` to the
-current project by writing an explicit marker block in the project's AI
-instruction surface. A future hybrid model may allow that same marker block to
-reference either a private `agent-core` context or a public `agent-life`
-context after discovery resolves the selected source.
+Current context selection connects a resolved profile/context to the current
+project by writing an explicit marker block in the project's AI instruction
+surface. The marker block may reference either a private `agent-core` context or
+a public `agent-life` context after discovery resolves the selected source.
 
 For the Codex MVP target, that surface is:
 
@@ -127,16 +126,9 @@ name. If that meaning is useful, give it one explicit context name.
 
 ## Context Sources
 
-Current implementation:
+Current implementation uses a hybrid source model:
 
-- Runtime discovery reads private `agent-core/profiles/*`.
-- Public `agent-life/profiles/*` entries are sample or documentation contexts.
-- `agent-init list`, `ready <context>`, `select <context>`, and `fzf` do not
-  currently discover public `agent-life/profiles/*` as runtime contexts.
-
-Candidate hybrid model:
-
-- `agent-life` may provide public-safe default contexts in
+- `agent-life` provides public-safe default contexts in
   `agent-life/profiles/*`.
 - `agent-core` may provide private personal, work, company, or domain contexts
   in `agent-core/profiles/*`.
@@ -148,15 +140,15 @@ Candidate hybrid model:
 - Commands that write marker blocks should point at the selected resolved
   source path.
 
-The candidate discovery order is:
+The discovery order for a selected context is:
 
 ```text
 1. private agent-core/profiles/<context>
 2. public agent-life/profiles/<context>
 ```
 
-This would allow a fresh install to offer reusable public contexts before a
-private `agent-core` exists, while preserving the rule that private context is
+This allows a fresh install to offer reusable public contexts before a private
+`agent-core` exists, while preserving the rule that private context is
 user-owned and wins by name.
 
 The marker block remains a window, not a copy. It should reference the selected
@@ -199,8 +191,7 @@ memory, account details, company content, or personal workflow material.
 `repo-review` is the first sample context chosen for evaluating `agent-life`
 itself. It is a public-safe briefing context for repo state analysis,
 improvement candidates, risks, and verification habits. It is not an automatic
-analysis feature. Public context discovery is not implemented yet and this
-section does not change runtime behavior.
+analysis feature.
 
 Public default contexts should stay short and operational:
 

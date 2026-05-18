@@ -84,6 +84,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Strengthen fzf context switching demo and README optional UI guidance.
 - [x] Document public plus private context discovery as a candidate model.
 - [x] Add five public-safe default context AGENTS files.
+- [x] Implement public plus private hybrid context discovery.
+- [x] Preserve private context override priority over public contexts.
+- [x] Add smoke coverage for public fallback and private override behavior.
+- [x] Record the hybrid discovery implementation decision.
 
 ## Next
 
@@ -99,14 +103,6 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
-- [ ] Decide whether to implement public `agent-life/profiles/*` runtime
-      discovery as fallback/default contexts.
-- [ ] Implement public `agent-life/profiles/*` runtime discovery if the hybrid
-      model is accepted.
-- [ ] If public discovery is implemented, preserve private
-      `agent-core/profiles/*` as highest priority.
-- [ ] If public discovery is implemented, ensure same-name private contexts
-      override public contexts.
 - [ ] Decide whether `agent-init list` should display context scope such as
       `private` or `public`.
 - [ ] Decide whether `agent-init list --tsv` and `agent-init fzf` should expose

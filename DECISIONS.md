@@ -588,6 +588,8 @@ context, with no private core mutation or hidden runtime behavior.
 
 ### 2026-05-18: Public plus private context discovery is a candidate model
 
+Superseded by the implementation decision below.
+
 Current runtime discovery reads private `agent-core/profiles/*` only. Public
 `agent-life/profiles/*` currently acts as sample and documentation context.
 
@@ -614,3 +616,28 @@ implementation step is chosen.
 Reason: fresh installs should be useful with public contexts such as
 `repo-review`, while private `agent-core` must remain user-owned and higher
 priority when present.
+
+### 2026-05-18: Hybrid context discovery is implemented
+
+`agent-init` runtime context discovery now uses the hybrid model:
+
+```text
+1. private agent-core/profiles/<context>/AGENTS.md
+2. public agent-life/profiles/<context>/AGENTS.md
+```
+
+Private contexts override public contexts with the same name. Public contexts
+are fallback/default contexts and remain public-safe. `list`, `list --tsv`,
+`ready <context>`, `select <context>`, the bare `agent-init <context>`
+shortcut, `status`, `doctor`, and `fzf` use the shared discovery result or the
+same selected-source resolver.
+
+Marker blocks continue to be windows, not copies. They point to the resolved
+actual source path and do not copy, merge, or persist public or private context
+content into the target project.
+
+This does not add activation, shell/env mutation, `current-profile` writes,
+RAG/LLM integration, context merge, or `agent-core` mutation.
+
+Reason: fresh installs should be useful without private `agent-core`, while
+private context remains user-owned and higher priority when present.
