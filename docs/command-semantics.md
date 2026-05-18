@@ -41,8 +41,23 @@ agent-init status            inspect the current project marker block
 ```
 
 The marker block is the canonical representation of an `agent-life` context
-connection. It is a small reference window into `agent-core`, not a copy of
-private context.
+connection. It is a small reference window into the resolved context source,
+not a copy of private or public context.
+
+Candidate discovery expansion:
+
+- Current implementation discovers runtime contexts only from private
+  `agent-core/profiles/*`.
+- A future hybrid model may discover both private `agent-core/profiles/*` and
+  public `agent-life/profiles/*`.
+- In that model, private contexts override public contexts with the same name.
+- Public contexts act as fallback/default reusable contexts for fresh installs
+  without a private `agent-core`.
+- The selected marker block should reference the resolved actual source path,
+  whether that source is private or public.
+
+This candidate model is documentation-only. It does not change the current
+runtime behavior of `list`, `ready`, `select`, `status`, `auto`, or `fzf`.
 
 ## Semantic Types
 
@@ -192,6 +207,17 @@ Current behavior:
 - Does not read profile memory.
 - Does not activate anything.
 
+Candidate hybrid behavior:
+
+- Discover private contexts from `agent-core/profiles/*`.
+- Discover public contexts from `agent-life/profiles/*`.
+- Merge by context name.
+- Prefer the private context when the same name exists in both sources.
+- Consider whether human output should show source scope, such as `private` or
+  `public`.
+- Consider whether `list --tsv` should include a scope/source column for
+  `fzf` without breaking simple usage.
+
 ### `agent-init auto`
 
 Semantic: recommend.
@@ -287,6 +313,16 @@ Current behavior:
 - Does not copy, merge, or persist `agent-core` files into the project.
 - Does not modify content outside the `agent-life` marker block.
 - Refuses malformed or duplicate marker blocks and asks for manual repair.
+
+Candidate hybrid behavior:
+
+- Resolve `<context>` through the public/private discovery model before
+  writing the marker block.
+- Prefer `agent-core/profiles/<context>/AGENTS.md` when present.
+- Fall back to `agent-life/profiles/<context>/AGENTS.md` when no private
+  context of the same name exists.
+- Write the resolved source path into the marker block.
+- Keep marker-block insertion, update, removal, and safety rules unchanged.
 
 ### `agent-init remove all`
 
@@ -473,6 +509,11 @@ Relationship to current profile discovery:
 - Current runtime discovery still reads `agent-core/profiles/*`.
 - Existing profile directories may continue to be the storage containers for
   named briefing contexts.
+- Public `agent-life/profiles/*` directories are currently sample/documentation
+  contexts, but may become fallback/default contexts in a future hybrid
+  discovery model.
+- Candidate precedence is private first, public second.
+- Name collisions should resolve to the private context.
 - A future rename from `profiles/<name>` to `contexts/<name>` is unresolved and
   should not be implemented until separately decided.
 

@@ -38,9 +38,11 @@ activation, shell mutation, or `current-profile` writes.
 
 ## Project-Local Connection Model
 
-Future context selection may connect a profile/context from `agent-core` to the
+Current context selection connects a profile/context from `agent-core` to the
 current project by writing an explicit marker block in the project's AI
-instruction surface.
+instruction surface. A future hybrid model may allow that same marker block to
+reference either a private `agent-core` context or a public `agent-life`
+context after discovery resolves the selected source.
 
 For the Codex MVP target, that surface is:
 
@@ -48,9 +50,9 @@ For the Codex MVP target, that surface is:
 <current-project>/AGENTS.md
 ```
 
-The marker block should contain read-first references to the selected
-`agent-core/profiles/<name>` files, especially the profile-local `AGENTS.md`.
-It should not copy or merge private memory into the project.
+The marker block should contain read-first references to the selected resolved
+source files, especially the profile-local `AGENTS.md`. It should not copy or
+merge private memory or public sample content into the project.
 
 The exact marker block tokens, shape, insertion rule, update rule, remove rule,
 and remove-all rollback policy are defined in
@@ -123,9 +125,45 @@ dev-stuff
 The discouraged multi-word examples are separate CLI arguments, not one context
 name. If that meaning is useful, give it one explicit context name.
 
-## Location
+## Context Sources
 
-Runtime profiles live in private `agent-core`:
+Current implementation:
+
+- Runtime discovery reads private `agent-core/profiles/*`.
+- Public `agent-life/profiles/*` entries are sample or documentation contexts.
+- `agent-init list`, `ready <context>`, `select <context>`, and `fzf` do not
+  currently discover public `agent-life/profiles/*` as runtime contexts.
+
+Candidate hybrid model:
+
+- `agent-life` may provide public-safe default contexts in
+  `agent-life/profiles/*`.
+- `agent-core` may provide private personal, work, company, or domain contexts
+  in `agent-core/profiles/*`.
+- Private contexts have highest priority.
+- Public contexts are fallback/default reusable contexts.
+- If the same context name exists in both places, the private
+  `agent-core/profiles/<name>` context overrides the public
+  `agent-life/profiles/<name>` context.
+- Commands that write marker blocks should point at the selected resolved
+  source path.
+
+The candidate discovery order is:
+
+```text
+1. private agent-core/profiles/<context>
+2. public agent-life/profiles/<context>
+```
+
+This would allow a fresh install to offer reusable public contexts before a
+private `agent-core` exists, while preserving the rule that private context is
+user-owned and wins by name.
+
+The marker block remains a window, not a copy. It should reference the selected
+actual source path and should not copy or merge public or private context into
+the current project.
+
+Private context location:
 
 ```text
 agent-core/
@@ -133,8 +171,13 @@ agent-core/
     <name>/
 ```
 
-Public sample profiles may exist in `agent-life/profiles/` as templates, but
-`agent-init` runtime discovery reads `agent-core/profiles/*`.
+Public context location:
+
+```text
+agent-life/
+  profiles/
+    <name>/
+```
 
 Current public sample contexts include:
 
@@ -144,10 +187,15 @@ stock         market-analysis context
 repo-review   repository review briefing context
 ```
 
+Future public-safe reusable contexts may include examples such as
+`python-arch` or `infographic-basic`, as long as they contain no private
+memory, account details, company content, or personal workflow material.
+
 `repo-review` is the first sample context chosen for evaluating `agent-life`
 itself. It is a public-safe briefing context for repo state analysis,
 improvement candidates, risks, and verification habits. It is not an automatic
-analysis feature and does not change runtime behavior.
+analysis feature. Public context discovery is not implemented yet and this
+section does not change runtime behavior.
 
 ## Minimal Structure
 

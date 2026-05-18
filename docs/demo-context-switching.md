@@ -5,9 +5,9 @@ This demo shows how `agent-init <context>`, `agent-init ready <context>`,
 project.
 
 The flow is project-local. It does not activate a profile or copy private
-context into the project. It connects one selected `agent-core` context to the
-current project's AI instruction surface by writing an explicit marker block in
-`AGENTS.md`.
+context into the project. The current implementation connects one selected
+`agent-core` context to the current project's AI instruction surface by writing
+an explicit marker block in `AGENTS.md`.
 
 For the current Codex MVP target, the instruction surface is:
 
@@ -47,6 +47,46 @@ agent-init fzf
 If `fzf` is not installed, `agent-init fzf` should print fallback commands
 instead of failing. Interactive `fzf` behavior is intentionally verified
 manually, not through automated smoke tests.
+
+## Fresh Install Candidate Flow
+
+Current implementation requires private `agent-core/profiles/*` for runtime
+context discovery. Without private `agent-core`, `agent-init fzf` may report
+that no contexts are available.
+
+A candidate hybrid discovery model would make public-safe contexts in
+`agent-life/profiles/*` available as fallback/default contexts. That would let a
+fresh install start with reusable contexts before a private `agent-core` exists.
+
+Candidate first-run shape:
+
+```sh
+cd target-project
+agent-init list
+agent-init ready repo-review
+agent-init repo-review
+codex
+```
+
+Candidate public contexts could include:
+
+```text
+repo-review
+python-arch
+infographic-basic
+```
+
+After private `agent-core` is connected, private contexts would take priority.
+If both sources contain `repo-review`, the private
+`agent-core/profiles/repo-review` context should override the public
+`agent-life/profiles/repo-review` context.
+
+The marker block should point to the resolved source path. It remains a window,
+not a copy, and should not copy, merge, or persist public or private context
+into the project.
+
+This section describes a future candidate only. It does not describe current
+runtime behavior.
 
 ## Fzf Context Selector
 
@@ -110,7 +150,7 @@ Check the current framework, core, project, and selected-context state:
 agent-init status
 ```
 
-List contexts discovered from `agent-core`:
+List contexts discovered from `agent-core` in the current implementation:
 
 ```sh
 agent-init list

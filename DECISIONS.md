@@ -585,3 +585,32 @@ single-purpose selector into a broader UI surface.
 Reason: keeping fzf narrow protects the current invariant that context
 switching is one explicit project-local marker block reference to one selected
 context, with no private core mutation or hidden runtime behavior.
+
+### 2026-05-18: Public plus private context discovery is a candidate model
+
+Current runtime discovery reads private `agent-core/profiles/*` only. Public
+`agent-life/profiles/*` currently acts as sample and documentation context.
+
+A candidate next model is hybrid discovery:
+
+```text
+1. private agent-core/profiles/<context>
+2. public agent-life/profiles/<context>
+```
+
+In this model, `agent-life` provides public-safe default reusable contexts and
+`agent-core` provides private personal, work, company, or domain contexts.
+Private contexts have highest priority. If a context name exists in both
+sources, the private context overrides the public context.
+
+Marker blocks should point to the resolved actual source path and remain a
+window, not a copy. They should not copy or merge public or private context
+into the target project.
+
+This is not implemented yet. It must not change current `list`, `ready`,
+`select`, `status`, `remove`, or `fzf` behavior until an explicit
+implementation step is chosen.
+
+Reason: fresh installs should be useful with public contexts such as
+`repo-review`, while private `agent-core` must remain user-owned and higher
+priority when present.

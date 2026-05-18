@@ -82,6 +82,7 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Strengthen `agent-init fzf` smoke coverage for fallback, `list --tsv`,
       and `ready <context>`.
 - [x] Strengthen fzf context switching demo and README optional UI guidance.
+- [x] Document public plus private context discovery as a candidate model.
 
 ## Next
 
@@ -97,6 +98,16 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether existing `profiles/<name>` remains the long-term private
       container or whether a future `contexts/<name>` structure is worth a
       separate migration.
+- [ ] Decide whether to implement public `agent-life/profiles/*` runtime
+      discovery as fallback/default contexts.
+- [ ] If public discovery is implemented, preserve private
+      `agent-core/profiles/*` as highest priority.
+- [ ] If public discovery is implemented, ensure same-name private contexts
+      override public contexts.
+- [ ] Decide whether `agent-init list` should display context scope such as
+      `private` or `public`.
+- [ ] Decide whether `agent-init list --tsv` and `agent-init fzf` should expose
+      scope/source without making the UI noisy.
 - [ ] Decide whether and how to implement `agent-init update` as a public
       framework update wrapper around the existing bootstrap update flow.
 - [ ] Decide whether marker block refresh needs a separate explicit command.

@@ -768,3 +768,25 @@ fzf follow-up scope deferred:
 - Documentation-only change: no implementation, `agent-core` mutation, rename,
   alias, multi-select, command palette, runtime behavior, or marker block logic
   was added.
+
+Public plus private context discovery candidate documented:
+
+- Reviewed the current problem that `agent-init fzf` can show no contexts when
+  private `agent-core` is missing because runtime discovery currently reads
+  only `agent-core/profiles/*`.
+- Documented a candidate hybrid model where public `agent-life/profiles/*`
+  provides public-safe fallback/default reusable contexts and private
+  `agent-core/profiles/*` provides personal, work, company, or domain contexts.
+- Defined candidate precedence as private first, public second.
+- Defined same-name behavior as private overriding public.
+- Clarified that marker blocks should reference the resolved actual source path
+  and remain a window, not a copy.
+- Added a fresh-install candidate flow showing how public contexts such as
+  `repo-review`, `python-arch`, or `infographic-basic` could be used before a
+  private `agent-core` exists.
+- Added NEXT implementation candidates for public profile discovery, private
+  override behavior, and whether list/fzf should show scope/source.
+- Documentation-only change: no implementation, runtime discovery change,
+  marker block logic change, select/remove/status/list/fzf behavior change,
+  private `agent-core` file change, or public/private boundary relaxation was
+  made.
