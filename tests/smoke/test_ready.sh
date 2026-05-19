@@ -48,7 +48,7 @@ requested_output="$(AGENT_CORE_PATH="$core" "$ROOT/bin/agent-init" ready develop
 assert_contains "$requested_output" '<!-- agent-life:start -->'
 assert_contains "$requested_output" 'Selected context:'
 assert_contains "$requested_output" '- develop'
-assert_not_contains "$requested_output" 'Context hint:'
+assert_not_contains "$requested_output" 'Intent:'
 assert_contains "$requested_output" 'Read first:'
 assert_contains "$requested_output" "- $core/profiles/develop/AGENTS.md"
 assert_contains "$requested_output" 'Rules:'

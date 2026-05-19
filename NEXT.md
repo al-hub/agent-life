@@ -92,6 +92,13 @@ This file tracks the next concrete actions. Keep it actionable and current.
       marker blocks.
 - [x] Add `Hint:` lines to public task/planning/review/summary contexts.
 - [x] Add smoke coverage for hinted and path-only marker block shapes.
+- [x] Accept the minimal Context Intent convention: `Description:` for
+      list/fzf display and optional `Intent:` for marker block display.
+- [x] Replace the experimental `Hint:` marker label with the clearer `Intent:`
+      convention.
+- [x] Implement optional one-line `Intent:` extraction for marker blocks
+      without context taxonomy, permission enforcement, branching, body copying,
+      or hard-coded context names.
 
 ## Next
 
@@ -116,14 +123,6 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether marker block refresh needs a separate explicit command.
 - [ ] Decide whether private `agent-core` update needs a future separate
       command such as `agent-init core update`.
-- [ ] Accept or reject the minimal Context Intent convention:
-      `Description:` for list/fzf display and optional `Intent:` for marker
-      block display.
-- [ ] If accepted, replace the experimental `Hint:` marker label with the
-      clearer `Intent:` convention.
-- [ ] Implement optional one-line `Intent:` extraction for marker blocks, if
-      the convention is accepted, without context taxonomy, permission
-      enforcement, branching, body copying, or hard-coded context names.
 - [ ] Observe whether one-line `Intent` is enough before considering any
       richer marker block convention.
 - [ ] Later candidate: decide whether `agent-init show <context>` is needed

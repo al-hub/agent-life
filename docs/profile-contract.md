@@ -197,8 +197,7 @@ Public default contexts should stay short and operational:
 
 - Use one context for one briefing intent.
 - Include one `Description:` line for future list and fzf display.
-- Candidate convention: optionally include one `Intent:` line for marker block
-  display.
+- Optionally include one `Intent:` line for marker block display.
 - Prefer role, focus, avoid, output shape, and verification habit sections.
 - Keep guidance public-safe and reusable across projects.
 - Avoid private examples, credentials, account details, company specifics, and
@@ -216,9 +215,9 @@ Intent: optional one-line statement of what this context is meant to help with
 
 `Description:` is for context discovery surfaces such as `list` and `fzf`.
 
-`Intent:` is a candidate convention for the marker block. It should be brief
-enough to fit in one marker block bullet. It is written by the context author
-and surfaced as text, not interpreted by `agent-init`.
+`Intent:` is for the marker block. It should be brief enough to fit in one
+marker block bullet. It is written by the context author and surfaced as text,
+not interpreted by `agent-init`.
 
 `agent-init` must not treat `Intent:` as a mode, permission field, taxonomy, or
 branching condition. It must not use `Intent:` to decide whether files may be
@@ -243,8 +242,8 @@ Intent: Review the current diff for commit readiness and risk.
 ```
 
 Earlier experiments used a `Hint:` line for the same marker-block surface. The
-candidate direction is to use the clearer name `Intent:` before adding any
-further marker-block behavior.
+implemented convention uses the clearer name `Intent:` and does not add any
+mode, permission, or taxonomy behavior.
 
 ## Minimal Structure
 

@@ -1,7 +1,7 @@
 # work-summary Default Context
 
 Description: Summarize completed work so the next AI session can continue cleanly.
-Hint: Summarize completed work into decisions, next actions, and handoff notes.
+Intent: Summarize completed work into decisions, next actions, and handoff notes.
 
 ## Use This When
 

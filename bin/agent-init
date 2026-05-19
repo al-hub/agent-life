@@ -231,15 +231,15 @@ profile_description() {
   printf '%s\n' "$description" | tr '\t' ' '
 }
 
-context_hint() {
-  local file hint
+context_intent() {
+  local file intent
   file="$1"
-  hint=""
+  intent=""
 
   if [ -r "$file" ]; then
-    hint="$(awk '
-      /^Hint:[[:space:]]*/ {
-        sub(/^Hint:[[:space:]]*/, "")
+    intent="$(awk '
+      /^Intent:[[:space:]]*/ {
+        sub(/^Intent:[[:space:]]*/, "")
         print
         found = 1
         exit
@@ -250,10 +250,10 @@ context_hint() {
         }
       }
     ' "$file" 2>/dev/null || true)"
-    [ -n "$hint" ] || hint=""
+    [ -n "$intent" ] || intent=""
   fi
 
-  printf '%s\n' "$hint" | tr '\t' ' '
+  printf '%s\n' "$intent" | tr '\t' ' '
 }
 
 list_contexts_tsv() {
@@ -439,20 +439,20 @@ marker_outside_has_content() {
 }
 
 selected_context_block() {
-  local context source hint
+  local context source intent
   context="$1"
   source="$2"
-  hint="$(context_hint "$source")"
+  intent="$(context_intent "$source")"
 
   printf '%s\n' "<!-- agent-life:start -->"
   printf '%s\n' "## Agent-life selected context"
   printf '\n'
   printf '%s\n' "Selected context:"
   printf '%s\n' "- $context"
-  if [ -n "$hint" ]; then
+  if [ -n "$intent" ]; then
     printf '\n'
-    printf '%s\n' "Context hint:"
-    printf '%s\n' "- $hint"
+    printf '%s\n' "Intent:"
+    printf '%s\n' "- $intent"
   fi
   cat <<EOF
 

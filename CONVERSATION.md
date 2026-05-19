@@ -914,3 +914,25 @@ Minimal context intent convention refined:
   context names, no context body copying, no discovery or select/remove/status
   behavior change, no shell/env mutation, no context merge, and no RAG/LLM
   integration.
+
+Optional Intent convention minimally implemented:
+
+- Replaced the experimental marker-block `Hint:` surface with `Intent:`.
+- Added one-line `Intent:` fields to the public default contexts:
+  `task-brief`, `impl-plan`, `codex-review`, `diff-review`, and
+  `work-summary`.
+- Updated `bin/agent-init` to extract the first `Intent:` line from the
+  selected source `AGENTS.md` with line-based parsing.
+- `selected_context_block` now emits an `Intent:` section only when that line
+  exists; contexts without `Intent:` keep the path-only marker shape.
+- `ready <context>` and `select <context>` still share the same marker block
+  generation helper.
+- Updated smoke coverage for public `task-brief` ready/select markers with
+  `Intent:` and private override markers without `Intent:`.
+- Updated `docs/marker-block.md`, `docs/profile-contract.md`, and `NEXT.md` to
+  match implementation.
+- Preserved constraints: no Intent interpretation, no context classification,
+  no Mode/Permission taxonomy, no permission enforcement, no hard-coded context
+  names, no context body copying, no multi-line capsule, no marker-outside
+  edits, no `agent-core` mutation, no shell/env mutation, no context merge, and
+  no RAG/LLM integration.

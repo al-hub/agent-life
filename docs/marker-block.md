@@ -1,8 +1,7 @@
 # AGENTS.md Marker Block
 
 This document defines the project-local marker block that `agent-init select`
-and `agent-init remove all` use, plus the candidate direction for adding an
-optional one-line context intent.
+and `agent-init remove all` use, including the optional one-line context intent.
 
 The current MVP supports the Codex target through the current project's
 `AGENTS.md` file only.
@@ -28,10 +27,10 @@ Selection is reference-only. It does not copy, merge, classify, or parse
 selected context content. The block should stay small and contain only enough
 information to point the AI toward the selected source.
 
-A selected context may eventually expose an optional one-line `Intent:` in its
-source `AGENTS.md`. When present, the marker block may include that one line as
-a small intent label. The intent is not a copied context body, semantic
-contract, mode, permission grant, or value that `agent-init` interprets.
+A selected context may expose an optional one-line `Intent:` in its source
+`AGENTS.md`. When present, the marker block includes that one line as a small
+intent label. The intent is not a copied context body, semantic contract, mode,
+permission grant, or value that `agent-init` interprets.
 
 If no intent exists, the marker block keeps the path-only shape.
 
@@ -70,8 +69,6 @@ marker block commands. It should preview this block with
 `agent-init select <context>`. It must not create a second marker format or
 copy `agent-core` contents.
 
-Candidate `Intent:` shape:
-
 ```markdown
 <!-- agent-life:start -->
 ## Agent-life selected context
@@ -106,10 +103,6 @@ block.
 `agent-init` must not interpret the intent value, branch on it, classify the
 context from it, or use it to decide file modification permission. It only
 surfaces the author-provided one-line text in the marker block.
-
-Current implementation note: this step does not change marker block generation.
-Replacing the earlier experimental `Hint:` surface with `Intent:` is a separate
-future implementation candidate.
 
 Example:
 
