@@ -23,14 +23,16 @@ For the Codex MVP target, the instruction surface is:
 <current-project>/AGENTS.md
 ```
 
-Selection is reference-only. It does not copy, merge, or parse selected context
-content. The block should stay small and contain only enough information to
-point the AI toward the selected source.
+Selection is reference-only. It does not copy, merge, classify, or parse
+selected context content. The block should stay small and contain only enough
+information to point the AI toward the selected source.
 
-A selected context may expose an optional one-line `Hint:` in its source
+A selected context may expose an optional one-line `Intent:` in its source
 `AGENTS.md`. When present, the marker block may include that one line as a
-small direction label. The hint is not a copied context body or a semantic
-contract.
+small intent label. The intent is not a copied context body, semantic contract,
+mode, permission grant, or value that `agent-init` interprets.
+
+If no intent exists, the marker block keeps the path-only shape.
 
 ## Tokens
 
@@ -74,15 +76,14 @@ copy `agent-core` contents.
 Selected context:
 - <context>
 
-Context hint:
-- <optional one-line hint from the selected source AGENTS.md>
+Intent:
+- <optional one-line intent from the selected source AGENTS.md>
 
 Read first:
 - <resolved-source>/profiles/<context>/AGENTS.md
 
 Rules:
 - Treat this context as guidance for the current AI session.
-- Do not modify agent-core files unless explicitly asked.
 - Follow project AGENTS.md and selected context together.
 - This is not activation, orchestration, or shell/runtime mutation.
 <!-- agent-life:end -->
@@ -93,11 +94,37 @@ Rules:
 `<resolved-source>` is the selected actual source root, either the discovered
 private `agent-core` path or the public `agent-life` framework path.
 
-The `Context hint:` section is optional. It appears only when the selected
-source `AGENTS.md` has a non-empty first `Hint:` line. If no hint exists, the
-block keeps the path-only shape and omits the section entirely. Commands must
-use only one hint line and must not copy any other source content into the
-marker block.
+The `Intent:` section is optional. It appears only when the selected source
+`AGENTS.md` has a non-empty first `Intent:` line. If no intent exists, the block
+keeps the path-only shape and omits the section entirely. Commands must use
+only one intent line and must not copy any other source content into the marker
+block.
+
+`agent-init` must not interpret the intent value, branch on it, classify the
+context from it, or use it to decide file modification permission. It only
+surfaces the author-provided one-line text in the marker block.
+
+Example:
+
+```markdown
+<!-- agent-life:start -->
+## Agent-life selected context
+
+Selected context:
+- task-brief
+
+Intent:
+- Prepare a copy-ready task brief from the user request.
+
+Read first:
+- /home/al-hub/.agent-life/framework/profiles/task-brief/AGENTS.md
+
+Rules:
+- Treat this context as guidance for the current AI session.
+- Follow project AGENTS.md and selected context together.
+- This is not activation, orchestration, or shell/runtime mutation.
+<!-- agent-life:end -->
+```
 
 ## Insert Rule
 
@@ -163,6 +190,8 @@ Marker block commands must not:
 - Copy full context bodies into the project.
 - Parse or merge private memory automatically.
 - Implement multi-line mode contracts or compact capsules.
+- Implement a context taxonomy, mode model, or permission model.
+- Enforce file modification permission from marker block fields.
 - Activate profiles.
 - Source `profile.env`.
 - Write `current-profile`.

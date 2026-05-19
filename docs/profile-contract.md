@@ -195,9 +195,9 @@ analysis feature.
 
 Public default contexts should stay short and operational:
 
-- Use one context for one work mode.
+- Use one context for one briefing intent.
 - Include one `Description:` line for future list and fzf display.
-- Optionally include one `Hint:` line for marker block display.
+- Optionally include one `Intent:` line for marker block display.
 - Prefer role, focus, avoid, output shape, and verification habit sections.
 - Keep guidance public-safe and reusable across projects.
 - Avoid private examples, credentials, account details, company specifics, and
@@ -206,17 +206,42 @@ Public default contexts should stay short and operational:
 - Remember that the marker block is a window, not a copy; public context bodies
   are referenced by source path rather than copied into project `AGENTS.md`.
 
-`Description:` and `Hint:` serve different surfaces:
+`Description:` and `Intent:` serve different surfaces:
 
 ```text
 Description: short human-readable summary for list/fzf display
-Hint: optional one-line direction label for the selected marker block
+Intent: optional one-line statement of what this context is meant to help with
 ```
 
-`Hint:` should be brief enough to fit in one marker block bullet. It may guide
-the selected context's use, but detailed behavior remains in the rest of the
-source `AGENTS.md`. If `Hint:` is absent, selection keeps the existing
-path-only marker block shape.
+`Description:` is for context discovery surfaces such as `list` and `fzf`.
+
+`Intent:` is for the marker block. It should be brief enough to fit in one
+marker block bullet. It is written by the context author and surfaced as text,
+not interpreted by `agent-init`.
+
+`agent-init` must not treat `Intent:` as a mode, permission field, taxonomy, or
+branching condition. It must not use `Intent:` to decide whether files may be
+modified. If `Intent:` is absent, the marker block should keep the path-only
+shape.
+
+Examples:
+
+```text
+Description: Turn a rough user request into a clear Codex task brief.
+Intent: Prepare a copy-ready task brief from the user request.
+
+Description: Plan a small safe implementation with scope, steps, constraints, and verification.
+Intent: Produce an implementation plan for review before changes are made.
+
+Description: Review current git diff for risk, unintended changes, and missing verification.
+Intent: Review the current diff for commit readiness and risk.
+```
+
+Detailed behavior belongs in the rest of the selected source `AGENTS.md`.
+
+Earlier experiments used a `Hint:` line for the same marker-block surface. The
+candidate direction is to use the clearer name `Intent:` before adding any
+further marker-block behavior.
 
 ## Minimal Structure
 

@@ -116,8 +116,13 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether marker block refresh needs a separate explicit command.
 - [ ] Decide whether private `agent-core` update needs a future separate
       command such as `agent-init core update`.
-- [ ] Observe whether one-line `Context hint` is enough before considering any
-      compact capsule or richer marker block convention.
+- [ ] Decide whether to replace the experimental `Hint:` marker label with the
+      clearer `Intent:` convention.
+- [ ] Implement optional one-line `Intent:` extraction for marker blocks, if
+      the convention is accepted, without context taxonomy, permission
+      enforcement, branching, body copying, or hard-coded context names.
+- [ ] Observe whether one-line `Intent` is enough before considering any
+      richer marker block convention.
 - [ ] Later candidate: decide whether `agent-init show <context>` is needed
       after observing real fzf preview friction.
 - [ ] Later candidate: decide whether fzf remove/status keybindings are worth

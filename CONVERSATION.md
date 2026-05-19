@@ -873,3 +873,25 @@ One-line context hint convention implemented:
   copying, no multi-line mode contract, no compact capsule, no AGENTS semantic
   parsing beyond line-based `Hint:` extraction, no marker-outside edits, no
   `agent-core` mutation, no activation, and no shell/env mutation.
+
+Context marker intent convention reconsidered:
+
+- Recorded the `task-brief` success and `impl-plan` partial failure in
+  `docs/context-marker-evaluation.md`.
+- Rejected `Mode` / `Permission` taxonomy as a direction for `agent-init`
+  because it would push the tool toward classification, control, or permission
+  enforcement.
+- Documented the candidate `Description:` / `Intent:` convention in
+  `docs/profile-contract.md`: description is for list/fzf display, intent is
+  optional one-line marker-block text.
+- Documented the marker block direction in `docs/marker-block.md`: selected
+  context, optional intent, and read-first source path only.
+- Clarified that `agent-init` should surface intent text only, not interpret
+  it, branch on it, classify contexts with it, or use it to decide file
+  modification permission.
+- Updated `NEXT.md` with the implementation candidate to replace experimental
+  `Hint:` with `Intent:` later.
+- Documentation-only step: no `bin/agent-init` implementation change, no
+  marker block generation change, no select/remove/status/fzf behavior change,
+  no discovery change, no shell/env mutation, no context merge, and no
+  RAG/LLM integration.
