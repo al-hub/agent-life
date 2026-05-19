@@ -44,3 +44,25 @@ assert_contains "$output" "agent-init select <context>"
 assert_contains "$output" "agent-init remove all"
 assert_not_exists "$project/AGENTS.md"
 assert_not_exists "$HOME/.local/state/agent-life"
+
+no_core_home="$SMOKE_TMP_BASE/no-core-home"
+no_core_project="$SMOKE_TMP_BASE/no-core-project"
+fake_bin="$SMOKE_TMP_BASE/fake-bin"
+fzf_input="$SMOKE_TMP_BASE/fzf-input.tsv"
+mkdir -p "$no_core_home" "$no_core_project" "$fake_bin"
+
+cat > "$fake_bin/fzf" <<EOF
+#!/bin/sh
+awk '{ print > "$fzf_input"; if (!selected && \$1 == "task-brief") { selected = \$0 } } END { if (selected) print selected }'
+EOF
+chmod +x "$fake_bin/fzf"
+
+fake_output="$(cd "$no_core_project" && HOME="$no_core_home" PATH="$fake_bin:$PATH" "$ROOT/bin/agent-init" fzf)"
+fake_input="$(cat "$fzf_input")"
+fake_agents="$(cat "$no_core_project/AGENTS.md")"
+
+assert_contains "$fake_input" "task-brief	Turn a rough user request into a clear, copy-ready Codex task brief."
+assert_contains "$fake_output" "[OK] Selected project context: task-brief"
+assert_contains "$fake_agents" "- task-brief"
+assert_contains "$fake_agents" "- $ROOT/profiles/task-brief/AGENTS.md"
+assert_not_exists "$no_core_home/.local/state/agent-life"

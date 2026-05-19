@@ -840,3 +840,16 @@ Hybrid context discovery implemented:
   change, no marker-outside edits, no context body copying, no activation, no
   shell/env mutation, no `current-profile` write, no RAG/LLM integration, and
   no multi-context merge.
+
+fzf public fallback regression coverage added:
+
+- Confirmed current `agent-init fzf` already receives public contexts through
+  `agent-init list --tsv` when private `agent-core` is missing.
+- Strengthened `tests/smoke/test_fzf.sh` with a fake `fzf` executable that
+  captures the TSV input and selects `task-brief` from public profiles under a
+  temporary HOME with no private core.
+- Verified the selected marker points to
+  `agent-life/profiles/task-brief/AGENTS.md` and no runtime state directory is
+  created.
+- No runtime behavior changed; this was regression coverage for the existing
+  hybrid discovery path.
