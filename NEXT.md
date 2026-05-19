@@ -88,6 +88,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [x] Preserve private context override priority over public contexts.
 - [x] Add smoke coverage for public fallback and private override behavior.
 - [x] Record the hybrid discovery implementation decision.
+- [x] Implement optional one-line `Hint:` convention for selected context
+      marker blocks.
+- [x] Add `Hint:` lines to public task/planning/review/summary contexts.
+- [x] Add smoke coverage for hinted and path-only marker block shapes.
 
 ## Next
 
@@ -112,6 +116,8 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether marker block refresh needs a separate explicit command.
 - [ ] Decide whether private `agent-core` update needs a future separate
       command such as `agent-init core update`.
+- [ ] Observe whether one-line `Context hint` is enough before considering any
+      compact capsule or richer marker block convention.
 - [ ] Later candidate: decide whether `agent-init show <context>` is needed
       after observing real fzf preview friction.
 - [ ] Later candidate: decide whether fzf remove/status keybindings are worth

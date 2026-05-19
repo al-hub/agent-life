@@ -853,3 +853,23 @@ fzf public fallback regression coverage added:
   created.
 - No runtime behavior changed; this was regression coverage for the existing
   hybrid discovery path.
+
+One-line context hint convention implemented:
+
+- Observed that a path-only marker block was weak at steering `task-brief`
+  behavior, while a manually added one-line hint made Codex produce a
+  copy-ready task brief instead of implementing the request.
+- Implemented optional first `Hint:` line extraction from the selected source
+  `AGENTS.md`.
+- `selected_context_block` now includes a `Context hint:` section only when the
+  selected source has a non-empty first `Hint:` line.
+- `ready <context>` and `select <context>` continue to share the same marker
+  block generation helper.
+- Added `Hint:` lines to public `task-brief`, `impl-plan`, `codex-review`,
+  `diff-review`, and `work-summary` contexts.
+- Documented `Description:` as list/fzf display text and `Hint:` as optional
+  marker block direction text.
+- Preserved boundaries: no hard-coded context names in code, no context body
+  copying, no multi-line mode contract, no compact capsule, no AGENTS semantic
+  parsing beyond line-based `Hint:` extraction, no marker-outside edits, no
+  `agent-core` mutation, no activation, and no shell/env mutation.

@@ -1,6 +1,7 @@
 # impl-plan Default Context
 
 Description: Plan a small implementation before editing code, including files, risks, and verification.
+Hint: Plan the smallest safe implementation path before editing files.
 
 ## Use This When
 

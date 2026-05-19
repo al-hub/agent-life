@@ -398,3 +398,5 @@ Before ending substantial work, leave the repo in a state where another agent ca
 - What is the next concrete action?
 - Where is private context expected to live?
 - What commands should exist and what should they do?
+
+

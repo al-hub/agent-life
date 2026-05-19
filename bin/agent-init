@@ -231,6 +231,31 @@ profile_description() {
   printf '%s\n' "$description" | tr '\t' ' '
 }
 
+context_hint() {
+  local file hint
+  file="$1"
+  hint=""
+
+  if [ -r "$file" ]; then
+    hint="$(awk '
+      /^Hint:[[:space:]]*/ {
+        sub(/^Hint:[[:space:]]*/, "")
+        print
+        found = 1
+        exit
+      }
+      END {
+        if (!found) {
+          exit 1
+        }
+      }
+    ' "$file" 2>/dev/null || true)"
+    [ -n "$hint" ] || hint=""
+  fi
+
+  printf '%s\n' "$hint" | tr '\t' ' '
+}
+
 list_contexts_tsv() {
   local root core profile description
   root="$1"
@@ -414,16 +439,22 @@ marker_outside_has_content() {
 }
 
 selected_context_block() {
-  local context source
+  local context source hint
   context="$1"
   source="$2"
+  hint="$(context_hint "$source")"
 
+  printf '%s\n' "<!-- agent-life:start -->"
+  printf '%s\n' "## Agent-life selected context"
+  printf '\n'
+  printf '%s\n' "Selected context:"
+  printf '%s\n' "- $context"
+  if [ -n "$hint" ]; then
+    printf '\n'
+    printf '%s\n' "Context hint:"
+    printf '%s\n' "- $hint"
+  fi
   cat <<EOF
-<!-- agent-life:start -->
-## Agent-life selected context
-
-Selected context:
-- $context
 
 Read first:
 - $source

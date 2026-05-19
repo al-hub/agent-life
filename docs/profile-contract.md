@@ -197,6 +197,7 @@ Public default contexts should stay short and operational:
 
 - Use one context for one work mode.
 - Include one `Description:` line for future list and fzf display.
+- Optionally include one `Hint:` line for marker block display.
 - Prefer role, focus, avoid, output shape, and verification habit sections.
 - Keep guidance public-safe and reusable across projects.
 - Avoid private examples, credentials, account details, company specifics, and
@@ -204,6 +205,18 @@ Public default contexts should stay short and operational:
 - Avoid long rule sets that over-constrain the AI.
 - Remember that the marker block is a window, not a copy; public context bodies
   are referenced by source path rather than copied into project `AGENTS.md`.
+
+`Description:` and `Hint:` serve different surfaces:
+
+```text
+Description: short human-readable summary for list/fzf display
+Hint: optional one-line direction label for the selected marker block
+```
+
+`Hint:` should be brief enough to fit in one marker block bullet. It may guide
+the selected context's use, but detailed behavior remains in the rest of the
+source `AGENTS.md`. If `Hint:` is absent, selection keeps the existing
+path-only marker block shape.
 
 ## Minimal Structure
 

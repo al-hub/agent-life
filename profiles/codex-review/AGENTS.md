@@ -1,6 +1,7 @@
 # codex-review Default Context
 
 Description: Review Codex-made changes or proposals against the original request, scope, and safety.
+Hint: Review AI-made changes for scope, safety, correctness, and verification.
 
 ## Use This When
 

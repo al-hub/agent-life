@@ -1,6 +1,7 @@
 # diff-review Default Context
 
 Description: Inspect a git diff before commit for unintended changes, missing checks, and go/no-go risk.
+Hint: Review the current diff for commit risk, unintended changes, and missing verification.
 
 ## Use This When
 

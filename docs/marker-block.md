@@ -8,8 +8,9 @@ The current MVP supports the Codex target through the current project's
 
 ## Purpose
 
-The marker block connects one selected `agent-core` context to the current
-project's AI instruction surface.
+The marker block connects one selected context to the current project's AI
+instruction surface. The selected source may be a private `agent-core` context
+or a public `agent-life` context.
 
 The marker block is the canonical representation of an `agent-life` context
 connection.
@@ -22,9 +23,14 @@ For the Codex MVP target, the instruction surface is:
 <current-project>/AGENTS.md
 ```
 
-Selection is reference-only. It does not copy, merge, or parse private
-`agent-core` content. The block should stay small and contain only enough
-information to point the AI toward the selected `agent-core` context.
+Selection is reference-only. It does not copy, merge, or parse selected context
+content. The block should stay small and contain only enough information to
+point the AI toward the selected source.
+
+A selected context may expose an optional one-line `Hint:` in its source
+`AGENTS.md`. When present, the marker block may include that one line as a
+small direction label. The hint is not a copied context body or a semantic
+contract.
 
 ## Tokens
 
@@ -68,8 +74,11 @@ copy `agent-core` contents.
 Selected context:
 - <context>
 
+Context hint:
+- <optional one-line hint from the selected source AGENTS.md>
+
 Read first:
-- <agent-core>/profiles/<context>/AGENTS.md
+- <resolved-source>/profiles/<context>/AGENTS.md
 
 Rules:
 - Treat this context as guidance for the current AI session.
@@ -81,7 +90,14 @@ Rules:
 
 `<context>` is the selected context name.
 
-`<agent-core>` is the discovered private core path.
+`<resolved-source>` is the selected actual source root, either the discovered
+private `agent-core` path or the public `agent-life` framework path.
+
+The `Context hint:` section is optional. It appears only when the selected
+source `AGENTS.md` has a non-empty first `Hint:` line. If no hint exists, the
+block keeps the path-only shape and omits the section entirely. Commands must
+use only one hint line and must not copy any other source content into the
+marker block.
 
 ## Insert Rule
 
@@ -144,7 +160,9 @@ Marker block commands must not:
 - Rewrite the whole `AGENTS.md`.
 - Modify content outside the marker block.
 - Copy or merge `agent-core` file contents into the project.
+- Copy full context bodies into the project.
 - Parse or merge private memory automatically.
+- Implement multi-line mode contracts or compact capsules.
 - Activate profiles.
 - Source `profile.env`.
 - Write `current-profile`.

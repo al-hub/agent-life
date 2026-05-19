@@ -1,6 +1,7 @@
 # task-brief Default Context
 
 Description: Turn a rough user request into a clear, copy-ready Codex task brief.
+Hint: Turn the request into a copy-ready Codex task brief; avoid implementation unless explicitly asked.
 
 ## Use This When
 
