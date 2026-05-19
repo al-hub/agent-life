@@ -116,7 +116,10 @@ This file tracks the next concrete actions. Keep it actionable and current.
 - [ ] Decide whether marker block refresh needs a separate explicit command.
 - [ ] Decide whether private `agent-core` update needs a future separate
       command such as `agent-init core update`.
-- [ ] Decide whether to replace the experimental `Hint:` marker label with the
+- [ ] Accept or reject the minimal Context Intent convention:
+      `Description:` for list/fzf display and optional `Intent:` for marker
+      block display.
+- [ ] If accepted, replace the experimental `Hint:` marker label with the
       clearer `Intent:` convention.
 - [ ] Implement optional one-line `Intent:` extraction for marker blocks, if
       the convention is accepted, without context taxonomy, permission

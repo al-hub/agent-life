@@ -895,3 +895,22 @@ Context marker intent convention reconsidered:
   marker block generation change, no select/remove/status/fzf behavior change,
   no discovery change, no shell/env mutation, no context merge, and no
   RAG/LLM integration.
+
+Minimal context intent convention refined:
+
+- Tightened `docs/context-marker-evaluation.md` to state the lesson from the
+  hint experiment: `task-brief` improved, `impl-plan` still drifted toward file
+  edits, and the response should not be a Mode/Permission taxonomy.
+- Clarified in `docs/profile-contract.md` that `Description:` is for list/fzf
+  display and optional `Intent:` is only candidate one-line marker-block text
+  authored by the context maintainer.
+- Clarified in `docs/marker-block.md` that the `Intent:` section is a candidate
+  marker shape and that this step does not change current marker block
+  generation.
+- Updated `NEXT.md` with an explicit accept/reject step for the minimal Context
+  Intent convention before any implementation.
+- Preserved constraints: no `bin/agent-init` change, no Mode/Permission
+  taxonomy, no context classification or permission enforcement, no hard-coded
+  context names, no context body copying, no discovery or select/remove/status
+  behavior change, no shell/env mutation, no context merge, and no RAG/LLM
+  integration.

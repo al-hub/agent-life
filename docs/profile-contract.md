@@ -197,7 +197,8 @@ Public default contexts should stay short and operational:
 
 - Use one context for one briefing intent.
 - Include one `Description:` line for future list and fzf display.
-- Optionally include one `Intent:` line for marker block display.
+- Candidate convention: optionally include one `Intent:` line for marker block
+  display.
 - Prefer role, focus, avoid, output shape, and verification habit sections.
 - Keep guidance public-safe and reusable across projects.
 - Avoid private examples, credentials, account details, company specifics, and
@@ -215,14 +216,18 @@ Intent: optional one-line statement of what this context is meant to help with
 
 `Description:` is for context discovery surfaces such as `list` and `fzf`.
 
-`Intent:` is for the marker block. It should be brief enough to fit in one
-marker block bullet. It is written by the context author and surfaced as text,
-not interpreted by `agent-init`.
+`Intent:` is a candidate convention for the marker block. It should be brief
+enough to fit in one marker block bullet. It is written by the context author
+and surfaced as text, not interpreted by `agent-init`.
 
 `agent-init` must not treat `Intent:` as a mode, permission field, taxonomy, or
 branching condition. It must not use `Intent:` to decide whether files may be
 modified. If `Intent:` is absent, the marker block should keep the path-only
 shape.
+
+Detailed guidance stays in the rest of the selected source `AGENTS.md`.
+`Intent:` is only a small project-local pointer label, not a copy or summary of
+the whole context.
 
 Examples:
 
@@ -236,8 +241,6 @@ Intent: Produce an implementation plan for review before changes are made.
 Description: Review current git diff for risk, unintended changes, and missing verification.
 Intent: Review the current diff for commit readiness and risk.
 ```
-
-Detailed behavior belongs in the rest of the selected source `AGENTS.md`.
 
 Earlier experiments used a `Hint:` line for the same marker-block surface. The
 candidate direction is to use the clearer name `Intent:` before adding any
